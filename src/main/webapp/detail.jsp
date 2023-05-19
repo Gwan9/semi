@@ -1,5 +1,6 @@
-<%@page import="VO.ClassNoteVOjsb"%>
-<%@page import="DAO.StudentDAOjsb"%>
+
+<%@page import="VO.ClassNoteVO"%>
+<%@page import="DAO.StudentDAO"%>
 <%@page import="java.text.SimpleDateFormat"%>
 
 <%@page import="java.util.ArrayList"%>
@@ -38,9 +39,9 @@ img {
 
 		if (studentName != null) {
 			
-			StudentDAOjsb dao = new StudentDAOjsb();
+			StudentDAO dao = new StudentDAO();
 
-			ArrayList<ClassNoteVOjsb> list = dao.selectAll(studentName);
+			ArrayList<ClassNoteVO> list = dao.studentSearchSelectAllByNameToDetail(studentName);
 
 			//for (ClassNoteVO vo : list) {
 		

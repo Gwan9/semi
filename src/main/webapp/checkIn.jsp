@@ -1,6 +1,6 @@
 
 <%@page import="VO.ClassNoteVO"%>
-<%@page import="DAO.TeacherDAOsgh"%>
+<%@page import="DAO.StudentDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
@@ -10,8 +10,8 @@ if( teacherName != null ){
 	ClassNoteVO vo = new ClassNoteVO();
 	
 	vo.setTeacherCheckIn(teacherName);
-	TeacherDAOsgh dao = new TeacherDAOsgh();
+	StudentDAO dao = new StudentDAO();
 	//dao.checkInTeacher(vo);
 	
-}System.out.println();
+}System.out.println(); 
 %>

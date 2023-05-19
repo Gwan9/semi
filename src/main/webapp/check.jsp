@@ -1,6 +1,5 @@
-<%@page import="DAO.TeacherDAOsgh"%>
-<%@page import="VO.ClassNoteVOsgh"%>
-<%@page import="DAO.StudentDAOsgh"%>
+<%@page import="VO.ClassNoteVO"%>
+<%@page import="DAO.StudentDAO"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.util.ArrayList"%>
@@ -35,15 +34,13 @@ String today = sdf.format( nowDate);
 		$( "#divStudent" ).hide();
 		<%
 /* 화면 불러올 때 오늘자 학생 데이터 생성 */
-		StudentDAOsgh dao = new StudentDAOsgh();
-		ArrayList<ClassNoteVOsgh> vo = new ArrayList<ClassNoteVOsgh>();
-		vo = dao.studentSelectAll( today );
-		dao.addAllStudent();
+		StudentDAO dao = new StudentDAO();
+		dao.studentCheckInsertAll();
 		System.out.println( "addAllStudent()" );
 		
 		/* 화면 불러올 때 오늘자 교사 데이터 생성 */
-		TeacherDAOsgh dao2 = new TeacherDAOsgh();
-		dao2.addAllTeacher();
+		StudentDAO dao2 = new StudentDAO();
+		dao2.teacherCheckInsertAll();
 		System.out.println( "addAllTeacher()"); 
 		%>
 			

@@ -1,73 +1,6 @@
-<%@page import="VO.ClassNoteVOjsb"%>
-<%@page import="DAO.StudentDAOjsb" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@page import="org.json.simple.JSONObject"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="org.json.simple.JSONArray"%>
-<%
 
-	JSONArray JA = new JSONArray();
-	StudentDAOjsb dao = new StudentDAOjsb();
-	
-	String studentName = request.getParameter("studentName").trim();
-	
-	if(studentName == null){
-		ArrayList<ClassNoteVOjsb> list = dao.selectAll();
-		
-		for(ClassNoteVOjsb vo : list){
-	JSONObject student = new JSONObject();
-		
-	student.put("no", vo.getStudentNo());
-	student.put("name", vo.getStudentName());
-	student.put("grade", vo.getStudentGrade());
-	student.put("phone", vo.getStudentPhone());
-	student.put("regist_date", vo.getStudentRegistDate());
-	student.put("parents_name", vo.getStudentParentsName());
-	student.put("parents_phone", vo.getStudentParentsPhone());
-	student.put("due_date", vo.getStudentDueDate());
-	student.put("photo", vo.getStudentPhoto());
-	student.put("gender", vo.isStudentGender());
-	student.put("birth", vo.getStudentBirth());
-	student.put("addrs", vo.getStudentAddrs());
-	student.put("email", vo.getStudentEmail());
-	student.put("school_name", vo.getStudentSchoolName());
-	student.put("status", vo.isStudentStatus());
-	
-	JA.add(student);
-		}
-	}else{
-		
-		ArrayList<ClassNoteVOjsb> list = dao.selectAll(studentName);
-		for(ClassNoteVOjsb vo : list){
-	JSONObject student = new JSONObject();
-		
-	student.put("no", vo.getStudentNo());
-	student.put("name", vo.getStudentName());
-	student.put("grade", vo.getStudentGrade());
-	student.put("phone", vo.getStudentPhone());
-	student.put("regist_date", vo.getStudentRegistDate());
-	student.put("parents_name", vo.getStudentParentsName());
-	student.put("parents_phone", vo.getStudentParentsPhone());
-	student.put("due_date", vo.getStudentDueDate());
-	student.put("photo", vo.getStudentPhoto());
-	student.put("gender", vo.isStudentGender());
-	student.put("birth", vo.getStudentBirth());
-	student.put("addrs", vo.getStudentAddrs());
-	student.put("email", vo.getStudentEmail());
-	student.put("school_name", vo.getStudentSchoolName());
-	student.put("status", vo.isStudentStatus());
-	
-	JA.add(student);
-		}
-	}
-	
-	out.println(JA.toJSONString());
-%>
-=======
-
-<%@page import="VO.ClassNoteVOjsb"%>
-<%@page import="DAO.StudentDAOjsb"%>
+<%@page import="VO.ClassNoteVO"%>
+<%@page import="DAO.StudentDAO"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -180,6 +113,10 @@ padding: 5px 10px;
 									//#로 id 값을 가져오면 첫번째 값만 가져오므로 name으로 가져온다
 		});
 	});
+	
+	//<인쇄>
+	//$("#printBtn").on()
+	//------------------------------------------------
 
 	function search() {
 		//기존 테이블 행 삭제 (비워주기)
@@ -254,7 +191,7 @@ padding: 5px 10px;
 	<%
 	// 조회 전 전체목록 다 나오게 하기
 	//DAO 생성
-	StudentDAOjsb dao = new StudentDAOjsb();
+	StudentDAO dao = new StudentDAO();
 	%>
 	<div id="container">
 
@@ -262,25 +199,27 @@ padding: 5px 10px;
 
 			<div id="student1">
 				<h5>학생 정보 조회</h5>
-				 분반<select name="lectureClass" id="lectureClass">
+				 분반 <select name="lectureClass" id="lectureClass">
 					<option value="전체">전체</option>
-					<option value="A반">A반</option>
-					<option value="B반">B반</option>
-					<option value="C반">C반</option>
-				</select> 강의명<select name="lectureName" id="lectureName">
+					<option value="A">A반</option>
+					<option value="B">B반</option>
+					<option value="C">C반</option> 
+				</select> 
+				강의명 <select name="lectureName" id="lectureName">
 					<option value="전체">전체</option>
-					<option value="언어1">언어1</option>
-					<option value="언어2">언어2</option>
+					<option value="국어">국어</option>
+					<option value="수리">수리</option>
 					<option value="영어">영어</option>
-					<option value="수리(가)">수리(가)</option>
-					<option value="수리(나)">수리(나)</option>
-				</select> <select name="studentGrade" id="studentGrade">
+				</select> 
+			학년	<select name="studentGrade" id="studentGrade">
 					<option value="전체">전체</option>
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
-				</select>학년 이름<input type="text" name="studentName" id="studentName" /> <br />
-				<br /> <input type="date" name="startDate" id="" /> 부터 <input
+				</select> 
+				이름 <input type="text" name="studentName" id="studentName" /> <br />
+				<br />
+				등록일 <input type="date" name="startDate" id="" /> 부터 <input
 					type="date" name="" id="" /> 까지
 
 				<!-- <input type="button" value="조회" id="searchBtn" /> <br /> <br /> -->
@@ -308,16 +247,15 @@ padding: 5px 10px;
 					</thead>
 
 					<%
-						ArrayList<ClassNoteVOjsb> list = dao.selectAll();
-						for (ClassNoteVOjsb vo : list) {
+						ArrayList<ClassNoteVO> list = dao.studenSearchSelectAll();
+						for (ClassNoteVO vo : list) {
 						%>
 					
 					<tr>
 						<td><input type='checkbox' name='studentNo' id='studentNo' /></td>
 						
 						<!--  이름 누르면 학생 상세 페이지로 !!!!-->
-						<!-- 근데 이건 바로 전체목록나오는거라 매개변수를 받는 메서드가 아니야 -->
-						<td><a href="detail.jsp?studentName="><%=vo.getStudentName()%></a></td>
+						<td><a href="detail.jsp?studentName=<%=vo.getStudentName()%>"><%=vo.getStudentName()%></a></td>
 						
 						<td><%=vo.getStudentSchoolName()%></td>
 						<td><%=vo.getStudentGrade()%></td>
@@ -343,7 +281,7 @@ padding: 5px 10px;
 				<!-- 부트스트랩 이용한 버튼 -->
 				<button type="button" class="btn btn-dark custom-btn-xs">PDF</button>
 				<button type="button" class="btn btn-dark custom-btn-xs">EXCEL</button>
-				<button type="button" class="btn btn-dark custom-btn-xs">인쇄</button>
+				<button type="button" class="btn btn-dark custom-btn-xs" id="printBtn">인쇄</button>
 
 			</div>
 		</div>
