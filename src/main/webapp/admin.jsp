@@ -1,5 +1,5 @@
+<%@page import="DAO.StudentDAO"%>
 <%@page import="VO.ClassNoteVO"%>
-<%@page import="DAO.KHWDAO"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -25,7 +25,7 @@
 	margin-top: 50px;
 }
 
-#lecture_select {
+#lectureSelect {
 	width: 200px;
 	height: 40px;
 	margin-right: 20px;
@@ -36,7 +36,7 @@
 	height: 40px;
 }
 
-#student_regist_date_start {
+#registDateStart {
 	width: 100px;
 	height: 40px;
 	margin-right: 10px;
@@ -44,7 +44,7 @@
 	margin-bottom: 20px;
 }
 
-#student_regist_date_end {
+#registDateEnd {
 	width: 100px;
 	height: 40px;
 	margin-left: 10px;
@@ -98,7 +98,6 @@ table, th, td {
 
 #container2 {
 	width: 1000px;
-	height: 1500px;
 	background: #FFE4C4;
 	margin: 0px auto;
 	visibility: visible;
@@ -242,8 +241,8 @@ table, th, td {
 					        + "<td>" + obj[i].pw + "</td>"
 					        + "<td>" + obj[i].phone + "</td>"
 					        + "<td>" + obj[i].subject + "</td>"
-					        + "<td>" + obj[i].sal + "</td>"
-					        + "<td>" + obj[i].worktype + "</td>"
+					        + "<td>" + obj[i].lectureStartDate + "</td>"
+					        + "<td>" + obj[i].LectureEndDate + "</td>"
 					        + "<td><a href='DeleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
 					        + "</tr>";
 
@@ -260,9 +259,15 @@ table, th, td {
 			
 		}); // search 버튼 클릭했을 때
 		
+		
+		
+		
+		// 초기화 버튼을 눌렀을 때 table의 tr 태그는 모두 삭제 (첫 행은 제외) + 달력 안에 값도 초기화
 		$("#reset").on("click", function() {
-			// 초기화 버튼을 눌렀을 때 table의 tr 태그는 모두 삭제 (첫 행은 제외)
+			
 			$("#table_result tr:not(:first-child)").remove();
+			$("#registDateStart, #registDateEnd").val("");
+			$("#labelName").val("");
 			
 			// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 			var tableHeight = $('#table_result').outerHeight();
@@ -274,16 +279,159 @@ table, th, td {
 		
 		
 		
+		$("#lectureSelect").change(function() {
+			// 강의명을 선택한 경우, 그 강의명에 해당하는 행을 출력한다.
+			
+// 			console.log("과목 선택");
+// 			console.log($("option[value='lectureEng']").text());
+
+			// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+			var tableHeight = $('#table_result').outerHeight();
+			var containerHeight = tableHeight + 320;
+			$('#container').css('height', containerHeight + 'px');
+			
+			
+			// requestData 를 담을 객체를 만들고, 선택하는 조건에 따라 반복문을 만들어보자
+			
+			var requestData = {};
+			
+			
+			if ($("#lectureSelect").val() == "lectureKor") {
+				requestData.lectureSelect = $("option[value='lectureKor']").text();
+			} else if ($("#lectureSelect").val() == "lectureEng") {
+				requestData.lectureSelect = $("option[value='lectureEng']").text();
+			} else if ($("#lectureSelect").val() == "lectureMath") {
+				requestData.lectureSelect = $("option[value='lectureMath']").text();
+			}
+				
+				// 선택하면 검색 결과가 나오게
+				
+				$.ajax({
+					type: "GET",
+					async: true,
+					url: "SearchTeacherSubjectOk.jsp",
+					dataType: "html",
+					data: requestData, // requestData를 담은 객체
+					success: function(response, status, request) {
+//	 					console.log("성공");
+//	 					console.log(response);
+
+						var obj = JSON.parse(response);
+						
+						console.log(obj);
+						
+						// 2. 버튼 클릭 시 tr의 태그 자손으로 출력
+						var txt = null;
+						
+						for(var i=0; i<obj.length; i++) {
+							
+							txt = "<tr>"
+						        + "<th><a href='teacher_detail.jsp?teacher_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
+						        + "<td>" + obj[i].name + "</td>"
+						        + "<td>" + obj[i].id + "</td>"
+						        + "<td>" + obj[i].pw + "</td>"
+						        + "<td>" + obj[i].phone + "</td>"
+						        + "<td>" + obj[i].subject + "</td>"
+						        + "<td>" + obj[i].lectureStartDate + "</td>"
+						        + "<td>" + obj[i].lectureEndDate + "</td>"
+						        + "<td><a href='DeleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+						        + "</tr>";
+
+								// 덧붙이기
+								$("#table_result").append(txt);
+						}
+		
+					},
+					error: function(response, status, request) {
+						console.log("실패");
+					}
+		
+				}); // ajax end
+			
+		}) // end
+	
 		
 		
+		// 기간을 넣어서 조회하려면 어떻게?
+		// 각 달력에 일자를 선택한 경우, 그 결과 값을 checkDate() 함수에 넘겨, 그리고 결과가 두개가 있어야지만 콘솔에 메세지를 출력할 수 있도록 if 문 전개하자.
 		
+		var registDateStart = false; // registDateStart 이 눌렸는지, 안 눌렸는 지 boolean  형태로 넣기
+		var registDateEnd = false;
+		
+		$("#registDateStart").change(function() {
+			console.log($("#registDateStart").val());
+			registDateStart = true;
+			checkDate();
+		});
+		
+		$("#registDateEnd").change(function() {
+			console.log($("#registDateEnd").val());
+			registDateEnd = true;
+			checkDate();
+		});;
+		
+// 		var registDateStartV = $("#registDateStart").val();
+// 		var registDateEnd = $("#registDateEnd").val();
+		
+		function checkDate() {
+
+				// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+				var tableHeight = $('#table_result').outerHeight();
+				var containerHeight = tableHeight + 650;
+				$('#container').css('height', containerHeight + 'px');
+				
+			if(registDateStart == true && registDateEnd == true) {
+				console.log("달력 모두 선택됨.");
+				
+				$.ajax({
+					type: "GET",
+					async: true,
+					url: "SearchTeacherDateOK.jsp",
+					dataType: "html",
+					data: {"registDateStart":$("#registDateStart").val(),"registDateEnd":$("#registDateEnd").val()},
+					success: function(response, status, request) {
+// 						console.log("성공");
+						
+						var obj = JSON.parse(response);
+						
+						console.log(obj);
+						
+						var txt = null;
+						
+						for(var i=0; i<obj.length; i++) {
+							
+							txt = "<tr>"
+						        + "<th><a href='teacher_detail.jsp?teacher_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
+						        + "<td>" + obj[i].name + "</td>"
+						        + "<td>" + obj[i].id + "</td>"
+						        + "<td>" + obj[i].pw + "</td>"
+						        + "<td>" + obj[i].phone + "</td>"
+						        + "<td>" + obj[i].subject + "</td>"
+						        + "<td>" + obj[i].lectureStartDate + "</td>"
+						        + "<td>" + obj[i].lectureEndDate + "</td>"
+						        + "<td><a href='DeleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+						        + "</tr>";
+
+								// 덧붙이기
+								$("#table_result").append(txt);
+						}
+						
+						
+					},
+					error: function(response, status, request) {
+						console.log("실패");
+					}
+				}); // ajax end
+				
+				
+			}
+		}
+
 		
 // 		-----------------------------------------------------------------------------------------
 		
 		
-		
-		
-		
+
 		
 		
 	});
@@ -312,37 +460,17 @@ table, th, td {
 
 			<br /> 
 			
-			<span id="lecture_select_box"> 
+			<span id="lectureSelect_box"> 
 				<label class="label" for="">강의명 : </label>
 				
 <!-- 			<input type="text" name="강의명" id="lecture_name" value="" /> -->
 				
-				<select id="lecture_select">
+				<select id="lectureSelect">
 					<option value="">선택</option>
-					
-					<%
-										// 강의 DAO만들어서 셀렉하는 함수 만들어야 됨.
-					%>
-					
-					
-					<option value="lecture_국어">국어 1반</option>
-					<option value="lecture_국어">국어 2반</option>
-					<option value="lecture_국어">국어 3반</option>
-					<option value="lecture_국어">영어 1반</option>
-					<option value="lecture_국어">영어 2반</option>
-					<option value="lecture_국어">영어 3반</option>
-					<option value="lecture_국어">수학 1반</option>
-					<option value="lecture_국어">수학 2반</option>
-					<option value="lecture_국어">수학 3반</option>
-					
-					
-					
-					<%
-
-					%>
-					
-				</select>
-				
+					<option value="lectureKor">국어</option>
+					<option value="lectureEng">영어</option>
+					<option value="lectureMath">수학</option>
+				</select>	
 			</span> 
 			
 			<span id="nameBox"> 
@@ -354,7 +482,7 @@ table, th, td {
 			
 			<span id="student_regist_search"> 
 				<label class="label" for="">강의 일자별 조회 : </label>
-				<input type="date" name="" id="student_regist_date_start" />~<input type="date" name="" id="student_regist_date_end" />
+				<input type="date" name="registDateStart" id="registDateStart" />~<input type="date" name="registDateEnd" id="registDateEnd" />
 			</span> 
 			
 			<input type="button" id="search" value="조회" />
@@ -379,7 +507,7 @@ table, th, td {
 						<th>비고</th>
 					</tr>
 		<%
-			KHWDAO dao = new KHWDAO();
+			StudentDAO dao = new StudentDAO();
 				
 			ArrayList<ClassNoteVO> list = dao.teacherSelectAll();
 			
@@ -392,8 +520,8 @@ table, th, td {
 					<td><%= vo.getTeacherPw() %></td>
 					<td><%= vo.getTeacherPhone() %></td>
 					<td><%= vo.getTeacherSubject() %></td>
-					<td></td>
-					<td></td>
+					<td><%= vo.getLectureStartDate() %></td>
+					<td><%= vo.getLectureEndDate() %></td>
 					<td><a href="DeleteTeacherOk.jsp?teacher_no=<%= vo.getTeacherNo() %>"><input type="button" id="delete_btn" value="삭제" /></a></td>
 				</tr>
 					
@@ -452,25 +580,25 @@ table, th, td {
 						</tr>
 						
 					<%
-					dao = new KHWDAO();
+					dao = new StudentDAO();
 					
-					ArrayList<ClassNoteVO> accountingList = dao.selectAllAccounting();
+					ArrayList<ClassNoteVO> accountingList = dao.teacherSelectAllAccounting();
 					
 					for(ClassNoteVO vo : accountingList) {
 					%>	
 						<tr>
 							
-							<td><%= vo.getClass_registerNo()%></td>
-							<td><%= vo.getLectureClass()%></td>
-							<td><%= vo.getStudentName()%></td>
-							<td><%= vo.isPay()%></td>
-							<td><%= vo.getLectureName()%></td>
-							<td><%= vo.getLectureTuition()%></td>
-							<td><%= vo.getPayType()%></td>
-							<td><%= vo.getLectureStartDate()%></td>
-							<td><%= vo.getLectureEndDate()%></td>
-							<td><%= vo.getStudentDueDate()%></td>
-							<td><%= vo.getStudentParentsPhone()%></td>
+							<td><%= vo.getClass_registerNo() %></td>
+							<td><%= vo.getLectureClass() %></td>
+							<td><%= vo.getStudentName() %></td>
+							<td><%= vo.isPay() %></td>
+							<td><%= vo.getLectureName() %></td>
+							<td><%= vo.getLectureTuition() %></td>
+							<td><%= vo.getPayType() %></td>
+							<td><%= vo.getLectureStartDate() %></td>
+							<td><%= vo.getLectureEndDate() %></td>
+							<td><%= vo.getStudentDueDate() %></td>
+							<td><%= vo.getStudentParentsPhone() %></td>
 						
 							
 						</tr>

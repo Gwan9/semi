@@ -1,7 +1,7 @@
+<%@page import="DAO.StudentDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@page import="VO.ClassNoteVO"%>
-<%@page import="DAO.KHWDAO"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,9 +38,9 @@
 			Boolean genderBoolean = Boolean.valueOf(gender);
 			
 			
-			KHWDAO dao = new KHWDAO();
+			StudentDAO dao = new StudentDAO();
 			
-			ClassNoteVO vo = dao.teacherGetOne(noInt);
+			ClassNoteVO vo = dao.teacherSelectAllByNo(noInt);
 			
 			vo.setTeacherNo(noInt);
 			vo.setTeacherName(name);
@@ -58,19 +58,17 @@
 			vo.setTeacherPhoto(photo);
 			
 			
-			dao.updateOne(vo);
+			dao.teacherUpdateAllByNo(vo);
 			
 		}
 	%>
 	
-		<h2>정상적으로 수정되었습니다.</h2>
-		<h2>3초 후에 자동으로 이전 페이지로 이동합니다.</h2>
-	
 		<script type="text/javascript">
-		
-			window.setTimeout(function() {
-				location.href="admin.jsp";
-			}, 3000);
+			
+			alert("정상적으로 수정되었습니다.");
+			
+			window.location.href="admin.jsp";
+			
 		</script>
 </body>
 </html>
