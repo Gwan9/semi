@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 import VO.ClassNoteVO;
@@ -314,7 +315,7 @@ public class StudentDAO {
 
 	// studentCheck-------------------------------------------------------------------------------------------------------------------------------
 		// student_check - student 조인해서 STUDENT_CHECK_DATE 값으로 전체 조회
-	public ArrayList<ClassNoteVO> studentCheckSelectAll(String date){
+	public ArrayList<ClassNoteVO> studentCheckSelectAllByDate(String date){
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
 	
@@ -355,7 +356,7 @@ public class StudentDAO {
 	return list;
 	}
 	// STUDENT_CHECK - STUDENT 조인하고 시작날짜 끝 날짜 값으로 
-	public ArrayList<ClassNoteVO> studenCheckSelectAll(String date1, String date2){
+	public ArrayList<ClassNoteVO> studenCheckSelectAllByDate1Date2(String date1, String date2){
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
 			
@@ -398,6 +399,23 @@ public class StudentDAO {
 		}
 	return list;
 	}	
+	
+	// sgh
+		public void studentCheckInsertAll() {
+			                                                          
+			sb.setLength(0);
+			sb.append( "INSERT INTO STUDENT_CHECK VALUES ( STUDENT_CHECK_NO_SEQ.nextval, null, null, null,to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd'), STUDENT_NO_SEQ.nextval )" );
+			
+			try {
+		        pstmt = conn.prepareStatement(sb.toString());
+		        pstmt.executeUpdate();
+		    } catch (SQLIntegrityConstraintViolationException e) {
+		        // 중복 INSERT 에러 처리
+		        e.printStackTrace(); // 예외를 출력하거나 로깅
+		    } catch (SQLException e) {
+		        e.printStackTrace(); // 예외를 출력하거나 로깅
+		    } 
+		}
 			
 
 	// studentSearch-------------------------------------------------------------------------------------------------------------------------------
@@ -941,7 +959,7 @@ public class StudentDAO {
 		return list;
 	}
 
-	
+
 	public ClassNoteVO teacherSelectAllByNo(int teacherNo) {
 
 		// vo 초기화
@@ -1019,7 +1037,7 @@ public class StudentDAO {
 		}
 		return list;
 	}
-	public ArrayList<ClassNoteVO> teacherSelectAllByDate1toDate2(String date1, String date2){
+	public ArrayList<ClassNoteVO> teacherCheckSelectAllByDate1toDate2(String date1, String date2){
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 		ClassNoteVO vo = null;
 		
@@ -1570,7 +1588,7 @@ public class StudentDAO {
 			pstmt.setInt(1, vo.getTeacherCheckNo() );
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch block2
 			e.printStackTrace();
 		}
 	}
