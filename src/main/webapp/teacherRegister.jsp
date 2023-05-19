@@ -8,6 +8,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript">
 	$(function(){
+		
+		
 		$("input[value='중복확인']").on("click", function(){
 			console.log("버튼눌림");
 			$.ajax({
@@ -41,6 +43,14 @@
 			}
 			
 		})
+		
+		$("input[value='가입하기']").on("click", function(){
+			
+			if($("#id").val() == "")
+				$("#msg").html("<h6 style='color:red;'>*필수 정보입니다<h6>");
+			
+		})
+		
 		
 	})
 	

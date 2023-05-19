@@ -1,4 +1,3 @@
-
 <%@page import="DAO.StudentDAO"%>
 <%@page import="VO.ClassNoteVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -49,9 +48,16 @@
 	StudentDAO dao = new StudentDAO();
 	dao.teacherInsertByAll(vo);
 	
+	session.setAttribute("vo", vo);
+	
 	
 	%>
-	<h4>회원가입을 축하합니다.</h4>
+	<script type="text/javascript">
+		window.setTimeout(function(){
+			alert("회원가입을 축하합니다");
+			location.href = "main.jsp";
+		})
+	</script>
 </body>
 
 </html>

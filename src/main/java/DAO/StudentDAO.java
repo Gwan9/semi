@@ -1236,7 +1236,7 @@ public class StudentDAO {
 			
 		sb.setLength(0);
 		sb.append("INSERT INTO teacher ");
-		sb.append("VALUES (TEACHER_TNO_SEQ.NEXTVAL, ?, ?, ?, ?, 0, ?, ?, 0, ?, 0, SYSDATE, ?, ?) ");
+		sb.append("VALUES (TEACHER_NO_SEQ.NEXTVAL, ?, ?, ?, ?, 0, ?, ?, 0, ?, 0, SYSDATE, ?, ?) ");
 		
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
