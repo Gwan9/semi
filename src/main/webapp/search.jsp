@@ -1,5 +1,6 @@
-<%@page import="VO.ClassNoteVOjsb"%>
-<%@page import="DAO.StudentDAOjsb"%>
+
+<%@page import="VO.ClassNoteVO"%>
+<%@page import="DAO.StudentDAO"%>
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.json.simple.JSONArray"%>
 <%@page import="java.util.ArrayList"%>
@@ -25,57 +26,57 @@ System.out.println(grade);
 JSONArray j = new JSONArray();
 
 //dao 생성
-StudentDAOjsb dao = new StudentDAOjsb();
+StudentDAO dao = new StudentDAO();
 
 //db로부터 모든 데이터 가져오기
 //리스트 변수 선언
-ArrayList<ClassNoteVOjsb> list;
+ArrayList<ClassNoteVO> list;
 
 //-------------------------------------------------------------------------------
 
 //이름만
 if (studentName != null && !studentName.isEmpty()) {
-	list = dao.selectAllByName(studentName);
+	list = dao.studentSearchSelectAllByName(studentName);
 }
 
 //학년만
 else if (!"전체".equals(grade) && "전체".equals(lectureClass) && "전체".equals(lectureClass))  {
 	int studentGrade = Integer.parseInt(grade);
-	list = dao.selectAllByGrade(studentGrade);
+	list = dao.studentSearchSelectAllByGrade(studentGrade);
 		
 }
 //분반만
 else if (!"전체".equals(lectureClass) && "전체".equals(grade) && "전체".equals(lectureName)) {
-	list = dao.selectByLectureClass(lectureClass);
+	list = dao.studentSearchSelectByLectureClass(lectureClass);
 	System.out.println("분반: " + list);
 }
 
 //강의명만
 else if (!"전체".equals(lectureName) && "전체".equals(grade) && "전체".equals(lectureClass)) {
-	list = dao.selectByLectureName(lectureName);
+	list = dao.studentSearchSelectByLectureName(lectureName);
 } 
 
 //학년+분반
 else if (!"전체".equals(grade)&& !"전체".equals(lectureClass) && "전체".equals(lectureName)) {
 	int studentGrade = Integer.parseInt(grade);
-	list = dao.selectByGradeLectureClass(studentGrade, lectureClass);
+	list = dao.studentSearchSelectByGradeLectureClass(studentGrade, lectureClass);
 } 
 
 //학년+강의명
 else if (!"전체".equals(grade)&& "전체".equals(lectureClass) && !"전체".equals(lectureName)) {
 	int studentGrade = Integer.parseInt(grade);
-	list = dao.selectByGradeLectureName(studentGrade, lectureName);
+	list = dao.studentSearchSelectByGradeLectureName(studentGrade, lectureName);
 } 
 
 //분반+강의명
 else if ("전체".equals(grade)&& !"전체".equals(lectureClass) && !"전체".equals(lectureName)) {
-	list = dao.selectByLectureClassLectureName(lectureClass, lectureName);
+	list = dao.studentSearchSelectByLectureClassLectureName(lectureClass, lectureName);
 }
 
 //학년 + 분반 + 강의명
 else if (!"전체".equals(grade)&& !"전체".equals(lectureClass) && !"전체".equals(lectureName)) {
 	int studentGrade = Integer.parseInt(grade);
-	list = dao.selectByGradeLectureClassLectureName(studentGrade, lectureClass, lectureName);
+	list = dao.studentSearchSelectByGradeLectureClassLectureName(studentGrade, lectureClass, lectureName);
 } 
 
 //아니라면 그냥 기본 빈 리스트를 생성
@@ -84,7 +85,7 @@ else {
 	System.out.println(list);
 }
 
-for (ClassNoteVOjsb vo : list) {
+for (ClassNoteVO vo : list) {
 
 	JSONObject student = new JSONObject();
 
