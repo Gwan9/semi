@@ -46,9 +46,15 @@
 		
 		$("input[value='가입하기']").on("click", function(){
 			
-			if($("#id").val() == "")
+			if($("#id").val() == ""){
 				$("#msg").html("<h6 style='color:red;'>*필수 정보입니다<h6>");
-			
+				window.setTimeout(function(){
+					document.frm.action = "teacherRegister.jsp";
+					document.from.method = "get";
+					document.from.submit();
+				})
+			}
+				
 		})
 		
 		
@@ -95,6 +101,7 @@
 					<div>
 						<h5>비밀번호</h5>
 						<input type="password" name="pw" class="pw" id="password_1" />
+						<div id="msg"></div>
 					</div>
 					<div>
 						<h5>비밀번호 재확인</h5>
@@ -104,23 +111,28 @@
 					<div>
 						<h5>이름</h5>
 						<input type="text" name="name" id="" />
+						<div id="msg"></div>
 					</div>
 					<div>
 						<h5>생년월일</h5>
 						<input type="text" name="birth" id="" />
+						<div id="msg"></div>
 					</div>
 					<div>
 						<h5>성별</h5>
 						<h5><input type="radio" name="gender" id="" value="남" />남
 						<input type="radio" name="gender" id="" value="여" />여</h5>
+						<div id="msg"></div>
 					</div>
 					<div>
 						<h5>거주지</h5>
 						<input type="text" name="addrs" id="" />
+						<div id="msg"></div>
 					</div>
 					<div>
 						<h5>연락처</h5>
 						<input type="text" name="phone" id="" />
+						<div id="msg"></div>
 					</div>
 					<div>
 						<h5>EMAIL</h5>
@@ -128,11 +140,14 @@
 						<select name="" id="">
 							<option value="직접입력">직접입력</option>
 						</select>
+						<div id="msg"></div>
 					</div>
 					<div id="sub">
-						<input type="submit" value="가입하기" />
-						<a href="main.jsp">
-						<input type="button" value="취소하기" /></a>
+						<form action="" name="frm">
+							<input type="button" value="가입하기" />
+						</form>	
+							<a href="main.jsp">
+							<input type="button" value="취소하기" /></a>
 					</div>
 				</div>
 			</div>
