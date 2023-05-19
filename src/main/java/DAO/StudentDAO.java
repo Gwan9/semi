@@ -255,7 +255,7 @@ public class StudentDAO {
 	
 	// student - class_register - lecture 조인
 	
-	public ArrayList<ClassNoteVO> studenSearchSelectAll() {
+	public ArrayList<ClassNoteVO> studentSearchSelectAll() {
 
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 
@@ -356,7 +356,7 @@ public class StudentDAO {
 	return list;
 	}
 	// STUDENT_CHECK - STUDENT 조인하고 시작날짜 끝 날짜 값으로 
-	public ArrayList<ClassNoteVO> studenCheckSelectAllByDate1Date2(String date1, String date2){
+	public ArrayList<ClassNoteVO> studentCheckSelectAllByDate1Date2(String date1, String date2){
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
 			
