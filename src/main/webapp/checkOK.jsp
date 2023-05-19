@@ -1,10 +1,7 @@
-<%@page import="VO.ClassNoteVOjsb"%>
-<%@page import="DAO.StudentDAOjsb"%>
-<%@page import="DAO.TeacherDAOsgh"%>
+<%@page import="VO.ClassNoteVO"%>
+<%@page import="DAO.StudentDAO"%>
 <%@page import="org.json.simple.JSONObject"%>
-<%@page import="VO.ClassNoteVOsgh"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="DAO.StudentDAOsgh"%>
 <%@page import="org.json.simple.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -19,11 +16,11 @@ if( today != null && selectVal != null){
 	if( Integer.parseInt(selectVal) == 1 ){
 		
 		JSONArray j = new JSONArray();
-		StudentDAOjsb dao1 = new StudentDAOjsb();
-		ArrayList<ClassNoteVOjsb> list1 = dao1.studentSelectAll( today );
+		StudentDAO dao1 = new StudentDAO();
+		ArrayList<ClassNoteVO> list1 = dao1.studentCheckSelectAllByDate( today );
 		
 		
-		for( ClassNoteVOjsb vo : list1 ){
+		for( ClassNoteVO vo : list1 ){
 			JSONObject student = new JSONObject();
 			student.put( "studentNo", vo.getStudentNo() );
 			student.put( "studentName", vo.getStudentName() );
@@ -42,10 +39,10 @@ if( today != null && selectVal != null){
 	}else if( Integer.parseInt(selectVal) == 2 ){
 		
 		JSONArray teacherArray = new JSONArray();
-		TeacherDAOsgh dao2 = new TeacherDAOsgh();
-		ArrayList<ClassNoteVOsgh> list2 = dao2.teacherSelectAll( today );
+		StudentDAO dao2 = new StudentDAO();
+		ArrayList<ClassNoteVO> list2 = dao2.teacherSelectAllByDate( today );
 		
-		for( ClassNoteVOsgh vo : list2 ){
+		for( ClassNoteVO vo : list2 ){
 			JSONObject teacher = new JSONObject();
 			teacher.put( "teacherCheckIn", vo.getTeacherCheckIn() );
 			teacher.put( "teacherCheckOut", vo.getTeacherCheckOut() );
