@@ -247,7 +247,7 @@ padding: 5px 10px;
 					</thead>
 
 					<%
-						ArrayList<ClassNoteVO> list = dao.studenSearchSelectAll();
+						ArrayList<ClassNoteVO> list = dao.studentSearchSelectAll();
 						for (ClassNoteVO vo : list) {
 						%>
 					
