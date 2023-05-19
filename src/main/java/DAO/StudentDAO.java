@@ -324,29 +324,35 @@ public class StudentDAO {
 		sb.append("FROM STUDENT_CHECK ");
 		sb.append("INNER JOIN STUDENT ");
 		sb.append("ON STUDENT_CHECK.STUDENT_NO = STUDENT.STUDENT_NO ");
+		sb.append("INNER JOIN CLASS_REGISTER ");
+		sb.append("ON STUDENT.STUDENT_NO = CLASS_REGISTER.STUDENT_NO ");
+		sb.append("INNER JOIN LECTURE ");
+		sb.append("ON CLASS_REGISTER.LECTURE_NO = LECTURE.LECTURE_NO ");
 		sb.append("WHERE STUDENT_CHECK.STUDENT_CHECK_DATE = ? ");
-		
+
 		// 5. 문장객체
 		try {
 		pstmt = conn.prepareStatement(sb.toString());
 		pstmt.setString(1, date);
 		rs = pstmt.executeQuery();
-		while ( rs.next() ) {
+		
+		while (rs.next()) {
+		    System.out.println(rs.next());
 		    vo = new ClassNoteVO();
 		    vo.setStudentNo(rs.getInt("student_no"));
-			vo.setStudentName(rs.getString("student_name"));
-			vo.setStudentSchoolName(rs.getString("student_school_name"));
-			vo.setStudentGrade(rs.getInt("student_grade"));
-			//vo.setLectureClass(rs.getString("lecture_class"));
-			vo.setStudentPhone(rs.getString("student_phone"));
-			vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+		    vo.setStudentName(rs.getString("student_name"));
+		    vo.setStudentSchoolName(rs.getString("student_school_name"));
+		    vo.setStudentGrade(rs.getInt("student_grade"));
+		    vo.setLectureClass(rs.getString("lecture_class"));
+		    vo.setStudentPhone(rs.getString("student_phone"));
+		    vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
 		    vo.setStudentCheckNo(rs.getInt("student_check_no"));
 		    vo.setStudentCheckIn(rs.getString("student_check_in"));
 		    vo.setStudentCheckLate(rs.getString("student_check_late"));
 		    vo.setStudentCheckLeave(rs.getString("student_check_leave"));
 		    vo.setStudentCheckDate(rs.getString("student_check_date"));
 		    list.add(vo);
-	    System.out.println("LIST " + list);
+		    System.out.println("LIST " + list);
 		}
 
 		}catch (SQLException e) {			
@@ -405,7 +411,8 @@ public class StudentDAO {
 	
 	// sgh
 		public void studentCheckInsertAll() {
-			                                                          
+			                                      
+			
 			sb.setLength(0);
 			sb.append( "INSERT INTO STUDENT_CHECK VALUES ( STUDENT_CHECK_NO_SEQ.nextval, null, null, null,to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd'), STUDENT_NO_SEQ.nextval )" );
 			
