@@ -14,8 +14,8 @@ public class StudentDAO {
 	// 기본생성자 (JDBC의 1-3단계)
 	// 1. 환경변수
 	String driver = "oracle.jdbc.driver.OracleDriver";
-	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
-//	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
+//	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
+	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
 	String user = "scott";
 	String password = "tiger";
 	Connection conn;
@@ -43,6 +43,29 @@ public class StudentDAO {
 	} // 기본생성자 끝
 	
 	// Note-------------------------------------------------------------------------------------------------------------------------------
+	
+	public void studentNoteInsert(String title, String tarea) {
+		
+//		로그인 되어있는 교사의 교사번호를 담은 무언가
+		int num = 0;
+		
+		sb.setLength(0);
+		sb.append("insert into class_note values(note_no_seq.nextval, sysdate, ?, ?, ? ");
+		
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setString(1, title);
+			pstmt.setString(2, tarea);
+			pstmt.setInt(3, num);	//수정필요
+			
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public ArrayList<ClassNoteVO> studentNoteSelectAll(String lectureName){
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
@@ -1039,7 +1062,7 @@ public class StudentDAO {
 			vo.setTeacherCheckOut(rs.getString( "teacher_check_out" ) );
 			vo.setTeacherWorkTime(rs.getString( "teacher_work_time" ) );
 			vo.setTeacherCheckDate(rs.getString( "teacher_check_date" ) );
-			vo.setTeacherNo(rs.getInt( "teacher_no" ) );
+			vo.setTeacherNo(rs.getInt( "teacher_no" ));
 			list.add(vo);
 		}
 		

@@ -1,5 +1,5 @@
-<%@page import="VO.CwkVO"%>
-<%@page import="DAO.CwkDAO"%>
+<%@page import="VO.ClassNoteVO"%>
+<%@page import="DAO.StudentDAO"%>
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="org.json.simple.JSONArray"%>
@@ -11,11 +11,11 @@
 JSONArray JA = new JSONArray();
 
 
-	CwkDAO dao = new CwkDAO();
+	StudentDAO dao = new StudentDAO();
 
-	ArrayList<CwkVO> list = dao.lectureSelectAll();
+	ArrayList<ClassNoteVO> list = dao.lectureSelectAll();
 
-for(CwkVO vo : list){
+for(ClassNoteVO vo : list){
 	JSONObject lecture = new JSONObject();
 
 	lecture.put("lno", vo.getLectureNo());
