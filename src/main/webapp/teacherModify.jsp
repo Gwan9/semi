@@ -1,5 +1,5 @@
 
-<%@page import="DAO.TeacherDAOptm"%>
+<%@page import="DAO.StudentDAO"%>
 <%@page import="VO.ClassNoteVO"%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -37,8 +37,8 @@
 				String n = request.getParameter("no");
 				if(n != null){
 					int no = Integer.parseInt(n);
-					TeacherDAOptm dao = new TeacherDAOptm();
-					ClassNoteVO vo = dao.selectOne(no);
+					StudentDAO dao = new StudentDAO();
+					ClassNoteVO vo = dao.teacherSelectAllByNo(no);
 						if(vo != null){
 			%>			
 			<div id="container">

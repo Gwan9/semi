@@ -1,7 +1,6 @@
-
-
+<%@page import="DAO.StudentDAO"%>
 <%@page import="VO.ClassNoteVO"%>
-<%@page import="DAO.TeacherDAOptm"%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -14,9 +13,9 @@
 	<%
 		String teacherId = request.getParameter("id");
 		String teacherPw = request.getParameter("pw");
-		TeacherDAOptm dao = new TeacherDAOptm();
+		StudentDAO dao = new StudentDAO();
 		// 로그인 성공했다면
-		ClassNoteVO vo = dao.getTwo(teacherId, teacherPw);
+		ClassNoteVO vo = dao.teacherSelectAllByIdPw(teacherId, teacherPw);
 		if(vo != null)
 			session.setAttribute("vo", vo);
 		/* 
