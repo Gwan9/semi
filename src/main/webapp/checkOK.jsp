@@ -7,7 +7,6 @@
     pageEncoding="UTF-8"%>
 <%
 
-
 String today = request.getParameter( "today" );
 String selectVal = request.getParameter( "selectVal" );
 

@@ -70,10 +70,10 @@ String today = sdf.format( nowDate);
 		// 조회 클릭 시 날짜부터 날짜까지 값들 출력
 		$( "#AtoB" ).on( "click", dateTodate )
 		// today버튼 클릭 시 텍스트박스 날짜의 값들 출력
-		$( "#checkToday" ).on( "click", dateToday )
+		//$( "#checkToday" ).on( "click", dateToday )
 		
 		// 입력 버튼 누를 시 등교 지각 조퇴 비고 값 입력
-		$( "#btnAllCommit" ).on( "click", allCommit )
+		//$( "#btnAllCommit" ).on( "click", allCommit )
 		
 		
 		// 출근버튼 클릭 시 출근시간 update

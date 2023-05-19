@@ -355,8 +355,11 @@ public class StudentDAO {
 		}
 	return list;
 	}
+	
+	
 	// STUDENT_CHECK - STUDENT 조인하고 시작날짜 끝 날짜 값으로 
-	public ArrayList<ClassNoteVO> studentCheckSelectAllByDate1Date2(String date1, String date2){
+	// sgh
+	public ArrayList<ClassNoteVO> studentCheckSelectAllByDate1ToDate2(String date1, String date2){
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
 			
@@ -1494,7 +1497,7 @@ public class StudentDAO {
 		}
 		return list;
 	}
-	
+	// sgh
 	public ArrayList<ClassNoteVO> teacherCheckSelectAllByDate1ToDate2(String date1, String date2){
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 		ClassNoteVO vo = null;
