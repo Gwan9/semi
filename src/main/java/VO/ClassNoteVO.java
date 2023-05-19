@@ -61,5 +61,26 @@ public class ClassNoteVO {
 	String noticeDate;
 	String noticeTitle;
 	String noticeContents;
+	
+	public ClassNoteVO(int teacherNo, String teacherId, String teacherPw, String teacherName,
+			String teacherAddress, int teacherSal, String teacherPhone, String teacherEmail, String teacherSubject,
+			String teacherPhoto, String teacherWorktype, String teacherHiredate, String teacherBirth, boolean g) {
+		
+		this.teacherNo = teacherNo;
+		this.teacherId = teacherId;
+		this.teacherPw = teacherPw;
+		this.teacherName = teacherName;
+		this.teacherAddress = teacherAddress;
+		this.teacherSal = teacherSal;
+		this.teacherPhone = teacherPhone;
+		this.teacherEmail = teacherEmail;
+		this.teacherSubject = teacherSubject;
+		this.teacherPhoto = teacherPhoto;
+		this.teacherWorktype = teacherWorktype;
+		this.teacherHiredate = teacherHiredate;
+		this.teacherBirth = teacherBirth;
+		this.teacherGender = g;
+		
+	}
 }
 
