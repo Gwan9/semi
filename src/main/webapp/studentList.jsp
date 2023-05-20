@@ -77,9 +77,9 @@ table {
 	bottom: 590px;
 }
 
-.custom-btn-xs{
-font-size: 10px;
-padding: 5px 10px;
+.custom-btn-xs {
+	font-size: 10px;
+	padding: 5px 10px;
 }
 </style>
 
@@ -92,49 +92,87 @@ padding: 5px 10px;
 	$(function() {
 
 		// <조회>
-		//분반, 강의명, 학년은 값을 선택하면 조회
-		//change 말고 selected 도 고려
+		//분반, 강의명, 학년은 select타입 값을 선택하면 조회
+		//* change 말고 selected 도 고려
 		$("#lectureClass").on("change", search);
 		$("#lectureName").on("change", search);
 		$("#studentGrade").on("change", search);
+
+		/* 		&("#startDate").on("click", search);
+		 &("#endDate").on("click", search); */
+
 		//이름은 조회버튼을 눌러야 조회
 		$("#searchBtn").on("click", search);
-		
-		// <체크>
+
+		// <전체 체크>
 		//checkAll을 누르면 모든 체크박스가 선택됨
-		$("#checkAll").on("change", function(){ //체크박스가 변경될때마다 실행
-			var isChecked = $(this).prop("checked"); 
-							// $(this) : 현재 이벤트가 발생한 요소
-							// prop("checked") : 해당 요소의 checked 속성값을 가져오기 
-							// $(this).prop("checked") : boolean 타입
-								// 체크박스가 선택되면 isChecked에 true가 담기고, 선택해제되면 false가 담김
-			$("input[name='studentNo']").prop("checked", isChecked); 
-									// checkAll을 누르면 그 체크상태의 값을 studentNo의 checked 속성값에 담아줌
-									//#로 id 값을 가져오면 첫번째 값만 가져오므로 name으로 가져온다
+		$("#checkAll").on("change", function() { //체크박스가 변경될때마다 실행
+			var isChecked = $(this).prop("checked");
+			// $(this) : 현재 이벤트가 발생한 요소
+			// prop("checked") : 해당 요소의 checked 속성값을 가져오기 
+			// $(this).prop("checked") : boolean 타입
+			// 체크박스가 선택되면 isChecked에 true가 담기고, 선택해제되면 false가 담김
+			$("input[name='studentNo']").prop("checked", isChecked);
+			// checkAll을 누르면 그 체크상태의 값을 studentNo의 checked 속성값에 담아줌
+			//#로 id 값을 가져오면 첫번째 값만 가져오므로 name으로 가져오기!
 		});
+
+		// <인쇄>
+		//체크박스 선택된 값 배열에 담아서 print.jsp로 보내고 거기서 인쇄
+
+		// 체크박스가 선택된 학생의 정보를 selectedList 배열에 담아서 그걸 print.jsp에 전달
+		$("#printBtn").on(
+				"click",
+				function() {
+					// 체크박스가 선택된 학생의 정보를 selectedList 배열에 담아서 그걸 print.jsp에 전달
+					var selectedList = [];
+					$("input[name='studentNo']:checked").each(
+							function() {
+								var studentInfo = {
+
+									studentName : $(this).closest("tr").find(
+											"td:nth-child(2)").text(),
+									studentSchoolName : $(this).closest("tr")
+											.find("td:nth-child(3)").text(),
+									studentGrade : $(this).closest("tr").find(
+											"td:nth-child(4)").text(),
+									lectureClass : $(this).closest("tr").find(
+											"td:nth-child(5)").text(),
+									studentPhone : $(this).closest("tr").find(
+											"td:nth-child(6)").text(),
+									studentRegistDate : $(this).closest("tr")
+											.find("td:nth-child(7)").text(),
+									studentGender : $(this).closest("tr").find(
+											"td:nth-child(8)").text(),
+									studentParentsName : $(this).closest("tr")
+											.find("td:nth-child(9)").text(),
+									studentParentsPhone : $(this).closest("tr")
+											.find("td:nth-child(10)").text(),
+								}
+
+								selectedList.push(studentInfo); // 체크된 학생 정보를 배열에 추가
+							});
+					console.log(selectedList);
+
+					// 선택된 체크박스 값을 print.jsp로 이동
+					var url = "print.jsp?selectedList=" + encodeURIComponent(JSON.stringify(selectedList));
+					window.location.href = url; 
+				});
+
 	});
-	
-	
+
 	//-------------------------------------------------------------------------------------------
-	//체크박스 선택된 값 배열에 담아서 print.jsp에 보내고 거기서 인쇄
-	
-	var selectedList = [];
-	$("input[name='studentNo']:checked").each(function () {
-		selectedList.push($(this).val()); //체크된 여부를 가져와서 넘겨줄 배열에 담기
-	});
-	
+
 	//----------------------------------------------------------------------------------------
-	
-	//<인쇄>
-	//$("#printBtn").on()
+
 	//-----------------------------------------------------------------------------------------
 
 	function search() {
 		//기존 테이블 행 삭제 (비워주기)
 		$("#sl tbody").empty();
-		
+
 		//체크 된 거 언체크로
-		if($("#checkAll").prop("checked") == true) //만약 체크되었다면
+		if ($("#checkAll").prop("checked") == true) //만약 체크되었다면
 			//console.log("checked");
 			$("#checkAll").prop("checked", false); //해제
 
@@ -142,13 +180,16 @@ padding: 5px 10px;
 		$
 				.ajax({
 					url : "search.jsp",
-					//넘겨줄 데이터 sdsds
+					//넘겨줄 데이터 
 					data : {
 						"studentName" : $("#studentName").val(),
 						"studentGrade" : $("#studentGrade").val(),
 						"lectureClass" : $("#lectureClass").val(),
 						"lectureName" : $("#lectureName").val(),
+
 					//날짜
+					/* 	"startDate" : $("#startDate").val(),
+						"endDate" : $("#endDate").val(), */
 
 					},
 
@@ -162,36 +203,36 @@ padding: 5px 10px;
 						for (var i = 0; i < obj.length; i++) {
 							//오브젝트의 값들을 가져와서 
 							var txt = "<tbody><tr><td><input type='checkbox' name='studentNo' id='studentNo' />"
-								//+ " </td><td> "+ obj[i].studentName
-								+ " </td><td><a href='detail.jsp?studentName="
-								+ obj[i].studentName
-								+ "'> "
-								+ obj[i].studentName //'' ""때문에 겁나 애먹었네
-								+ " </a> </td><td> "
-								+ obj[i].studentSchoolName
-								+ " </td><td> "
-								+ obj[i].studentGrade
-								+ " </td><td> "
-								+ obj[i].lectureClass
-								+ " </td><td> "
-								+ obj[i].studentPhone
-								+ " </td><td> "
-								+ obj[i].studentRegistDate.substring(0,10)
-								+ " </td><td> "
-								+ (obj[i].studentGender ? "남" : "여")
-								+ " </td><td> "
-								+ obj[i].studentParentsName
-								+ "</td><td>" + obj[i].studentParentsPhone
+									//+ " </td><td> "+ obj[i].studentName
+									+ " </td><td><a href='detail.jsp?studentName="
+									+ obj[i].studentName
+									+ "'> "
+									+ obj[i].studentName //'' ""때문에 겁나 애먹었네
+									+ " </a> </td><td> "
+									+ obj[i].studentSchoolName
+									+ " </td><td> "
+									+ obj[i].studentGrade
+									+ " </td><td> "
+									+ obj[i].lectureClass
+									+ " </td><td> "
+									+ obj[i].studentPhone
+									+ " </td><td> "
+									+ obj[i].studentRegistDate.substring(0, 8)
+									+ " </td><td> "
+									+ (obj[i].studentGender ? "남" : "여")
+									+ " </td><td> "
+									+ obj[i].studentParentsName
+									+ "</td><td>" + obj[i].studentParentsPhone
 
-								+ "</td></tr></tbody>";
-						//테이블에 붙여줘
-						$("#sl").append(txt);
+									+ "</td></tr></tbody>";
+							//테이블에 붙여줘
+							$("#sl").append(txt);
 						}
 					},
 					//에러났다면
 					error : function() {
 						alert("실패");
-					} 
+					}
 				});
 	}
 </script>
@@ -210,28 +251,24 @@ padding: 5px 10px;
 
 			<div id="student1">
 				<h5>학생 정보 조회</h5>
-				 분반 <select name="lectureClass" id="lectureClass">
+				분반 <select name="lectureClass" id="lectureClass">
 					<option value="전체">전체</option>
 					<option value="A">A반</option>
 					<option value="B">B반</option>
-					<option value="C">C반</option> 
-				</select> 
-				강의명 <select name="lectureName" id="lectureName">
+					<option value="C">C반</option>
+				</select> 강의명 <select name="lectureName" id="lectureName">
 					<option value="전체">전체</option>
 					<option value="국어">국어</option>
 					<option value="수리">수리</option>
 					<option value="영어">영어</option>
-				</select> 
-			학년	<select name="studentGrade" id="studentGrade">
+				</select> 학년 <select name="studentGrade" id="studentGrade">
 					<option value="전체">전체</option>
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
-				</select> 
-				이름 <input type="text" name="studentName" id="studentName" /> <br />
-				<br />
-				등록일 <input type="date" name="startDate" id="" /> 부터 <input
-					type="date" name="" id="" /> 까지
+				</select> 이름 <input type="text" name="studentName" id="studentName" /> <br />
+				<br /> 등록일 <input type="date" name="startDate" id="" /> 부터 <input
+					type="date" name="endDate" id="" /> 까지
 
 				<!-- <input type="button" value="조회" id="searchBtn" /> <br /> <br /> -->
 				<button type="button" id="searchBtn" class="btn btn-warning btn-xs">조회</button>
@@ -258,29 +295,31 @@ padding: 5px 10px;
 					</thead>
 
 					<%
-						ArrayList<ClassNoteVO> list = dao.studenSearchSelectAll();
-						for (ClassNoteVO vo : list) {
-						%>
-					
+					ArrayList<ClassNoteVO> list = dao.studenSearchSelectAll();
+
+					for (ClassNoteVO vo : list) {
+					%>
+
 					<tr>
 						<td><input type='checkbox' name='studentNo' id='studentNo' /></td>
-						
+
 						<!--  이름 누르면 학생 상세 페이지로 !!!!-->
 						<td><a href="detail.jsp?studentName=<%=vo.getStudentName()%>"><%=vo.getStudentName()%></a></td>
-						
+
 						<td><%=vo.getStudentSchoolName()%></td>
 						<td><%=vo.getStudentGrade()%></td>
 						<td><%=vo.getLectureClass()%></td>
 						<td><%=vo.getStudentPhone()%></td>
-						<td><%=vo.getStudentRegistDate().substring(0,10)%></td>
+						<td><%=vo.getStudentRegistDate().substring(0, 8)%></td>
 						<td><%=vo.isStudentGender() == true ? "남" : "여"%></td>
 						<td><%=vo.getStudentParentsName()%></td>
 						<td><%=vo.getStudentParentsPhone()%></td>
-
-					</tr> 
+					</tr>
 					<%
 					}
-					%> 
+					%>
+
+
 
 				</table>
 			</div>
@@ -292,8 +331,8 @@ padding: 5px 10px;
 				<!-- 부트스트랩 이용한 버튼 -->
 				<button type="button" class="btn btn-dark custom-btn-xs">PDF</button>
 				<button type="button" class="btn btn-dark custom-btn-xs">EXCEL</button>
-				<button type="button" class="btn btn-dark custom-btn-xs" id="printBtn">인쇄</button>
-
+				<button type="button" class="btn btn-dark custom-btn-xs"
+					id="printBtn">인쇄</button>
 			</div>
 		</div>
 	</div>

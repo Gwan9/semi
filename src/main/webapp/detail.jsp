@@ -70,7 +70,7 @@ img {
 				<td>생일</td>
 				<%-- <% SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); %>
 				<td><%=sdf.format(list.get(0).getStudentBirth())%></td> --%>
-				<td><%=list.get(0).getStudentBirth().substring(0,10)%></td>
+				<td><%=list.get(0).getStudentBirth().substring(0,8)%></td>
 				
 			</tr>
 			<tr>
