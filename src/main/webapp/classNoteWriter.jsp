@@ -181,7 +181,7 @@ input {
 		<div class="maincontents">
 			<label for="">학생 : </label> 
 			<input type="text" name="selectStudentList" id="selectStudentList" readonly /> 
-			<br /> <br /> 
+			<br /> <br /> w
 			<label for="">수업일자 : </label> 
 			<input type="date" name="date" id="date" /> 
 			<br /> <br /> <label for="">강의명 : </label> 
@@ -198,7 +198,7 @@ input {
 			<br />
 			<div id="alter_btn" align="right">
 				<input type="button" value="등록하기" id="update" /> 
-				<input class="btn" type="button" value="취소하기" id="cancel" />
+				<a href = "classNote.jsp"><input class="btn" type="button" value="취소하기" id="cancel" /></a>
 			</div>
 		</div>
 	</div>
