@@ -433,7 +433,6 @@ table, th, td {
 		
 
 		
-		
 	});
 </script>
 
