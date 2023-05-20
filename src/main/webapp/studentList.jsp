@@ -158,7 +158,6 @@ table {
 					var url = "print.jsp?selectedList=" + encodeURIComponent(JSON.stringify(selectedList));
 					window.location.href = url; 
 				});
-
 	});
 
 	//-------------------------------------------------------------------------------------------
