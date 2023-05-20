@@ -15,8 +15,8 @@ public class StudentDAO {
 	// 기본생성자 (JDBC의 1-3단계)
 	// 1. 환경변수
 	String driver = "oracle.jdbc.driver.OracleDriver";
-	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
-//	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
+//	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
+	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
 	String user = "scott";
 	String password = "tiger";
 	Connection conn;
@@ -409,23 +409,52 @@ public class StudentDAO {
 	return list;
 	}	
 	
-	// sgh
+	// sgh 변경 확
 		public void studentCheckInsertAll() {
 			                                      
-			
 			sb.setLength(0);
-			sb.append( "INSERT INTO STUDENT_CHECK VALUES ( STUDENT_CHECK_NO_SEQ.nextval, null, null, null,to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd'), STUDENT_NO_SEQ.nextval )" );
+			sb.append( "INSERT INTO student_check" );
+			sb.append( "SELECT STUDENT_CHECK_NO_SEQ.nextval, null, student_no, to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd')" );
+			sb.append( "FROM student" );
+			sb.append( "WHERE ROWNUM <= (SELECT COUNT(student_no) FROM student);" );
 			
 			try {
 		        pstmt = conn.prepareStatement(sb.toString());
 		        pstmt.executeUpdate();
-		    } catch (SQLIntegrityConstraintViolationException e) {
-		        // 중복 INSERT 에러 처리
-		        e.printStackTrace(); // 예외를 출력하거나 로깅
 		    } catch (SQLException e) {
-		        e.printStackTrace(); // 예외를 출력하거나 로깅
-		    } 
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		
+		// sgh 구현확인필요
+		public boolean studentCheckIsExist() {
+			boolean exist = false;
+			
+				
+	             sb.append("SELECT COUNT(student_no) ");
+	             sb.append("FROM student_check "); 
+	             sb.append("WHERE (SELECT student_check_date FROM student_check WHERE student_check_date = sysdate) IS NULL; "); 
+
+	             try {
+					pstmt = conn.prepareStatement(sb.toString());
+					rs = pstmt.executeQuery();
+					ResultSet rs = pstmt.executeQuery();
+					
+					if (rs.next()) {
+						int count = rs.getInt(1);
+						exist = count > 0;
+					}
+	             } catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+	             }
+		            // 예외 처리 코드 작성
+		        
+
+		        return exist;
+		    }
+		
 			
 
 	// studentSearch-------------------------------------------------------------------------------------------------------------------------------
@@ -1535,10 +1564,15 @@ public class StudentDAO {
 		}
 		return list;
 	}
+	//sgh sql 문 teacher_no부분 확인필요
 	public void teacherCheckInsertAll() {
+	
 		sb.setLength(0);
-		sb.append( "INSERT INTO TEACHER_CHECK VALUES ( TEACHER_CHECK_NO_SEQ.nextval, null, null, null, 2, to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd') )" );
-		// 2 -> TEACHER_NO_SEQ.nextval 조인해서 수정예정
+		sb.append( "INSERT INTO teacher_check" );
+		sb.append( "SELECT TEACHER_CHECK_NO_SEQ.nextval, null, null, null, TEACHER_NO ,  to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd') ) " );
+		sb.append( "FROM teacher " );
+		sb.append( "WHERE ROWNUM <= (SELECT COUNT(teacher_no) FROM teacher); " );
+		//seq 확인
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.executeUpdate();
@@ -1550,11 +1584,38 @@ public class StudentDAO {
 		
 	
 	}
+	// sgh 구현확인필요
+	public boolean teacherCheckIsExist() {
+		boolean exist = false;
+		
+			
+             sb.append("SELECT COUNT(teacher_no) ");
+             sb.append("FROM teacher_check "); 
+             sb.append("WHERE (SELECT teacher_check_date FROM teacher_check WHERE teacher_check_date = sysdate) IS NULL; "); 
+             try {
+				pstmt = conn.prepareStatement(sb.toString());
+				rs = pstmt.executeQuery();
+				ResultSet rs = pstmt.executeQuery();
+				
+				if (rs.next()) {
+					int count = rs.getInt(1);
+					exist = count > 0;
+				}
+             } catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+             }
+	            // 예외 처리 코드 작성
+	        
+
+	        return exist;
+	    }
+	//sgh 구현 확인 예정
 	public void teacherCheckInUpdateByName(ClassNoteVO vo) {
 		sb.setLength(0);
 		sb.append( "UPDATE TEACHER_CHECK " );
-		sb.append( "SET TEACHER_CHECK_IN = SYSDATE ) " );
-		sb.append( "WHERE TEACHER_NO IN= ( " );
+		sb.append( "SET TEACHER_CHECK_IN = SYSDATE " );
+		sb.append( "WHERE TEACHER_NO = ( " );
 		sb.append( "SELECT TEACHER_NO " );
 		sb.append( "FROM TEACHER " );
 		sb.append( "WHERE TEACHER_NAME = ? ) " );
@@ -1568,11 +1629,12 @@ public class StudentDAO {
 			e.printStackTrace();
 		}
 	}
+	//sgh 구현 확인 예정
 	public void teacherCheckOutUpdateByName(ClassNoteVO vo) {
 		sb.setLength(0);
 		sb.append( "UPDATE TEACHER_CHECK " );
-		sb.append( "SET TEACHER_CHECK_OUT = SYSDATE ) " );
-		sb.append( "WHERE TEACHER_NO IN= ( " );
+		sb.append( "SET TEACHER_CHECK_OUT = SYSDATE " );
+		sb.append( "WHERE TEACHER_NO = ( " );
 		sb.append( "SELECT TEACHER_NO " );
 		sb.append( "FROM TEACHER " );
 		sb.append( "WHERE TEACHER_NAME = ? ) " );
@@ -1586,12 +1648,15 @@ public class StudentDAO {
 			e.printStackTrace();
 		}
 	}
-	
-	public void teacherWorkTimeUpdateByNo(ClassNoteVO vo) {
+	//sgh 일한시간 sql문 확인필요
+	public void teacherWorkTimeUpdateByName(ClassNoteVO vo) {
 		sb.setLength(0);
-		sb.append( "UPDATE TEACHER_CHECK " );
-		sb.append( "SET TEACHER_WORK_TIME =  ) " );
-		sb.append( "WHERE TEACHER_CHECK_NO = ? ) " );
+		sb.append( "UPDATE TEACHER " );
+		sb.append( "SET TEACHER_WORKING_TIME = ( " );
+		sb.append( "SELECT TEACHER_CHECK_OUT - TEACHER_CHECK_IN " );
+		sb.append( "FROM TEACHER_CHECK tc " );
+		sb.append( "WHERE tc.TEACHER_NO = TEACHER.TEACHER_NO) " );
+		sb.append( "WHERE TEACHER_NAME = ? ; " );
 		
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
