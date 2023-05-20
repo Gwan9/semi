@@ -13,10 +13,11 @@
 	<h2>인쇄 페이지</h2>
 
 
+<!-- 정렬 맞추지마 >> 맞추니까 동작안해 -->
 	<%
 	//전달받은 파라미터 값 가져오기
 String selectedListStr = request.getParameter("selectedList");
-	System.out.println(selectedListStr);
+	//System.out.println(selectedListStr);
  if (selectedListStr != null) {
 
 
@@ -47,10 +48,15 @@ String selectedListStr = request.getParameter("selectedList");
 
 		// 생성한 테이블을 어딘가에 추가하거나 출력
 		document.write(tableHtml);
+		
+		
+	
 	</script>
-	<% } %>
-</body>
 
-	</table>
+<input type="button" value="인쇄" onclick="window.print()" />
+	<% } %>
+
+
+	
 </body>
 </html>

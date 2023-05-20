@@ -48,22 +48,28 @@
 	top: 40px;
 	width: 800px;
 	height: 150px;
-	background-color: #212529;
+	 background-color: #212529; 
 	color: white;
 	font-size: 90%;
-	background-color: black;
+	/* border-radius: 13px;
+	border: 2px solid #FFCA2C; */
 }
 
 #student2 {
 	position: relative;
 	top: 60px;
 	width: 800px;
-	background: skyblue;
+ 	height: 320px; 
+	 background: #212529; 
+	 overflow: auto; /* 영역을 넘어갈 때 스크롤바 생성 */
+	 overflow-x: white-space;
+	/* border-radius: 13px; */
 }
 
 table {
 	width: 750px;
 	font-size: 80%;
+
 }
 
 #searchBtn {
@@ -72,9 +78,9 @@ table {
 }
 
 #btns {
-	position: absolute;
-	left: 810px;
-	bottom: 590px;
+	position: relative;
+	left: 710px;
+	bottom: -80px;
 }
 
 .custom-btn-xs {
@@ -155,8 +161,9 @@ table {
 					console.log(selectedList);
 
 					// 선택된 체크박스 값을 print.jsp로 이동
-					var url = "print.jsp?selectedList=" + encodeURIComponent(JSON.stringify(selectedList));
-					window.location.href = url; 
+					var url = "print.jsp?selectedList="
+							+ encodeURIComponent(JSON.stringify(selectedList));
+					window.location.href = url;
 				});
 	});
 
