@@ -1,5 +1,5 @@
+<%@page import="DAO.StudentDAO"%>
 <%@page import="VO.ClassNoteVO"%>
-<%@page import="DAO.KHWDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -119,8 +119,8 @@
 						
 					if( teacher_no != null ) {
 						int teacherNoInt = Integer.parseInt(teacher_no);
-						KHWDAO dao = new KHWDAO();
-						ClassNoteVO vo = dao.teacherGetOne(teacherNoInt);
+						StudentDAO dao = new StudentDAO();
+						ClassNoteVO vo = dao.teacherSelectAllByNo(teacherNoInt);
 				%>
 		
 	<form action="teacher_modify_form_OK.jsp?teacher_no=<%= vo.getTeacherNo() %>">
