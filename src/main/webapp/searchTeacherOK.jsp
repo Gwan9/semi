@@ -8,7 +8,7 @@
 <%
 	String teacherName = request.getParameter("nameText");
 
-	// 	System.out.println(teacherName);	
+	 	System.out.println(teacherName);	
 		
 	// 	out.println(teacherName);
 	

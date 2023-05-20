@@ -218,7 +218,7 @@ table, th, td {
 			$.ajax({
 				type: "GET",
 				async: true,
-				url: "SearchTeacherOK.jsp",
+				url: "searchTeacherOK.jsp",
 				dataType: "html",
 				data: {"nameText":$("#nameText").val()},
 				success: function(response, status, request) {
@@ -243,7 +243,7 @@ table, th, td {
 					        + "<td>" + obj[i].subject + "</td>"
 					        + "<td>" + obj[i].lectureStartDate + "</td>"
 					        + "<td>" + obj[i].LectureEndDate + "</td>"
-					        + "<td><a href='DeleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+					        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
 					        + "</tr>";
 
 							// 덧붙이기
@@ -334,7 +334,7 @@ table, th, td {
 						        + "<td>" + obj[i].subject + "</td>"
 						        + "<td>" + obj[i].lectureStartDate + "</td>"
 						        + "<td>" + obj[i].lectureEndDate + "</td>"
-						        + "<td><a href='DeleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+						        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
 						        + "</tr>";
 
 								// 덧붙이기
@@ -409,7 +409,7 @@ table, th, td {
 						        + "<td>" + obj[i].subject + "</td>"
 						        + "<td>" + obj[i].lectureStartDate + "</td>"
 						        + "<td>" + obj[i].lectureEndDate + "</td>"
-						        + "<td><a href='DeleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+						        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
 						        + "</tr>";
 
 								// 덧붙이기
@@ -509,7 +509,7 @@ table, th, td {
 		<%
 			StudentDAO dao = new StudentDAO();
 				
-			ArrayList<ClassNoteVO> list = dao.teacherSelectAll();
+			ArrayList<ClassNoteVO> list = dao.teacherSelectByAll();
 			
 			for(ClassNoteVO vo : list) {
 		%>	
@@ -522,7 +522,7 @@ table, th, td {
 					<td><%= vo.getTeacherSubject() %></td>
 					<td><%= vo.getLectureStartDate() %></td>
 					<td><%= vo.getLectureEndDate() %></td>
-					<td><a href="DeleteTeacherOk.jsp?teacher_no=<%= vo.getTeacherNo() %>"><input type="button" id="delete_btn" value="삭제" /></a></td>
+					<td><a href="deleteTeacherOk.jsp?teacher_no=<%= vo.getTeacherNo() %>"><input type="button" id="delete_btn" value="삭제" /></a></td>
 				</tr>
 					
 					

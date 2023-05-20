@@ -15,8 +15,8 @@ public class StudentDAO {
 	// 기본생성자 (JDBC의 1-3단계)
 	// 1. 환경변수
 	String driver = "oracle.jdbc.driver.OracleDriver";
-	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
-//	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
+//	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
+	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
 	String user = "scott";
 	String password = "tiger";
 	Connection conn;
@@ -895,7 +895,7 @@ public class StudentDAO {
 
 	// teacher-------------------------------------------------------------------------------------------------------------------------------
 
-	// teacher 전체 출력하기 (HW)
+	// teacher 전체 출력하기
 	public ArrayList<ClassNoteVO> teacherSelectAll() {
 
 		// vo 초기화
@@ -951,7 +951,57 @@ public class StudentDAO {
 	}
 
 	// --------------------------------------------------------------------
+	
+	// teacher 전부 출력하기 (HW)
+	public ArrayList<ClassNoteVO> teacherSelectByAll() {
 
+		// vo 초기화
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		// 4. SQL문
+		sb.setLength(0); // 초기화
+		sb.append(
+				"SELECT TEACHER_NO, TEACHER_ID, TEACHER_PW, TEACHER_NAME, TEACHER_PHONE, TEACHER_EMAIL, TEACHER_PHOTO, TEACHER_HIREDATE, TEACHER_ADDRESS, TEACHER_SAL, TEACHER_SUBJECT, TEACHER_WORKTYPE, TEACHER_BIRTH, TEACHER_GENDER ");
+		sb.append("FROM TEACHER");
+
+		try {
+			// 5. 문장 객체화
+			pstmt = conn.prepareStatement(sb.toString());
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리
+			while (rs.next()) {
+				ClassNoteVO vo = new ClassNoteVO();
+
+				vo.setTeacherNo(rs.getInt("TEACHER_NO"));
+				vo.setTeacherId(rs.getString("TEACHER_ID"));
+				vo.setTeacherPw(rs.getString("TEACHER_PW"));
+				vo.setTeacherName(rs.getString("TEACHER_NAME"));
+				vo.setTeacherPhone(rs.getString("TEACHER_PHONE"));
+				vo.setTeacherEmail(rs.getString("TEACHER_EMAIL"));
+				vo.setTeacherPhoto(rs.getString("TEACHER_PHOTO"));
+				vo.setTeacherHiredate(rs.getString("TEACHER_HIREDATE"));
+				vo.setTeacherAddress(rs.getString("TEACHER_ADDRESS"));
+				vo.setTeacherSal(rs.getInt("TEACHER_SAL"));
+				vo.setTeacherSubject(rs.getString("TEACHER_SUBJECT"));
+				vo.setTeacherWorktype(rs.getString("TEACHER_WORKTYPE"));
+				vo.setTeacherBirth(rs.getString("TEACHER_BIRTH"));
+				vo.setTeacherGender(rs.getBoolean("TEACHER_GENDER"));
+
+				list.add(vo);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	// 
 	// teacher no 을 사용해서 조회하기 위한 메서드(HW)
 	public ClassNoteVO teacherSelectAllByNo(int teacherNo) {
 
@@ -1238,8 +1288,7 @@ public class StudentDAO {
 
 		// 4. SQL 문
 		sb.setLength(0); // 초기화
-		sb.append(
-				"SELECT TEACHER_NO, TEACHER_ID, TEACHER_PW, TEACHER_NAME, TEACHER_PHONE, TEACHER_EMAIL, TEACHER_PHOTO, TEACHER_HIREDATE, TEACHER_ADDRESS, TEACHER_SAL, TEACHER_SUBJECT, TEACHER_WORKTYPE, TEACHER_BIRTH, TEACHER_GENDER ");
+		sb.append("SELECT TEACHER_NO, TEACHER_ID, TEACHER_PW, TEACHER_NAME, TEACHER_PHONE, TEACHER_EMAIL, TEACHER_PHOTO, TEACHER_HIREDATE, TEACHER_ADDRESS, TEACHER_SAL, TEACHER_SUBJECT, TEACHER_WORKTYPE, TEACHER_BIRTH, TEACHER_GENDER ");
 		sb.append("FROM TEACHER ");
 		sb.append("WHERE TEACHER_SUBJECT = ? ");
 
@@ -1271,8 +1320,7 @@ public class StudentDAO {
 
 				list.add(vo);
 
-			}
-			;
+			};
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -1292,8 +1340,7 @@ public class StudentDAO {
 
 		// 4. SQL 문
 		sb.setLength(0); // 초기화
-		sb.append(
-				"SELECT TEACHER_NO, TEACHER_ID, TEACHER_PW, TEACHER_NAME, TEACHER_PHONE, TEACHER_EMAIL, TEACHER_PHOTO, TEACHER_HIREDATE, TEACHER_ADDRESS, TEACHER_SAL, TEACHER_SUBJECT, TEACHER_WORKTYPE, TEACHER_BIRTH, TEACHER_GENDER ");
+		sb.append("SELECT TEACHER_NO, TEACHER_ID, TEACHER_PW, TEACHER_NAME, TEACHER_PHONE, TEACHER_EMAIL, TEACHER_PHOTO, TEACHER_HIREDATE, TEACHER_ADDRESS, TEACHER_SAL, TEACHER_SUBJECT, TEACHER_WORKTYPE, TEACHER_BIRTH, TEACHER_GENDER ");
 		sb.append("FROM TEACHER ");
 		sb.append("WHERE TEACHER_NAME = ? ");
 
@@ -1544,10 +1591,10 @@ public class StudentDAO {
 
 		// 4. SQL 문
 		sb.setLength(0); // 초기화
-		sb.append("select * ");
+		sb.append("SELECT * ");
 		sb.append("FROM CLASS_REGISTER ");
-		sb.append("INNER JOIN STUDENT ON CLASS_REGISTER.STUDENT_NO = STUDENT.STUDENT_NO ");
-		sb.append("INNER JOIN LECTURE ON CLASS_REGISTER.LECTURE_NO = LECTURE.LECTURE_NO");
+		sb.append("FULL OUTER JOIN STUDENT ON CLASS_REGISTER.STUDENT_NO = STUDENT.STUDENT_NO ");
+		sb.append("FULL OUTER JOIN LECTURE ON CLASS_REGISTER.LECTURE_NO = LECTURE.LECTURE_NO");
 
 		try {
 			// 5. 문장 객체화
