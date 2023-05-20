@@ -45,7 +45,35 @@ public class StudentDAO {
 
 	// Note-------------------------------------------------------------------------------------------------------------------------------
 
-	public ArrayList<ClassNoteVO> studentNoteSelectAll(String lectureName) {
+
+//	public ArrayList<ClassNoteVO> studentNoteSelectAll(String lectureName) {
+//
+//	
+//	public void studentNoteInsert(String title, String tarea) {
+//		
+////		로그인 되어있는 교사의 교사번호를 담은 무언가
+//		int num = 0;
+//		
+//		sb.setLength(0);
+//		sb.append("insert into class_note values(note_no_seq.nextval, sysdate, ?, ?, ? ");
+//		
+//		try {
+//			pstmt = conn.prepareStatement(sb.toString());
+//			
+//			pstmt.setString(1, title);
+//			pstmt.setString(2, tarea);
+//			pstmt.setInt(3, num);	//수정필요
+//			
+//			pstmt.executeUpdate();
+//			
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	
+	public ArrayList<ClassNoteVO> studentNoteSelectAll(String lectureName){
+
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
 
@@ -322,7 +350,7 @@ public class StudentDAO {
 
 		// 5. 문장객체
 		try {
-<<<<<<< HEAD
+
 		pstmt = conn.prepareStatement(sb.toString());
 		pstmt.setString(1, date);
 		rs = pstmt.executeQuery();
@@ -345,28 +373,6 @@ public class StudentDAO {
 		    list.add(vo);
 		    System.out.println("LIST " + list);
 		}
-=======
-			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.setString(1, date);
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				vo = new ClassNoteVO();
-				vo.setStudentNo(rs.getInt("student_no"));
-				vo.setStudentName(rs.getString("student_name"));
-				vo.setStudentSchoolName(rs.getString("student_school_name"));
-				vo.setStudentGrade(rs.getInt("student_grade"));
-				// vo.setLectureClass(rs.getString("lecture_class"));
-				vo.setStudentPhone(rs.getString("student_phone"));
-				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
-				vo.setStudentCheckNo(rs.getInt("student_check_no"));
-				vo.setStudentCheckIn(rs.getString("student_check_in"));
-				vo.setStudentCheckLate(rs.getString("student_check_late"));
-				vo.setStudentCheckLeave(rs.getString("student_check_leave"));
-				vo.setStudentCheckDate(rs.getString("student_check_date"));
-				list.add(vo);
-				System.out.println("LIST " + list);
-			}
->>>>>>> refs/remotes/origin/KHW
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -374,17 +380,17 @@ public class StudentDAO {
 		}
 		return list;
 	}
-<<<<<<< HEAD
-	
 	
 	// STUDENT_CHECK - STUDENT 조인하고 시작날짜 끝 날짜 값으로 
 	// sgh
 	public ArrayList<ClassNoteVO> studentCheckSelectAllByDate1ToDate2(String date1, String date2){
-=======
+		return null;
+	}
+	
 
 	// STUDENT_CHECK - STUDENT 조인하고 시작날짜 끝 날짜 값으로
 	public ArrayList<ClassNoteVO> studenCheckSelectAllByDate1Date2(String date1, String date2) {
->>>>>>> refs/remotes/origin/KHW
+
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
 
@@ -429,12 +435,12 @@ public class StudentDAO {
 	}
 
 	// sgh
-<<<<<<< HEAD
+
 		public void studentCheckInsertAll() {
 			                                      
 			
 			sb.setLength(0);
-			sb.append( "INSERT INTO STUDENT_CHECK VALUES ( STUDENT_CHECK_NO_SEQ.nextval, null, null, null,to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd'), STUDENT_NO_SEQ.nextval )" );
+			sb.append("INSERT INTO STUDENT_CHECK VALUES ( STUDENT_CHECK_NO_SEQ.nextval, null, null, null,to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd'), STUDENT_NO_SEQ.nextval )" );
 			
 			try {
 		        pstmt = conn.prepareStatement(sb.toString());
@@ -445,24 +451,8 @@ public class StudentDAO {
 		    } catch (SQLException e) {
 		        e.printStackTrace(); // 예외를 출력하거나 로깅
 		    } 
-=======
-	public void studentCheckInsertAll() {
 
-		sb.setLength(0);
-		sb.append(
-				"INSERT INTO STUDENT_CHECK VALUES ( STUDENT_CHECK_NO_SEQ.nextval, null, null, null,to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd'), STUDENT_NO_SEQ.nextval )");
-
-		try {
-			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.executeUpdate();
-		} catch (SQLIntegrityConstraintViolationException e) {
-			// 중복 INSERT 에러 처리
-			e.printStackTrace(); // 예외를 출력하거나 로깅
-		} catch (SQLException e) {
-			e.printStackTrace(); // 예외를 출력하거나 로깅
->>>>>>> refs/remotes/origin/KHW
 		}
-	}
 
 	// studentSearch-------------------------------------------------------------------------------------------------------------------------------
 
@@ -1769,13 +1759,13 @@ public class StudentDAO {
 		}
 		return list;
 	}
-<<<<<<< HEAD
+
 	// sgh
-	public ArrayList<ClassNoteVO> teacherCheckSelectAllByDate1ToDate2(String date1, String date2){
-=======
+
+
 
 	public ArrayList<ClassNoteVO> teacherCheckSelectAllByDate1ToDate2(String date1, String date2) {
->>>>>>> refs/remotes/origin/KHW
+
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 		ClassNoteVO vo = null;
 
