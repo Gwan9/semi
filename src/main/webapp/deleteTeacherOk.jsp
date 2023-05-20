@@ -1,4 +1,4 @@
-<%@page import="DAO.KHWDAO"%>
+<%@page import="DAO.StudentDAO"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
 <!DOCTYPE html>
@@ -9,18 +9,27 @@
 </head>
 <body>
 	<%
-	String teacherNo = request.getParameter("teacher_no");
+		String teacherNo = request.getParameter("teacher_no");
+	
+		System.out.println(teacherNo);
 		
-			if( teacherNo != null ) {
-		int teacherNoInt = Integer.parseInt(teacherNo);
+		if( teacherNo != null ) {
+			int teacherNoInt = Integer.parseInt(teacherNo);
 		
-		KHWDAO dao = new KHWDAO();
+			StudentDAO dao = new StudentDAO();
 		
-		dao.deleteTeacher(teacherNoInt);
+			dao.teacherDeleteByNo(teacherNoInt);
+			dao.teacherDeleteBySubject(teacherNoInt);
+			dao.teacherDeleteByDate(teacherNoInt);
 		
-		response.sendRedirect("admin.jsp");
-		
-			}
+		}
 	%>
+		<script type="text/javascript">
+			
+			alert("정상적으로 삭제되었습니다.");
+			
+			window.location.href="admin.jsp";
+			
+		</script>
 </body>
 </html>

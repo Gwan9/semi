@@ -255,7 +255,7 @@ public class StudentDAO {
 	
 	// student - class_register - lecture 조인
 	
-	public ArrayList<ClassNoteVO> studentSearchSelectAll() {
+	public ArrayList<ClassNoteVO> studenSearchSelectAll() {
 
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 
@@ -324,35 +324,29 @@ public class StudentDAO {
 		sb.append("FROM STUDENT_CHECK ");
 		sb.append("INNER JOIN STUDENT ");
 		sb.append("ON STUDENT_CHECK.STUDENT_NO = STUDENT.STUDENT_NO ");
-		sb.append("INNER JOIN CLASS_REGISTER ");
-		sb.append("ON STUDENT.STUDENT_NO = CLASS_REGISTER.STUDENT_NO ");
-		sb.append("INNER JOIN LECTURE ");
-		sb.append("ON CLASS_REGISTER.LECTURE_NO = LECTURE.LECTURE_NO ");
 		sb.append("WHERE STUDENT_CHECK.STUDENT_CHECK_DATE = ? ");
-
+		
 		// 5. 문장객체
 		try {
 		pstmt = conn.prepareStatement(sb.toString());
 		pstmt.setString(1, date);
 		rs = pstmt.executeQuery();
-		
-		while (rs.next()) {
-		    System.out.println(rs.next());
+		while ( rs.next() ) {
 		    vo = new ClassNoteVO();
 		    vo.setStudentNo(rs.getInt("student_no"));
-		    vo.setStudentName(rs.getString("student_name"));
-		    vo.setStudentSchoolName(rs.getString("student_school_name"));
-		    vo.setStudentGrade(rs.getInt("student_grade"));
-		    vo.setLectureClass(rs.getString("lecture_class"));
-		    vo.setStudentPhone(rs.getString("student_phone"));
-		    vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+			vo.setStudentName(rs.getString("student_name"));
+			vo.setStudentSchoolName(rs.getString("student_school_name"));
+			vo.setStudentGrade(rs.getInt("student_grade"));
+			//vo.setLectureClass(rs.getString("lecture_class"));
+			vo.setStudentPhone(rs.getString("student_phone"));
+			vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
 		    vo.setStudentCheckNo(rs.getInt("student_check_no"));
 		    vo.setStudentCheckIn(rs.getString("student_check_in"));
 		    vo.setStudentCheckLate(rs.getString("student_check_late"));
 		    vo.setStudentCheckLeave(rs.getString("student_check_leave"));
 		    vo.setStudentCheckDate(rs.getString("student_check_date"));
 		    list.add(vo);
-		    System.out.println("LIST " + list);
+	    System.out.println("LIST " + list);
 		}
 
 		}catch (SQLException e) {			
@@ -361,11 +355,8 @@ public class StudentDAO {
 		}
 	return list;
 	}
-	
-	
 	// STUDENT_CHECK - STUDENT 조인하고 시작날짜 끝 날짜 값으로 
-	// sgh
-	public ArrayList<ClassNoteVO> studentCheckSelectAllByDate1ToDate2(String date1, String date2){
+	public ArrayList<ClassNoteVO> studenCheckSelectAllByDate1Date2(String date1, String date2){
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
 			
@@ -409,9 +400,8 @@ public class StudentDAO {
 	return list;
 	}	
 	
-	// sgh 변경 확
+	// sgh 변경 확인 필요
 		public void studentCheckInsertAll() {
-			                                      
 			sb.setLength(0);
 			sb.append( "INSERT INTO student_check" );
 			sb.append( "SELECT STUDENT_CHECK_NO_SEQ.nextval, null, student_no, to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd')" );
@@ -1533,7 +1523,7 @@ public class StudentDAO {
 		}
 		return list;
 	}
-	// sgh
+	
 	public ArrayList<ClassNoteVO> teacherCheckSelectAllByDate1ToDate2(String date1, String date2){
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 		ClassNoteVO vo = null;

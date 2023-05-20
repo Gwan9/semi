@@ -1,7 +1,7 @@
+<%@page import="DAO.StudentDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@page import="VO.ClassNoteVO"%>
-<%@page import="DAO.KHWDAO"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,8 +82,8 @@ table, th, td {
 
 				if (teacherNo != null) {
 					int teacherNoInt = Integer.parseInt(teacherNo);
-					KHWDAO dao = new KHWDAO();
-					ClassNoteVO vo = dao.teacherGetOne(teacherNoInt);
+					StudentDAO dao = new StudentDAO();
+					ClassNoteVO vo = dao.teacherSelectAllByNo(teacherNoInt);
 			%>
 
 			<div id="img">
