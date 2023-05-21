@@ -78,13 +78,67 @@ String today = sdf.format( nowDate);
 		// today버튼 클릭 시 텍스트박스 날짜의 값들 출력
 		$( "#checkToday" ).on( "click", dateToday )
 		
+		/** SET student_check_status =
+		CASE
+		WHEN student_check_type = 1 THEN '등교'
+		WHEN student_check_type = 2 THEN '지각'
+		WHEN student_check_type = 3 THEN '조퇴'
+		WHEN student_check_type = 4 THEN '결석' */
+		
+		$("#checkAll").on("change", function() { //체크박스가 변경될때마다 실행
+			var isChecked = $(this).prop("checked");
+			$("input[name='studentNo']").prop("checked", isChecked);
+		});
+		
 		// 입력 버튼 누를 시 등교 지각 조퇴 비고 값 입력
 		//$( "#btnAllCommit" ).on( "click", allCommit )
 		
+		// btnStudentCheck 클릭 시 출석정보 전달
+		
+		$("#btnStudentCheckIn").on("click", function(){
+			var studentCheckType = 1
+			
+			$( "tbody" ).empty(); 
+			 
+			$.ajax({
+				url : "studentCheck.jsp",
+				data : {
+					"studentCheckType" : studentCheckType
+				},
+				success : function(data){
+					var obj = JSON.parse( data );
+					console.log(obj);
+					for ( var i=0; i<obj.length; i++ ) {
+						var txt = "<tbody><tr><td><input type='checkbox' name='studentNo' id='studentNo' />"
+							+ obj[i].studentNo
+							+ "</td><td> "
+							+ obj[i].studentName
+							+ "</td><td> "
+							+ obj[i].studentSchoolName
+							+ "</td><td> "
+							+ obj[i].studentGrade
+							+ "</td><td> "
+							+ obj[i].lectureClass
+							+ "</td><td> "
+							+ obj[i].studentPhone
+							+ "</td><td>"
+							+ obj[i].getStudentParentsPhone
+							+ "</td><td>"
+							+ obj[i].studentStatus
+							+ "</td></tr></tbody>";
+							$("#tl1").append(txt);
+					}
+				}
+			})
+		})
+		
+		
+		
+		
 		
 		// 출근버튼 클릭 시 출근시간 update
-		
 		$( "#btnCheckIn" ).on("click",function(){
+			$( "tbody" ).empty();
 			var currentTime = new Date();
 		    var hours = currentTime.getHours().toString().padStart(2, '0');
 		    var minutes = currentTime.getMinutes().toString().padStart(2, '0');
@@ -102,7 +156,9 @@ String today = sdf.format( nowDate);
 					var obj = JSON.parse( data );
 					console.log(obj);
 					for ( var i=0; i<obj.length; i++ ) {
-						var txt = "<tbody><tr><td>" 
+						var txt = "<tbody><tr><td>"
+						+ obj[i].teacherNo
+						+ "</td><td>"
 						+ obj[i].teacherCheckIn
 						+ "</td><td>"
 						+ obj[i].teacherCheckOut
@@ -119,6 +175,7 @@ String today = sdf.format( nowDate);
 		// 퇴근버튼 클릭 시 퇴근시간 update
 		
 		$( "#btnCheckOut" ).on( "click", function(){
+			$( "tbody" ).empty();
 			var currentTime = new Date();
 		    var hours = currentTime.getHours().toString().padStart(2, '0');
 		    var minutes = currentTime.getMinutes().toString().padStart(2, '0');
@@ -135,6 +192,8 @@ String today = sdf.format( nowDate);
 					console.log(obj);
 					for ( var i=0; i<obj.length; i++ ) {
 						var txt = "<tbody><tr><td>" 
+						+ obj[i].teacherNo
+						+ "</td><td>"
 						+ obj[i].teacherCheckIn
 						+ "</td><td>"
 						+ obj[i].teacherCheckOut
@@ -155,13 +214,20 @@ String today = sdf.format( nowDate);
 
 		/* date1 ~ date2 사이 테이블 출력 */
 		function dateTodate(){
-			$( "tbody" ).empty();
+		
+			$( "tbody" ).empty(); // table 내용 지우
+			
+			
 				$.ajax({
 					url : "checkAtoB.jsp",
 					data : {
-						"date1" : $( "#date1" ).val(),
+						// 넘겨주는 데이터 :
+						"selectVal" : $( "#selectStdTec" ).val() // 학생인지 교사인지
+						"date1" : $( "#date1" ).val(), // 날짜 1 ~ 날짜 2	
 						"date2" : $( "#date2" ).val(),
-						"selectVal" : $("#selectStdTec").val()
+						"studentName" : $( "#studentName" ).val(), // 학생이름 
+						"lectureClass" : $( "#lectureClass" ).val(), // 강의명 
+						"lectureName" : $( "#lectureName" ).val() // 반이름
 					}, 
 					success : function(data){
 						
@@ -170,7 +236,7 @@ String today = sdf.format( nowDate);
 							console.log(obj);
 							for ( var i=0; i<obj.length; i++ ){
 								
-								var txt = "<tbody><tr><td>"
+								var txt = "<tbody><tr><td><input type='checkbox' name='studentNo' id='studentNo' />"
 									+ obj[i].studentNo
 									+ "</td><td> "
 									+ obj[i].studentName
@@ -185,18 +251,7 @@ String today = sdf.format( nowDate);
 									+ "</td><td>"
 									+ obj[i].getStudentParentsPhone
 									+ "</td><td>"
-									+ obj[i].studentCheckIn
-									+ "<input type='checkbox' id='studentCheckInCheckbox'/>"
-									+ "</td><td>"
-									+ obj[i].studentCheckLate
-									+ "<input type='checkbox' id='studentCheckLateCheckbox'/>"
-									+ "</td><td>"
-									+ obj[i].studentCheckLeave
-									+ "<input type='checkbox' id='studentCheckLeaveCheckbox'/>"
-									+ "</td><td>"
-									+ "<input type='text' id='studentText'/>"
-									+ "</td><td>"
-									+ "<input type='button' id='studentEdit' value='확인'/>"
+									+ obj[i].studentStatus
 									+ "</td></tr></tbody>";
 									$("#tl1").append(txt);
 							}
@@ -223,10 +278,13 @@ String today = sdf.format( nowDate);
 			$( "tbody" ).empty();
 			console.log( "dateToday 호출" );
 			$.ajax({
-				url : "checkOK.jsp", 
+				url : "CheckOk.jsp", 
 				data : {
 					"today" : $( "#today_txt" ).val(),
 					"selectVal" : $("#selectStdTec").val()
+					"studentName" : $( "#studentName" ).val(), // 학생이름 
+					"lectureClass" : $( "#lectureClass" ).val(), // 강의명 
+					"lectureName" : $( "#lectureName" ).val() // 반이름
 					
 				},
 				success : function( data ) {
@@ -235,7 +293,7 @@ String today = sdf.format( nowDate);
 						var obj = JSON.parse( data );
 						console.log( obj );
 						for ( var i=0; i<obj.length; i++ ){
-							var txt = "<tbody><tr><td>"
+							var txt = "<tbody><tr><td><input type='checkbox' name='studentNo' id='studentNo' />"
 							+ obj[i].studentNo
 							+ "</td><td> "
 							+ obj[i].studentName
@@ -250,18 +308,7 @@ String today = sdf.format( nowDate);
 							+ "</td><td>"
 							+ obj[i].getStudentParentsPhone
 							+ "</td><td>"
-							+ obj[i].studentCheckIn
-							+ "<input type='checkbox' id='studentCheckInCheckbox'/>"
-							+ "</td><td>"
-							+ obj[i].studentCheckLate
-							+ "<input type='checkbox' id='studentCheckLateCheckbox'/>"
-							+ "</td><td>"
-							+ obj[i].studentCheckLeave
-							+ "<input type='checkbox' id='studentCheckLeaveCheckbox'/>"
-							+ "</td><td>"
-							+ "<input type='text' id='studentText'/>"
-							+ "</td><td>"
-							+ "<input type='button' id='studentEdit' value='확인'/>"
+							+ obj[i].studentStatus
 							+ "</td></tr></tbody>";
 							$("#tl1").append(txt);
 						}
@@ -293,15 +340,26 @@ String today = sdf.format( nowDate);
 			})
 		}
 		
-		/* function allCommit(){
-			$.ajax({
-				url : "studentChackOk.jsp",
-				data : {
-					"" : 
-				}
+		
+		function studentCheck(){
+			$("#sl tbody").empty();
+
+			//체크 된 거 언체크로
+			if ($("#checkAll").prop("checked") == true) //만약 체크되었다면
+				//console.log("checked");
+				$("#checkAll").prop("checked", false); //해제
+			
 				
+			$.ajax({
+				url : "studentCheck.jsp",
+				data : {
+					"today" : $( "#today_txt" ).val(),
+					"checkStatus" : 
+					
+					
+
 			})
-		} */
+		}
 		
 		
 		
@@ -362,6 +420,11 @@ String today = sdf.format( nowDate);
 		<option value="3">CCC</option>
 	</select>
 	
+	<input type="button" name="btnStudentStatus" id="btnStudentCheckIn" value="등교">
+	<input type="button" name="btnStudentStatus" id="btnStudentCheckLate" value="지각">
+	<input type="button" name="btnStudentStatus" id="btnStudentCheckLeave" value="조퇴">
+	<input type="button" name="btnStudentStatus" id="btnStudentCheckAbsence" value="결석">
+	
 	<table class="table table-dark table-striped" id="tl1">
 	<thead>
 		<tr>
@@ -372,10 +435,7 @@ String today = sdf.format( nowDate);
 			<th>강의반</th>
 			<th>전화번호</th>
 			<th>학부모전화번호</th>
-			<th>등교</th>
-			<th>지각</th>
-			<th>조퇴</th>
-			<th>비고</th>
+			<th>출결상태</th>
 			<th><input type="button" id="btnAllCommit" value="전체입력" /></th>
 		</tr>
 	</thead>
