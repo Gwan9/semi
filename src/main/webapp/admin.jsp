@@ -138,22 +138,12 @@ table, th, td {
 		});
 		
 		
-		// 등록 버튼을 누르면 빈 페이지가 나오는 걸로
-		$("#register_btn").on("click", function() {
-			window.location.href = "teacher_regist_form.jsp";
-		}) // register 버튼 end
-		
 		
 		$("#teacher_or_student").change(function() {
 			
-			// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
-			var tableHeight = $('#table_result').outerHeight();
-			var containerHeight = tableHeight + 270;
-			$('#container').css('height', containerHeight + 'px');
+			$("#table_result tr:not(:first-child)").remove();
 			
-			
-			
-			
+			// 강사 탭을 선택했을 경우
 			if($("#teacher_or_student").val() == "teacher_select") {
 				// 테스트 콘솔
 				console.log("교사 탭이 선택됨.");
@@ -163,6 +153,7 @@ table, th, td {
 				$("#msg1").css("visibility", "hidden");
 				// 표 표시하기
 				$("#container").css("visibility", "visible");
+				
 				
 				// 표 내용 바꾸기
 				$("#labelName").text("강사명 : ");
@@ -175,147 +166,17 @@ table, th, td {
 				$("#th6").text("담당 강의명");
 				
 				
-			} else if ($("#teacher_or_student").val() == "student_select") {
-				// 테스트 콘솔
-				console.log("학생 탭이 선택됨.");
-				console.log($("option[value='student_select']").text());
-				
-				// 안내 메세지 숨기기
-				$("#msg1").css("visibility", "hidden");
-				// 표 표시하기
-				$("#container").css("visibility", "visible");
-				
-				// 표 내용 바꾸기
-				$("#labelName").text("학생명 : ");
-				
-				$("#th1").text("학생번호");
-				$("#th2").text("학생명");
-				$("#th3").text("연락처");
-				$("#th4").text("학부모 연락처");
-				$("#th5").text("학교명");
-				$("#th6").text("수강반");
-				
-				
-			} else {
-				// 안내 메세지 표시하기
-				$("#msg1").css("visibility", "visible");
-				// 표 숨기기
-				$("#container").css("visibility", "hidden");
-			}
-		})
-		
-		
-		$("#search").on("click", function() {
-			
-			// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
-			var tableHeight = $('#table_result').outerHeight();
-			var containerHeight = tableHeight + 270;
-			$('#container').css('height', containerHeight + 'px');
-			
-			
-			// 클릭하면 검색 결과가 나오게
-			
-			$.ajax({
-				type: "GET",
-				async: true,
-				url: "searchTeacherOK.jsp",
-				dataType: "html",
-				data: {"nameText":$("#nameText").val()},
-				success: function(response, status, request) {
-// 					console.log("성공");
-// 					console.log(response);
-
-					var obj = JSON.parse(response);
-					
-					console.log(obj);
-					
-					// 2. 버튼 클릭 시 tr의 태그 자손으로 출력
-					var txt = null;
-					
-					for(var i=0; i<obj.length; i++) {
-						
-						txt = "<tr>"
-					        + "<th><a href='teacher_detail.jsp?teacher_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
-					        + "<td>" + obj[i].name + "</td>"
-					        + "<td>" + obj[i].id + "</td>"
-					        + "<td>" + obj[i].pw + "</td>"
-					        + "<td>" + obj[i].phone + "</td>"
-					        + "<td>" + obj[i].subject + "</td>"
-					        + "<td>" + obj[i].lectureStartDate + "</td>"
-					        + "<td>" + obj[i].LectureEndDate + "</td>"
-					        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
-					        + "</tr>";
-
-							// 덧붙이기
-							$("#table_result").append(txt);
-					}
-	
-				},
-				error: function(response, status, request) {
-					console.log("실패");
-				}
-	
-			}); // ajax end
-			
-		}); // search 버튼 클릭했을 때
-		
-		
-		
-		
-		// 초기화 버튼을 눌렀을 때 table의 tr 태그는 모두 삭제 (첫 행은 제외) + 달력 안에 값도 초기화
-		$("#reset").on("click", function() {
-			
-			$("#table_result tr:not(:first-child)").remove();
-			$("#registDateStart, #registDateEnd").val("");
-			$("#labelName").val("");
-			
-			// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
-			var tableHeight = $('#table_result').outerHeight();
-			var containerHeight = tableHeight + 270;
-			$('#container').css('height', containerHeight + 'px');
-			
-		})
-		
-		
-		
-		
-		$("#lectureSelect").change(function() {
-			// 강의명을 선택한 경우, 그 강의명에 해당하는 행을 출력한다.
-			
-// 			console.log("과목 선택");
-// 			console.log($("option[value='lectureEng']").text());
-
-			// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
-			var tableHeight = $('#table_result').outerHeight();
-			var containerHeight = tableHeight + 320;
-			$('#container').css('height', containerHeight + 'px');
-			
-			
-			// requestData 를 담을 객체를 만들고, 선택하는 조건에 따라 반복문을 만들어보자
-			
-			var requestData = {};
-			
-			
-			if ($("#lectureSelect").val() == "lectureKor") {
-				requestData.lectureSelect = $("option[value='lectureKor']").text();
-			} else if ($("#lectureSelect").val() == "lectureEng") {
-				requestData.lectureSelect = $("option[value='lectureEng']").text();
-			} else if ($("#lectureSelect").val() == "lectureMath") {
-				requestData.lectureSelect = $("option[value='lectureMath']").text();
-			}
-				
-				// 선택하면 검색 결과가 나오게
 				
 				$.ajax({
 					type: "GET",
 					async: true,
-					url: "SearchTeacherSubjectOk.jsp",
+					url: "searchTeacherAllOK.jsp",
 					dataType: "html",
-					data: requestData, // requestData를 담은 객체
 					success: function(response, status, request) {
 //	 					console.log("성공");
 //	 					console.log(response);
-
+						
+						
 						var obj = JSON.parse(response);
 						
 						console.log(obj);
@@ -333,12 +194,17 @@ table, th, td {
 						        + "<td>" + obj[i].phone + "</td>"
 						        + "<td>" + obj[i].subject + "</td>"
 						        + "<td>" + obj[i].lectureStartDate + "</td>"
-						        + "<td>" + obj[i].lectureEndDate + "</td>"
+						        + "<td>" + obj[i].LectureEndDate + "</td>"
 						        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
 						        + "</tr>";
 
 								// 덧붙이기
 								$("#table_result").append(txt);
+								
+								// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+								var tableHeight = $('#table_result').outerHeight();
+								var containerHeight = tableHeight + 270;
+								$('#container').css('height', containerHeight + 'px');
 						}
 		
 					},
@@ -347,85 +213,557 @@ table, th, td {
 					}
 		
 				}); // ajax end
-			
-		}) // end
-	
-		
-		
-		// 기간을 넣어서 조회하려면 어떻게?
-		// 각 달력에 일자를 선택한 경우, 그 결과 값을 checkDate() 함수에 넘겨, 그리고 결과가 두개가 있어야지만 콘솔에 메세지를 출력할 수 있도록 if 문 전개하자.
-		
-		var registDateStart = false; // registDateStart 이 눌렸는지, 안 눌렸는 지 boolean  형태로 넣기
-		var registDateEnd = false;
-		
-		$("#registDateStart").change(function() {
-			console.log($("#registDateStart").val());
-			registDateStart = true;
-			checkDate();
-		});
-		
-		$("#registDateEnd").change(function() {
-			console.log($("#registDateEnd").val());
-			registDateEnd = true;
-			checkDate();
-		});;
-		
-// 		var registDateStartV = $("#registDateStart").val();
-// 		var registDateEnd = $("#registDateEnd").val();
-		
-		function checkDate() {
-
-				// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
-				var tableHeight = $('#table_result').outerHeight();
-				var containerHeight = tableHeight + 650;
-				$('#container').css('height', containerHeight + 'px');
 				
-			if(registDateStart == true && registDateEnd == true) {
-				console.log("달력 모두 선택됨.");
+				
+				
+				$("#search").on("click", function() {
+					
+					// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+					var tableHeight = $('#table_result').outerHeight();
+					var containerHeight = tableHeight + 270;
+					$('#container').css('height', containerHeight + 'px');
+					
+					$("#table_result tr:not(:first-child)").remove();
+					
+					
+					// 클릭하면 검색 결과가 나오게
+					
+					$.ajax({
+						type: "GET",
+						async: true,
+						url: "searchTeacherOK.jsp",
+						dataType: "html",
+						data: {"nameText":$("#nameText").val()},
+						success: function(response, status, request) {
+//		 					console.log("성공");
+//		 					console.log(response);
+							
+							
+							var obj = JSON.parse(response);
+							
+							console.log(obj);
+							
+							// 2. 버튼 클릭 시 tr의 태그 자손으로 출력
+							var txt = null;
+							
+							for(var i=0; i<obj.length; i++) {
+								
+								txt = "<tr>"
+							        + "<th><a href='teacher_detail.jsp?teacher_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
+							        + "<td>" + obj[i].name + "</td>"
+							        + "<td>" + obj[i].id + "</td>"
+							        + "<td>" + obj[i].pw + "</td>"
+							        + "<td>" + obj[i].phone + "</td>"
+							        + "<td>" + obj[i].subject + "</td>"
+							        + "<td>" + obj[i].lectureStartDate + "</td>"
+							        + "<td>" + obj[i].LectureEndDate + "</td>"
+							        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+							        + "</tr>";
+
+									// 덧붙이기
+									$("#table_result").append(txt);
+							}
+							
+							// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+							var tableHeight = $('#table_result').outerHeight();
+							var containerHeight = tableHeight + 320;
+							$('#container').css('height', containerHeight + 'px');
+							
+			
+						},
+						error: function(response, status, request) {
+							console.log("실패");
+						}
+			
+					}); // ajax end
+					
+				}); // search 버튼 클릭했을 때
+				
+				
+				$("#lectureSelect").change(function() {
+					// 강의명을 선택한 경우, 그 강의명에 해당하는 행을 출력한다.
+					
+//		 			console.log("과목 선택");
+//		 			console.log($("option[value='lectureEng']").text());
+
+					$("#table_result tr:not(:first-child)").remove();
+					
+					// requestData 를 담을 객체를 만들고, 선택하는 조건에 따라 반복문을 만들어보자
+					
+					var requestData = {};
+					
+					
+					if ($("#lectureSelect").val() == "lectureKor") {
+						requestData.lectureSelect = $("option[value='lectureKor']").text();
+					} else if ($("#lectureSelect").val() == "lectureEng") {
+						requestData.lectureSelect = $("option[value='lectureEng']").text();
+					} else if ($("#lectureSelect").val() == "lectureMath") {
+						requestData.lectureSelect = $("option[value='lectureMath']").text();
+					}
+						
+						// 선택하면 검색 결과가 나오게
+						
+						$.ajax({
+							type: "GET",
+							async: true,
+							url: "SearchTeacherSubjectOk.jsp",
+							dataType: "html",
+							data: requestData, // requestData를 담은 객체
+							success: function(response, status, request) {
+//			 					console.log("성공");
+//			 					console.log(response);
+
+								var obj = JSON.parse(response);
+								
+								console.log(obj);
+								
+								// 2. 버튼 클릭 시 tr의 태그 자손으로 출력
+								var txt = null;
+								
+								for(var i=0; i<obj.length; i++) {
+									
+									txt = "<tr>"
+								        + "<th><a href='teacher_detail.jsp?teacher_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
+								        + "<td>" + obj[i].name + "</td>"
+								        + "<td>" + obj[i].id + "</td>"
+								        + "<td>" + obj[i].pw + "</td>"
+								        + "<td>" + obj[i].phone + "</td>"
+								        + "<td>" + obj[i].subject + "</td>"
+								        + "<td>" + obj[i].lectureStartDate + "</td>"
+								        + "<td>" + obj[i].lectureEndDate + "</td>"
+								        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+								        + "</tr>";
+
+										// 덧붙이기
+										$("#table_result").append(txt);
+										
+								}
+								
+								// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+								var tableHeight = $('#table_result').outerHeight();
+								var containerHeight = tableHeight + 320;
+								$('#container').css('height', containerHeight + 'px');
+				
+							},
+							error: function(response, status, request) {
+								console.log("실패");
+							}
+				
+						}); // ajax end
+					
+				}) // end
+			
+				
+				
+				// 기간을 넣어서 조회하려면 어떻게?
+				// 각 달력에 일자를 선택한 경우, 그 결과 값을 checkDate() 함수에 넘겨, 그리고 결과가 두개가 있어야지만 콘솔에 메세지를 출력할 수 있도록 if 문 전개하자.
+				
+				var registDateStart = false; // registDateStart 이 눌렸는지, 안 눌렸는 지 boolean  형태로 넣기
+				var registDateEnd = false;
+				
+				$("#registDateStart").change(function() {
+					console.log($("#registDateStart").val());
+					registDateStart = true;
+					checkDate();
+				});
+				
+				$("#registDateEnd").change(function() {
+					console.log($("#registDateEnd").val());
+					registDateEnd = true;
+					checkDate();
+				});;
+				
+//		 		var registDateStartV = $("#registDateStart").val();
+//		 		var registDateEnd = $("#registDateEnd").val();
+				
+				function checkDate() {
+
+						// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+						var tableHeight = $('#table_result').outerHeight();
+						var containerHeight = tableHeight + 650;
+						$('#container').css('height', containerHeight + 'px');
+						
+						$("#table_result tr:not(:first-child)").remove();
+						
+					if(registDateStart == true && registDateEnd == true) {
+						console.log("달력 모두 선택됨.");
+						
+						$.ajax({
+							type: "GET",
+							async: true,
+							url: "SearchTeacherDateOK.jsp",
+							dataType: "html",
+							data: {"registDateStart":$("#registDateStart").val(),"registDateEnd":$("#registDateEnd").val()},
+							success: function(response, status, request) {
+//		 						console.log("성공");
+								
+								var obj = JSON.parse(response);
+								
+								console.log(obj);
+								
+								var txt = null;
+								
+								for(var i=0; i<obj.length; i++) {
+									
+									txt = "<tr>"
+								        + "<th><a href='teacher_detail.jsp?teacher_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
+								        + "<td>" + obj[i].name + "</td>"
+								        + "<td>" + obj[i].id + "</td>"
+								        + "<td>" + obj[i].pw + "</td>"
+								        + "<td>" + obj[i].phone + "</td>"
+								        + "<td>" + obj[i].subject + "</td>"
+								        + "<td>" + obj[i].lectureStartDate + "</td>"
+								        + "<td>" + obj[i].lectureEndDate + "</td>"
+								        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+								        + "</tr>";
+
+										// 덧붙이기
+										$("#table_result").append(txt);
+								}
+								
+								
+							},
+							error: function(response, status, request) {
+								console.log("실패");
+							}
+						}); // ajax end
+						
+						
+					}
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				// 학생 탭을 선택했다면
+			} else if ($("#teacher_or_student").val() == "student_select") {
+				// 테스트 콘솔
+				console.log("학생 탭이 선택됨.");
+				console.log($("option[value='student_select']").text());
+				
+				// 안내 메세지 숨기기
+				$("#msg1").css("visibility", "hidden");
+				// 표 표시하기
+				$("#container").css("visibility", "visible");
+				
+				$("#table_result tr:not(:first-child)").remove();
+				
+				// 표 내용 바꾸기
+				$("#labelName").text("학생명 : ");
+				
+				$("#th1").text("학생번호");
+				$("#th2").text("학생명");
+				$("#th3").text("연락처");
+				$("#th4").text("학부모 연락처");
+				$("#th5").text("학교명");
+				$("#th6").text("수강반");
+				
 				
 				$.ajax({
 					type: "GET",
 					async: true,
-					url: "SearchTeacherDateOK.jsp",
+					url: "searchStudentAllOK.jsp",
 					dataType: "html",
-					data: {"registDateStart":$("#registDateStart").val(),"registDateEnd":$("#registDateEnd").val()},
 					success: function(response, status, request) {
-// 						console.log("성공");
+//	 					console.log("성공");
+//	 					console.log(response);
 						
 						var obj = JSON.parse(response);
 						
 						console.log(obj);
 						
+						// 2. 버튼 클릭 시 tr의 태그 자손으로 출력
 						var txt = null;
 						
 						for(var i=0; i<obj.length; i++) {
 							
 							txt = "<tr>"
-						        + "<th><a href='teacher_detail.jsp?teacher_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
+						        + "<th><a href='student_detail.jsp?student_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
 						        + "<td>" + obj[i].name + "</td>"
-						        + "<td>" + obj[i].id + "</td>"
-						        + "<td>" + obj[i].pw + "</td>"
 						        + "<td>" + obj[i].phone + "</td>"
-						        + "<td>" + obj[i].subject + "</td>"
+						        + "<td>" + obj[i].parentsPhone + "</td>"
+						        + "<td>" + obj[i].schoolName + "</td>"
+						        + "<td>" + obj[i].lectureName + "</td>"
 						        + "<td>" + obj[i].lectureStartDate + "</td>"
 						        + "<td>" + obj[i].lectureEndDate + "</td>"
-						        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+						        + "<td><a href='deleteStudentOk.jsp?student_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
 						        + "</tr>";
 
 								// 덧붙이기
 								$("#table_result").append(txt);
+								
+								// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+								var tableHeight = $('#table_result').outerHeight();
+								var containerHeight = tableHeight + 270;
+								$('#container').css('height', containerHeight + 'px');
 						}
-						
-						
+		
 					},
 					error: function(response, status, request) {
 						console.log("실패");
 					}
+		
 				}); // ajax end
 				
 				
+				
+				
+				//    수정 start
+				
+				$("#search").on("click", function() {
+					
+					// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+					var tableHeight = $('#table_result').outerHeight();
+					var containerHeight = tableHeight + 270;
+					$('#container').css('height', containerHeight + 'px');
+					
+					$("#table_result tr:not(:first-child)").remove();
+					
+					
+					// 클릭하면 검색 결과가 나오게
+					
+					$.ajax({
+						type: "GET",
+						async: true,
+						url: "searchStudentOK.jsp",
+						dataType: "html",
+						data: {"nameText":$("#nameText").val()},
+						success: function(response, status, request) {
+//		 					console.log("성공");
+//		 					console.log(response);
+							
+							var obj = eval("(" + response + ")");
+							
+							console.log(obj);
+							
+							// 2. 버튼 클릭 시 tr의 태그 자손으로 출력
+							var txt = null;
+							
+							for(var i=0; i<obj.length; i++) {
+								
+								txt = "<tr>"
+							        + "<th><a href='student_detail.jsp?student_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
+							        + "<td>" + obj[i].name + "</td>"
+							        + "<td>" + obj[i].phone + "</td>"
+							        + "<td>" + obj[i].parentsPhone + "</td>"
+							        + "<td>" + obj[i].schoolName + "</td>"
+							        + "<td>" + obj[i].lectureName + "</td>"
+							        + "<td>" + obj[i].lectureStartDate + "</td>"
+							        + "<td>" + obj[i].lectureEndDate + "</td>"
+							        + "<td><a href='deleteStudentOk.jsp?student_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+							        + "</tr>";
+
+									// 덧붙이기
+									$("#table_result").append(txt);
+							}
+			
+						},
+						error: function(response, status, request) {
+							console.log("실패");
+						}
+			
+					}); // ajax end
+					
+				}); // search 버튼 클릭했을 때
+				
+				
+				$("#lectureSelect").change(function() {
+					// 강의명을 선택한 경우, 그 강의명에 해당하는 행을 출력한다.
+					
+//		 			console.log("과목 선택");
+//		 			console.log($("option[value='lectureEng']").text());
+
+					// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+					var tableHeight = $('#table_result').outerHeight();
+					var containerHeight = tableHeight + 320;
+					$('#container').css('height', containerHeight + 'px');
+					
+					
+					$("#table_result tr:not(:first-child)").remove();
+					
+					// requestData 를 담을 객체를 만들고, 선택하는 조건에 따라 반복문을 만들어보자
+					
+					var requestData = {};
+					
+					
+					if ($("#lectureSelect").val() == "lectureKor") {
+						requestData.lectureSelect = $("option[value='lectureKor']").text();
+					} else if ($("#lectureSelect").val() == "lectureEng") {
+						requestData.lectureSelect = $("option[value='lectureEng']").text();
+					} else if ($("#lectureSelect").val() == "lectureMath") {
+						requestData.lectureSelect = $("option[value='lectureMath']").text();
+					}
+						
+						// 선택하면 검색 결과가 나오게
+						
+						$.ajax({
+							type: "GET",
+							async: true,
+							url: "SearchTeacherSubjectOk.jsp",
+							dataType: "html",
+							data: requestData, // requestData를 담은 객체
+							success: function(response, status, request) {
+//			 					console.log("성공");
+//			 					console.log(response);
+
+								var obj = JSON.parse(response);
+								
+								console.log(obj);
+								
+								// 2. 버튼 클릭 시 tr의 태그 자손으로 출력
+								var txt = null;
+								
+								for(var i=0; i<obj.length; i++) {
+									
+									txt = "<tr>"
+								        + "<th><a href='teacher_detail.jsp?teacher_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
+								        + "<td>" + obj[i].name + "</td>"
+								        + "<td>" + obj[i].id + "</td>"
+								        + "<td>" + obj[i].pw + "</td>"
+								        + "<td>" + obj[i].phone + "</td>"
+								        + "<td>" + obj[i].subject + "</td>"
+								        + "<td>" + obj[i].lectureStartDate + "</td>"
+								        + "<td>" + obj[i].lectureEndDate + "</td>"
+								        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+								        + "</tr>";
+
+										// 덧붙이기
+										$("#table_result").append(txt);
+								}
+				
+							},
+							error: function(response, status, request) {
+								console.log("실패");
+							}
+				
+						}); // ajax end
+					
+				}) // end
+			
+				
+				
+				// 기간을 넣어서 조회하려면 어떻게?
+				// 각 달력에 일자를 선택한 경우, 그 결과 값을 checkDate() 함수에 넘겨, 그리고 결과가 두개가 있어야지만 콘솔에 메세지를 출력할 수 있도록 if 문 전개하자.
+				
+				var registDateStart = false; // registDateStart 이 눌렸는지, 안 눌렸는 지 boolean  형태로 넣기
+				var registDateEnd = false;
+				
+				$("#registDateStart").change(function() {
+					console.log($("#registDateStart").val());
+					registDateStart = true;
+					checkDate();
+				});
+				
+				$("#registDateEnd").change(function() {
+					console.log($("#registDateEnd").val());
+					registDateEnd = true;
+					checkDate();
+				});;
+				
+//		 		var registDateStartV = $("#registDateStart").val();
+//		 		var registDateEnd = $("#registDateEnd").val();
+				
+				function checkDate() {
+
+						// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+						var tableHeight = $('#table_result').outerHeight();
+						var containerHeight = tableHeight + 650;
+						$('#container').css('height', containerHeight + 'px');
+						
+						$("#table_result tr:not(:first-child)").remove();
+						
+					if(registDateStart == true && registDateEnd == true) {
+						console.log("달력 모두 선택됨.");
+						
+						$.ajax({
+							type: "GET",
+							async: true,
+							url: "SearchTeacherDateOK.jsp",
+							dataType: "html",
+							data: {"registDateStart":$("#registDateStart").val(),"registDateEnd":$("#registDateEnd").val()},
+							success: function(response, status, request) {
+//		 						console.log("성공");
+								
+								var obj = JSON.parse(response);
+								
+								console.log(obj);
+								
+								var txt = null;
+								
+								for(var i=0; i<obj.length; i++) {
+									
+									txt = "<tr>"
+								        + "<th><a href='teacher_detail.jsp?teacher_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
+								        + "<td>" + obj[i].name + "</td>"
+								        + "<td>" + obj[i].id + "</td>"
+								        + "<td>" + obj[i].pw + "</td>"
+								        + "<td>" + obj[i].phone + "</td>"
+								        + "<td>" + obj[i].subject + "</td>"
+								        + "<td>" + obj[i].lectureStartDate + "</td>"
+								        + "<td>" + obj[i].lectureEndDate + "</td>"
+								        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+								        + "</tr>";
+
+										// 덧붙이기
+										$("#table_result").append(txt);
+								}
+								
+								
+							},
+							error: function(response, status, request) {
+								console.log("실패");
+							}
+						}); // ajax end
+						
+						
+					}
+				}
+				
+
+				
+				//   수정 end
+				
+			} else {
+				// 안내 메세지 표시하기
+				$("#msg1").css("visibility", "visible");
+				// 표 숨기기
+				$("#container").css("visibility", "hidden");
 			}
-		}
+		})
+		
+		
+		// 등록 버튼을 누르면 빈 페이지가 나오는 걸로
+		$("#register_btn").on("click", function() {
+			if($("#teacher_or_student").val() == "teacher_select") {
+				window.location.href = "teacher_regist_form.jsp";
+			} else if($("#teacher_or_student").val() == "student_select") {
+				window.location.href = "student_regist_form.jsp";
+			}
+		}) // register 버튼 end
+		
+		
+
+		
+		// 초기화 버튼을 눌렀을 때 table의 tr 태그는 모두 삭제 (첫 행은 제외) + 달력 안에 값도 초기화
+		$("#reset").on("click", function() {
+			
+			$("#table_result tr:not(:first-child)").remove();
+			$("#registDateStart, #registDateEnd").val("");
+			$("#labelName").val("");
+			
+			// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+			var tableHeight = $('#table_result').outerHeight();
+			var containerHeight = tableHeight + 270;
+			$('#container').css('height', containerHeight + 'px');
+			
+		})
+		
+		
 
 		
 // 		-----------------------------------------------------------------------------------------
@@ -505,32 +843,8 @@ table, th, td {
 						<th>강의종료일</th>
 						<th>비고</th>
 					</tr>
-		<%
-			StudentDAO dao = new StudentDAO();
-				
-			ArrayList<ClassNoteVO> list = dao.teacherSelectByAll();
-			
-			for(ClassNoteVO vo : list) {
-		%>	
-				<tr>
-					<th><a href="teacher_detail.jsp?teacher_no=<%= vo.getTeacherNo() %>"><%= vo.getTeacherNo() %></a></th>
-					<td id="tableName"><%= vo.getTeacherName() %></td>
-					<td><%= vo.getTeacherId() %></td>
-					<td><%= vo.getTeacherPw() %></td>
-					<td><%= vo.getTeacherPhone() %></td>
-					<td><%= vo.getTeacherSubject() %></td>
-					<td><%= vo.getLectureStartDate() %></td>
-					<td><%= vo.getLectureEndDate() %></td>
-					<td><a href="deleteTeacherOk.jsp?teacher_no=<%= vo.getTeacherNo() %>"><input type="button" id="delete_btn" value="삭제" /></a></td>
-				</tr>
 					
 					
-		
-		<%
-			}
-			
-		%>
-
 					</table>
 				</div>
 			</div>
@@ -579,7 +893,7 @@ table, th, td {
 						</tr>
 						
 					<%
-					dao = new StudentDAO();
+					StudentDAO dao = new StudentDAO();
 					
 					ArrayList<ClassNoteVO> accountingList = dao.teacherSelectAllAccounting();
 					

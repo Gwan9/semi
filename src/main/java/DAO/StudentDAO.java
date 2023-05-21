@@ -484,7 +484,8 @@ public class StudentDAO {
 
 		// 아니 디비에서는 되는데 대체 뭐가 문제야 ==> AND student_name=? 이 쿼리문을 빼먹어서
 		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
-		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append(
+				"l.lecture_class , l.lecture_name, s.student_phone, s.student_regist_date, s.student_gender, l.lecture_start_date, l.lecture_end_date, ");
 		sb.append("s.student_parents_name, s.student_parents_phone ");
 		sb.append("FROM student s, class_register c, lecture l ");
 		sb.append("WHERE s.student_no = c.student_no ");
@@ -506,14 +507,17 @@ public class StudentDAO {
 
 				vo.setStudentNo(rs.getInt("student_no"));
 				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
 				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setLectureName(rs.getString("lecture_name"));
 				vo.setStudentGrade(rs.getInt("student_grade"));
 				vo.setLectureClass(rs.getString("lecture_class"));
-				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setLectureStartDate(rs.getString("lecture_start_date"));
+				vo.setLectureEndDate(rs.getString("lecture_end_date"));
 				vo.setStudentRegistDate(rs.getString("student_regist_date"));
 				vo.setStudentGender(rs.getBoolean("student_gender"));
 				vo.setStudentParentsName(rs.getString("student_parents_name"));
-				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
 
 				list.add(vo);
 
@@ -893,6 +897,66 @@ public class StudentDAO {
 		return list;
 	}
 
+	// 학생 번호로 상세정보 검색
+	public ArrayList<ClassNoteVO> studentSearchSelectAllByNo(int studentNo) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성 (조인)
+		sb.setLength(0);
+
+		sb.append(
+				"SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, s.student_email, s.student_birth, s.student_addrs, ");
+		sb.append("l.lecture_class, s.student_phone, s.student_regist_date, s.student_gender, s.student_photo, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s ");
+		sb.append("JOIN class_register c ON s.student_no = c.student_no ");
+		sb.append("JOIN lecture l ON c.lecture_no = l.lecture_no ");
+		sb.append("WHERE s.student_no = ? ");
+
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, studentNo); // bind 변수 값 주기
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(studentNo); // 번호
+				vo.setStudentName(rs.getString("student_name")); // 이름
+				vo.setStudentGrade(rs.getInt("student_grade")); // 학년
+				vo.setStudentSchoolName(rs.getString("student_school_name")); // 학교명
+				vo.setStudentPhone(rs.getString("student_phone")); // 휴대전화
+				vo.setStudentGender(rs.getBoolean("student_gender")); // 성별
+				vo.setStudentEmail(rs.getString("student_email"));
+				vo.setStudentBirth(rs.getString("student_birth"));// 생년월일
+				vo.setStudentRegistDate(rs.getString("student_regist_date")); // 등록일
+				vo.setStudentParentsName(rs.getString("student_parents_name")); // 학부모 이름
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone")); // 학부모 전화
+				vo.setLectureClass(rs.getString("lecture_class")); // 수강반
+				vo.setStudentAddrs(rs.getString("student_addrs"));// 주소
+				vo.setStudentPhoto(rs.getString("student_photo"));
+				
+				
+				list.add(vo);
+
+				System.out.println("dao 에서의 값 : " + vo);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
 	// teacher-------------------------------------------------------------------------------------------------------------------------------
 
 	// teacher 전체 출력하기
@@ -951,7 +1015,7 @@ public class StudentDAO {
 	}
 
 	// --------------------------------------------------------------------
-	
+
 	// teacher 전부 출력하기 (HW)
 	public ArrayList<ClassNoteVO> teacherSelectByAll() {
 
@@ -960,7 +1024,8 @@ public class StudentDAO {
 
 		// 4. SQL문
 		sb.setLength(0); // 초기화
-		sb.append("SELECT TEACHER_NO, TEACHER_ID, TEACHER_PW, TEACHER_NAME, TEACHER_PHONE, TEACHER_EMAIL, TEACHER_PHOTO, TEACHER_HIREDATE, TEACHER_ADDRESS, TEACHER_SAL, TEACHER_SUBJECT, TEACHER_WORKTYPE, TEACHER_BIRTH, TEACHER_GENDER ");
+		sb.append(
+				"SELECT TEACHER_NO, TEACHER_ID, TEACHER_PW, TEACHER_NAME, TEACHER_PHONE, TEACHER_EMAIL, TEACHER_PHOTO, TEACHER_HIREDATE, TEACHER_ADDRESS, TEACHER_SAL, TEACHER_SUBJECT, TEACHER_WORKTYPE, TEACHER_BIRTH, TEACHER_GENDER ");
 		sb.append("FROM TEACHER");
 
 		try {
@@ -1000,7 +1065,7 @@ public class StudentDAO {
 		return list;
 	}
 
-	// 
+	//
 	// teacher no 을 사용해서 조회하기 위한 메서드(HW)
 	public ClassNoteVO teacherSelectAllByNo(int teacherNo) {
 
@@ -1206,37 +1271,82 @@ public class StudentDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	// student 신규 등록 (HW)
+
+		public void studentAddOne(ClassNoteVO vo) {
+
+			// 4. SQL문
+			sb.setLength(0);
+			sb.append("Insert into STUDENT (STUDENT_NO, STUDENT_NAME, STUDENT_GRADE, STUDENT_PHONE, STUDENT_REGIST_DATE, STUDENT_PARENTS_NAME, STUDENT_PARENTS_PHONE, STUDENT_PHOTO, STUDENT_GENDER, STUDENT_BIRTH, STUDENT_ADDRS, STUDENT_EMAIL, STUDENT_SCHOOL_NAME, STUDENT_STATUS) ");
+			sb.append("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+
+			try {
+				// 5. 문장 객체화
+				pstmt = conn.prepareStatement(sb.toString());
+				
+				pstmt.setInt(1, vo.getStudentNo());
+				pstmt.setString(2, vo.getStudentName());
+				pstmt.setInt(3, vo.getStudentGrade());
+				pstmt.setString(4, vo.getStudentPhone());
+				pstmt.setString(5, vo.getStudentRegistDate());
+				pstmt.setString(6, vo.getStudentParentsName());
+				pstmt.setString(7, vo.getStudentParentsPhone());
+				pstmt.setString(8, vo.getStudentPhoto());
+				pstmt.setBoolean(9, vo.isStudentGender());
+				pstmt.setString(10, vo.getStudentBirth());
+				pstmt.setString(11, vo.getStudentAddrs());
+				pstmt.setString(12, vo.getStudentEmail());
+				pstmt.setString(13, vo.getStudentSchoolName());
+				pstmt.setBoolean(14, vo.isStudentStatus());
+
+				// 6. 실행
+				int result = pstmt.executeUpdate();
+
+				if (result == 1) {
+					System.out.println("데이터 삽입 성공!");
+				}
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	
+	
 
 	// -----------------------------------------------
-	// teacher 정보 수정하기
+	// student 정보 수정하기
 
 	// 이름으로 검색했을 경우 수정하기 (HW)
-	public void teacherUpdateAllByNo(ClassNoteVO vo) {
+	public void studentUpdateAllByNo(ClassNoteVO vo) {
 
 		// 4. SQL문 작성
 		sb.setLength(0); // 초기화
-		sb.append("update teacher ");
+		sb.append("update student ");
 		sb.append(
-				"set TEACHER_ID = ?, TEACHER_PW = ?, TEACHER_NAME = ?, TEACHER_PHONE = ?, TEACHER_EMAIL = ?, TEACHER_PHOTO = ?, TEACHER_HIREDATE = ?,  TEACHER_ADDRESS = ?, TEACHER_SAL = ?, TEACHER_SUBJECT = ?, TEACHER_WORKTYPE = ?, TEACHER_BIRTH = ?, TEACHER_GENDER = ? ");
-		sb.append("where TEACHER_NO = ? ");
+				"set STUDENT_NAME = ?, STUDENT_GRADE = ?, STUDENT_PHONE = ?, STUDENT_REGIST_DATE = ?, STUDENT_PARENTS_NAME = ?, STUDENT_PARENTS_PHONE = ?, STUDENT_PHOTO = ?, STUDENT_GENDER = ?, STUDENT_BIRTH = ?, STUDENT_ADDRS = ?, STUDENT_EMAIL = ?, STUDENT_SCHOOL_NAME = ?, STUDENT_STATUS = ? ");
+		sb.append("where STUDENT_NO = ? ");
 
 		try {
 			// 5. 문장 객체화
 			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.setString(1, vo.getTeacherId());
-			pstmt.setString(2, vo.getTeacherPw());
-			pstmt.setString(3, vo.getTeacherName());
-			pstmt.setString(4, vo.getTeacherPhone());
-			pstmt.setString(5, vo.getTeacherEmail());
-			pstmt.setString(6, vo.getTeacherPhoto());
-			pstmt.setString(7, vo.getTeacherHiredate());
-			pstmt.setString(8, vo.getTeacherAddress());
-			pstmt.setInt(9, vo.getTeacherSal());
-			pstmt.setString(10, vo.getTeacherSubject());
-			pstmt.setString(11, vo.getTeacherWorktype());
-			pstmt.setString(12, vo.getTeacherBirth());
-			pstmt.setBoolean(13, vo.isTeacherGender());
-			pstmt.setInt(14, vo.getTeacherNo());
+			
+			
+			pstmt.setString(1, vo.getStudentName());
+			pstmt.setInt(2, vo.getStudentGrade());
+			pstmt.setString(3, vo.getStudentPhone());
+			pstmt.setString(4, vo.getStudentRegistDate());
+			pstmt.setString(5, vo.getStudentParentsName());
+			pstmt.setString(6, vo.getStudentParentsPhone());
+			pstmt.setString(7, vo.getStudentPhoto());
+			pstmt.setBoolean(8, vo.isStudentGender());
+			pstmt.setString(9, vo.getStudentBirth());
+			pstmt.setString(10, vo.getStudentAddrs());
+			pstmt.setString(11, vo.getStudentEmail());
+			pstmt.setString(12, vo.getStudentSchoolName());
+			pstmt.setBoolean(13, vo.isStudentStatus());
+			pstmt.setInt(14, vo.getStudentNo());
 
 			// 6. 실행
 			int result = pstmt.executeUpdate();
@@ -1248,21 +1358,21 @@ public class StudentDAO {
 			// 7. 레코드 별 로직 처리
 			while (rs.next()) {
 
-				vo.setTeacherNo(rs.getInt("TEACHER_NO"));
-				vo.setTeacherId(rs.getString("TEACHER_ID"));
-				vo.setTeacherPw(rs.getString("TEACHER_PW"));
-				vo.setTeacherName(rs.getString("TEACHER_NAME"));
-				vo.setTeacherPhone(rs.getString("TEACHER_PHONE"));
-				vo.setTeacherEmail(rs.getString("TEACHER_EMAIL"));
-				vo.setTeacherPhoto(rs.getString("TEACHER_PHOTO"));
-				vo.setTeacherHiredate(rs.getString("TEACHER_HIREDATE"));
-				vo.setTeacherAddress(rs.getString("TEACHER_ADDRESS"));
-				vo.setTeacherSal(rs.getInt("TEACHER_SAL"));
-				vo.setTeacherSubject(rs.getString("TEACHER_SUBJECT"));
-				vo.setTeacherWorktype(rs.getString("TEACHER_WORKTYPE"));
-				vo.setTeacherBirth(rs.getString("TEACHER_BIRTH"));
-				vo.setTeacherGender(rs.getBoolean("TEACHER_GENDER"));
-
+				vo.setStudentNo(rs.getInt("STUDENT_NO"));
+				vo.setStudentName(rs.getString("STUDENT_NAME"));
+				vo.setStudentGrade(rs.getInt("STUDENT_GRADE"));
+				vo.setStudentPhone(rs.getString("STUDENT_PHONE"));
+				vo.setStudentRegistDate(rs.getString("STUDENT_REGIST_DATE"));
+				vo.setStudentParentsName(rs.getString("STUDENT_PARENTS_NAME"));
+				vo.setStudentParentsPhone(rs.getString("STUDENT_PARENTS_PHONE"));
+				vo.setStudentPhoto(rs.getString("STUDENT_PHOTO"));
+				vo.isStudentGender();
+				vo.setStudentBirth(rs.getString("STUDENT_BIRTH"));
+				vo.setStudentAddrs(rs.getString("STUDENT_ADDRS"));
+				vo.setStudentEmail(rs.getString("STUDENT_EMAIL"));
+				vo.setStudentSchoolName(rs.getString("STUDENT_SCHOOL_NAME"));
+				vo.isStudentStatus();
+				
 			}
 
 		} catch (SQLException e) {
@@ -1275,6 +1385,73 @@ public class StudentDAO {
 	// 과목으로 검색했을 경우 수정하기
 
 	// 기간으로 검색했을 경우 수정하기
+	
+	
+	
+	// -----------------------------------------------
+		// teacher 정보 수정하기
+
+		// 이름으로 검색했을 경우 수정하기 (HW)
+		public void teacherUpdateAllByNo(ClassNoteVO vo) {
+
+			// 4. SQL문 작성
+			sb.setLength(0); // 초기화
+			sb.append("update teacher ");
+			sb.append(
+					"set TEACHER_ID = ?, TEACHER_PW = ?, TEACHER_NAME = ?, TEACHER_PHONE = ?, TEACHER_EMAIL = ?, TEACHER_PHOTO = ?, TEACHER_HIREDATE = ?,  TEACHER_ADDRESS = ?, TEACHER_SAL = ?, TEACHER_SUBJECT = ?, TEACHER_WORKTYPE = ?, TEACHER_BIRTH = ?, TEACHER_GENDER = ? ");
+			sb.append("where TEACHER_NO = ? ");
+
+			try {
+				// 5. 문장 객체화
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setString(1, vo.getTeacherId());
+				pstmt.setString(2, vo.getTeacherPw());
+				pstmt.setString(3, vo.getTeacherName());
+				pstmt.setString(4, vo.getTeacherPhone());
+				pstmt.setString(5, vo.getTeacherEmail());
+				pstmt.setString(6, vo.getTeacherPhoto());
+				pstmt.setString(7, vo.getTeacherHiredate());
+				pstmt.setString(8, vo.getTeacherAddress());
+				pstmt.setInt(9, vo.getTeacherSal());
+				pstmt.setString(10, vo.getTeacherSubject());
+				pstmt.setString(11, vo.getTeacherWorktype());
+				pstmt.setString(12, vo.getTeacherBirth());
+				pstmt.setBoolean(13, vo.isTeacherGender());
+				pstmt.setInt(14, vo.getTeacherNo());
+
+				// 6. 실행
+				int result = pstmt.executeUpdate();
+
+				if (result == 1) {
+					System.out.println("데이터 수정 성공!");
+				}
+
+				// 7. 레코드 별 로직 처리
+				while (rs.next()) {
+
+					vo.setTeacherNo(rs.getInt("TEACHER_NO"));
+					vo.setTeacherId(rs.getString("TEACHER_ID"));
+					vo.setTeacherPw(rs.getString("TEACHER_PW"));
+					vo.setTeacherName(rs.getString("TEACHER_NAME"));
+					vo.setTeacherPhone(rs.getString("TEACHER_PHONE"));
+					vo.setTeacherEmail(rs.getString("TEACHER_EMAIL"));
+					vo.setTeacherPhoto(rs.getString("TEACHER_PHOTO"));
+					vo.setTeacherHiredate(rs.getString("TEACHER_HIREDATE"));
+					vo.setTeacherAddress(rs.getString("TEACHER_ADDRESS"));
+					vo.setTeacherSal(rs.getInt("TEACHER_SAL"));
+					vo.setTeacherSubject(rs.getString("TEACHER_SUBJECT"));
+					vo.setTeacherWorktype(rs.getString("TEACHER_WORKTYPE"));
+					vo.setTeacherBirth(rs.getString("TEACHER_BIRTH"));
+					vo.setTeacherGender(rs.getBoolean("TEACHER_GENDER"));
+
+				}
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
 
 	// ---------------------------------------------------
 	// teacher object 을 사용해서 조회하기 위한 메서드
@@ -1287,7 +1464,8 @@ public class StudentDAO {
 
 		// 4. SQL 문
 		sb.setLength(0); // 초기화
-		sb.append("SELECT TEACHER_NO, TEACHER_ID, TEACHER_PW, TEACHER_NAME, TEACHER_PHONE, TEACHER_EMAIL, TEACHER_PHOTO, TEACHER_HIREDATE, TEACHER_ADDRESS, TEACHER_SAL, TEACHER_SUBJECT, TEACHER_WORKTYPE, TEACHER_BIRTH, TEACHER_GENDER ");
+		sb.append(
+				"SELECT TEACHER_NO, TEACHER_ID, TEACHER_PW, TEACHER_NAME, TEACHER_PHONE, TEACHER_EMAIL, TEACHER_PHOTO, TEACHER_HIREDATE, TEACHER_ADDRESS, TEACHER_SAL, TEACHER_SUBJECT, TEACHER_WORKTYPE, TEACHER_BIRTH, TEACHER_GENDER ");
 		sb.append("FROM TEACHER ");
 		sb.append("WHERE TEACHER_SUBJECT = ? ");
 
@@ -1319,7 +1497,8 @@ public class StudentDAO {
 
 				list.add(vo);
 
-			};
+			}
+			;
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -1339,7 +1518,8 @@ public class StudentDAO {
 
 		// 4. SQL 문
 		sb.setLength(0); // 초기화
-		sb.append("SELECT TEACHER_NO, TEACHER_ID, TEACHER_PW, TEACHER_NAME, TEACHER_PHONE, TEACHER_EMAIL, TEACHER_PHOTO, TEACHER_HIREDATE, TEACHER_ADDRESS, TEACHER_SAL, TEACHER_SUBJECT, TEACHER_WORKTYPE, TEACHER_BIRTH, TEACHER_GENDER ");
+		sb.append(
+				"SELECT TEACHER_NO, TEACHER_ID, TEACHER_PW, TEACHER_NAME, TEACHER_PHONE, TEACHER_EMAIL, TEACHER_PHOTO, TEACHER_HIREDATE, TEACHER_ADDRESS, TEACHER_SAL, TEACHER_SUBJECT, TEACHER_WORKTYPE, TEACHER_BIRTH, TEACHER_GENDER ");
 		sb.append("FROM TEACHER ");
 		sb.append("WHERE TEACHER_NAME = ? ");
 
@@ -1465,7 +1645,41 @@ public class StudentDAO {
 
 	}
 	
+	// -----------------------------------------
+		// teacher 삭제
+
+		// teacher 이름으로 조회했을 경우
+		public void studentDeleteByNo(int studentNo) {
+
+			// 4. SQL 문
+			sb.setLength(0); // 초기화
+			sb.append("DELETE ");
+			sb.append("FROM STUDENT ");
+			sb.append("WHERE STUDENT_NO = ? ");
+
+			try {
+				// 5. 문장 객체화
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setInt(1, studentNo);
+
+				// 6. 실행
+				int result = pstmt.executeUpdate();
+
+				if (result == 1) {
+					System.out.println("데이터 삭제 성공!");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
 	
+	
+	
+	
+	
+
 	// -----------------------------------------
 
 	public void teacherInsertByAll(ClassNoteVO vo) {
