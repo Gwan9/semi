@@ -1,15 +1,11 @@
-<%@page import="VO.ClassNoteVOjsb"%>
-<%@page import="DAO.StudentDAOjsb"%>
-<%@page import="DAO.TeacherDAOsgh"%>
+<%@page import="VO.ClassNoteVO"%>
+<%@page import="DAO.StudentDAO"%>
 <%@page import="org.json.simple.JSONObject"%>
-<%@page import="VO.ClassNoteVOsgh"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="DAO.StudentDAOsgh"%>
 <%@page import="org.json.simple.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-
 
 String today = request.getParameter( "today" );
 String selectVal = request.getParameter( "selectVal" );
@@ -18,12 +14,12 @@ if( today != null && selectVal != null){
 
 	if( Integer.parseInt(selectVal) == 1 ){
 		
-		JSONArray j = new JSONArray();
-		StudentDAOjsb dao1 = new StudentDAOjsb();
-		ArrayList<ClassNoteVOjsb> list1 = dao1.studentSelectAll( today );
+		JSONArray studentArray = new JSONArray();
+		StudentDAO dao1 = new StudentDAO();
+		ArrayList<ClassNoteVO> list1 = dao1.studentCheckSelectAllByDate( today );
 		
 		
-		for( ClassNoteVOjsb vo : list1 ){
+		for( ClassNoteVO vo : list1 ){
 			JSONObject student = new JSONObject();
 			student.put( "studentNo", vo.getStudentNo() );
 			student.put( "studentName", vo.getStudentName() );
@@ -32,20 +28,25 @@ if( today != null && selectVal != null){
 			student.put( "lectureClass", vo.getLectureClass() );
 			student.put( "studentPhone", vo.getStudentPhone() );
 			student.put( "studentParentsPhone", vo.getStudentParentsPhone() );
+			student.put( "studentCheckNo", vo.getStudentCheckNo() );
 			student.put( "studentCheckIn", vo.getStudentCheckIn() );
 			student.put( "studentCheckLate", vo.getStudentCheckLate() );
 			student.put( "studentCheckLeave", vo.getStudentCheckLeave() );
-			j.add( student );
+			student.put( "studentCheckDate", vo.getStudentCheckDate() );
+			
+			studentArray.add( student );
 	}
-		out.println( j.toJSONString() );
-		System.out.println( j.toJSONString() );
+		out.println( studentArray.toJSONString() );
+		System.out.println( studentArray.toJSONString() );
+	
+	
 	}else if( Integer.parseInt(selectVal) == 2 ){
 		
 		JSONArray teacherArray = new JSONArray();
-		TeacherDAOsgh dao2 = new TeacherDAOsgh();
-		ArrayList<ClassNoteVOsgh> list2 = dao2.teacherSelectAll( today );
+		StudentDAO dao2 = new StudentDAO();
+		ArrayList<ClassNoteVO> list2 = dao2.teacherSelectAllByDate( today );
 		
-		for( ClassNoteVOsgh vo : list2 ){
+		for( ClassNoteVO vo : list2 ){
 			JSONObject teacher = new JSONObject();
 			teacher.put( "teacherCheckIn", vo.getTeacherCheckIn() );
 			teacher.put( "teacherCheckOut", vo.getTeacherCheckOut() );
@@ -53,7 +54,7 @@ if( today != null && selectVal != null){
 			teacherArray.add( teacher );
 		}
 		out.println( teacherArray.toJSONString() );
-		System.out.println("교사");
+		System.out.println( teacherArray.toJSONString() );
 	}
 }
 %>
