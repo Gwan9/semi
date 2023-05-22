@@ -1,4 +1,6 @@
 
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="VO.ClassNoteVO"%>
 <%@page import="DAO.StudentDAO"%>
 <%@page import="org.json.simple.JSONObject"%>
@@ -16,9 +18,28 @@ String grade = request.getParameter("studentGrade").trim();
 String lectureClass = request.getParameter("lectureClass").trim();
 String lectureName = request.getParameter("lectureName").trim();
 
-/* String date1 = request.getParameter("date1").trim();
-String date2 = request.getParameter("date2").trim(); */
+String date1 = request.getParameter("date1").trim();
+String date2 = request.getParameter("date2").trim(); 
 
+//받아온 날짜가 2023-05-01 형식이라 23/05/01로 바꾸기 위한 과정
+String startDate = null;
+if (date1 != null && !date1.isEmpty()) {
+    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat outputFormat = new SimpleDateFormat("yy/MM/dd");
+    Date parsedDate = inputFormat.parse(date1);
+    startDate = outputFormat.format(parsedDate);
+}
+
+String endDate = null;
+if (date2 != null && !date2.isEmpty()) {
+    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat outputFormat = new SimpleDateFormat("yy/MM/dd");
+    Date parsedDate = inputFormat.parse(date2);
+    endDate = outputFormat.format(parsedDate);
+}
+
+System.out.println(startDate);
+System.out.println(endDate);  
 //-------------------------------------------------------------------------------
 //JSONArray 
 JSONArray j = new JSONArray();
@@ -36,6 +57,11 @@ ArrayList<ClassNoteVO> list;
 if (studentName != null && !studentName.isEmpty()) {
 	list = dao.studentSearchSelectAllByName(studentName);
 }
+
+//날짜만
+ else if( startDate != null && endDate != null){
+	list = dao.studentSelectAllByRegistDate( startDate, endDate );
+} 
 
 //학년만
 else if (!"전체".equals(grade) && "전체".equals(lectureClass) && "전체".equals(lectureClass))  {
@@ -76,11 +102,6 @@ else if (!"전체".equals(grade)&& !"전체".equals(lectureClass) && !"전체".e
 	int studentGrade = Integer.parseInt(grade);
 	list = dao.studentSearchSelectByGradeLectureClassLectureName(studentGrade, lectureClass, lectureName);
 } 
-
-//날짜
-/* if( date1 != null && date2 != null){
-	list = dao.studentSelectAllByRegisterDate( date1, date2 );
-} */
 
 
 

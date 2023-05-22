@@ -1,6 +1,6 @@
 package DAO;
 
-import java.sql.Connection;
+import java.sql.Connection; 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -1959,20 +1959,22 @@ public class StudentDAO {
 	
 		
 		//내 dao 추가
-	public ArrayList<ClassNoteVO> studentSelectAllByRegistDate(String date1, String date2){
-		ArrayList<ClassNoteVO> list = new ArrayList<>();
-		ClassNoteVO vo = null;
 
-		sb.setLength(0);
-		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
-		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
-		sb.append("s.student_parents_name, s.student_parents_phone ");
-		sb.append("FROM student s, class_register c, lecture l ");
-		sb.append("WHERE s.student_no = c.student_no ");
-		sb.append("AND c.lecture_no = l.lecture_no ");
-		sb.append("AND TO_CHAR(student_regist_date, 'YYYY-MM-DD') "); 
-		sb.append("BETWEEN ? AND ? ");
-		
+				public ArrayList<ClassNoteVO> studentSelectAllByRegistDate(String date1, String date2){
+					ArrayList<ClassNoteVO> list = new ArrayList<>();
+					ClassNoteVO vo = null;
+			
+					sb.setLength(0);
+					sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+					sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+					sb.append("s.student_parents_name, s.student_parents_phone ");
+					sb.append("FROM student s, class_register c, lecture l ");
+					sb.append("WHERE s.student_no = c.student_no ");
+					sb.append("AND c.lecture_no = l.lecture_no ");
+					sb.append("AND s.student_regist_date "); 
+					sb.append("BETWEEN ? AND ? ");
+					
+	
 		
 
 		try {
@@ -2002,6 +2004,7 @@ public class StudentDAO {
 				
 				list.add(vo);
 
+
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -2010,6 +2013,7 @@ public class StudentDAO {
 
 		return list;
 	}
+				
 
 
 		// 날짜 + 학생명으로 출석 조회
