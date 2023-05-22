@@ -16,6 +16,6 @@ String tarea = request.getParameter("tarea");
 
 StudentDAO dao = new StudentDAO();
 
-dao.studentNoteInsert(notetitle, tarea);
+dao.studentNoteInsert(notetitle, tarea, teachername);
 
 %>

@@ -13,6 +13,7 @@ ArrayList<ClassNoteVO> list = dao.teacherSelectAll();
 for (ClassNoteVO vo : list) {
 	JSONObject teacher = new JSONObject();
 
+	teacher.put("tno",vo.getTeacherNo());
 	teacher.put("tname", vo.getTeacherName());
 
 	JA.add(teacher);

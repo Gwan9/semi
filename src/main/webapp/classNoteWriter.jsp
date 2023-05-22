@@ -133,7 +133,7 @@ input {
 			var tarea = $("#tarea").val();
 
 		    $.ajax({
-				url: "insertnote.jsp",
+				url: "classNoteInsert.jsp",
 				data: {
 					selectStudentList: selectStudentList,
 					date: date,
@@ -144,6 +144,7 @@ input {
 		        	tarea: tarea
 				}
 			});
+		    location.href = "classNote.jsp";
 		});
 	})
 </script>
@@ -181,7 +182,7 @@ input {
 		<div class="maincontents">
 			<label for="">학생 : </label> 
 			<input type="text" name="selectStudentList" id="selectStudentList" readonly /> 
-			<br /> <br /> w
+			<br /> <br />
 			<label for="">수업일자 : </label> 
 			<input type="date" name="date" id="date" /> 
 			<br /> <br /> <label for="">강의명 : </label> 
