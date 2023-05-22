@@ -367,9 +367,11 @@ table {
 					</thead>
 
 					<%
+
 					ArrayList<ClassNoteVO> list = dao.studentSearchSelectAll();
 					for (ClassNoteVO vo : list) {
 					%>
+
 
 					<tr>
 						<td><input type='checkbox' name='studentNo' id='studentNo' /></td>

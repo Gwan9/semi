@@ -15,8 +15,8 @@ public class StudentDAO {
 	// 기본생성자 (JDBC의 1-3단계)
 	// 1. 환경변수
 	String driver = "oracle.jdbc.driver.OracleDriver";
-	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
-//	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
+//	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
+	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
 	String user = "scott";
 	String password = "tiger";
 	Connection conn;
@@ -45,6 +45,186 @@ public class StudentDAO {
 	
 	// Note-------------------------------------------------------------------------------------------------------------------------------
 	
+
+	public int getTotalCount() {
+		int cnt = 0;
+		
+		sb.setLength(0);
+		sb.append("select count(*) cnt from class_note ");
+		
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+			cnt = rs.getInt("cnt");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return cnt;
+	}
+	
+	public void studentNoteInsert(String title, String tarea, String tname) {
+		
+//		로그인 되어있는 교사의 교사번호를 담은 무언가
+		
+		sb.setLength(0);
+		sb.append("insert into class_note values(note_no_seq.nextval, sysdate, ?, ?, (select teacher_no from teacher where teacher_name = ? )) ");
+		
+		
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setString(1, title);
+			pstmt.setString(2, tarea);
+			pstmt.setString(3, tname);
+			
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public ArrayList<ClassNoteVO> studentNoteSelectAll() {
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
+		ClassNoteVO vo = new ClassNoteVO();
+		
+		sb.setLength(0);
+		sb.append("select note_no, note_date, note_title, note_contents, teacher_no from class_note ");
+		
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				vo.setNoteNo(rs.getInt("note_no"));
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contests"));
+				vo.setTeacherNo(rs.getInt("teacher_no"));
+				
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public void studentNoteDeleteOne(int noteno) {
+		sb.setLength(0);
+		sb.append("delete from class_note where note_no = ? ");
+		
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, noteno);
+			
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void studentNoteUpdateOne(ClassNoteVO vo) {
+		sb.setLength(0);
+		sb.append("update class_note set note_title = ?, note_contents = ?, note_date = sysdate where note_no = ? ");
+		
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, vo.getNoteTitle());
+			pstmt.setString(2, vo.getNoteContents());
+			pstmt.setInt(3, vo.getNoteNo());
+			
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public ClassNoteVO studentNoteSelectOne(int noteno) {
+	    ClassNoteVO vo = null;
+
+	    sb.setLength(0);
+	    sb.append("SELECT note_date, note_title, note_contents, t.teacher_name, r.class_register_no, s.student_name, l.lecture_name, l.lecture_class ");
+	    sb.append("FROM class_note n ");
+	    sb.append("JOIN class_register r ON r.class_register_no = n.class_register_no ");
+	    sb.append("join student s on s.student_no = r.student_no ");
+	    sb.append("JOIN teacher t ON t.teacher_no = r.teacher_no ");
+	    sb.append("JOIN lecture l ON l.lecture_no = r.lecture_no ");
+	    sb.append("WHERE n.note_no = ?");
+
+	    try {
+	        pstmt = conn.prepareStatement(sb.toString());
+	        pstmt.setInt(1, noteno);
+	        rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	            vo = new ClassNoteVO();
+	            vo.setNoteNo(noteno);
+	            vo.setNoteDate(rs.getString("note_date"));
+	            vo.setNoteTitle(rs.getString("note_title"));
+	            vo.setNoteContents(rs.getString("note_contents"));
+	            vo.setTeacherName(rs.getString("teacher_name"));
+	            vo.setClassRegisterNo(rs.getInt("class_register_no"));
+	            vo.setStudentName(rs.getString("student_name"));
+	            vo.setLectureClass(rs.getString("lecture_class"));
+	            vo.setLectureName(rs.getString("lecture_name"));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return vo;
+	}
+
+	
+	public ArrayList<ClassNoteVO> studentNoteSelectAll(int startno, int endno){
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
+		ClassNoteVO vo = null;
+		
+		sb.setLength(0);
+		sb.append("select rn, note_no, note_date, note_title, note_contents, class_register_no "
+				+ " from (select rownum rn, note_no, note_date, note_title, note_contents, class_register_no "
+				+ " from (select note_no, note_date, note_title, note_contents, class_register_no from class_note order by note_no desc) "
+				+ " where rownum <= ?) "
+				+ " where rn >= ? " );
+		
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, endno);
+			pstmt.setInt(2, startno);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				vo = new ClassNoteVO();
+				
+				vo.setNoteNo(rs.getInt("note_no"));
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contents"));
+				vo.setClassRegisterNo(rs.getInt("class_register_no"));
+				
+				list.add(vo);
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+
+
 	public ArrayList<ClassNoteVO> studentNoteSelectAll(String lectureName){
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
@@ -400,22 +580,51 @@ public class StudentDAO {
 	return list;
 	}	
 	
-	// sgh
+	// sgh 변경 확인 필요
 		public void studentCheckInsertAll() {
-			                                                          
 			sb.setLength(0);
-			sb.append( "INSERT INTO STUDENT_CHECK VALUES ( STUDENT_CHECK_NO_SEQ.nextval, null, null, null,to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd'), STUDENT_NO_SEQ.nextval )" );
+			sb.append( "INSERT INTO student_check" );
+			sb.append( "SELECT STUDENT_CHECK_NO_SEQ.nextval, null, student_no, to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd')" );
+			sb.append( "FROM student" );
+			sb.append( "WHERE ROWNUM <= (SELECT COUNT(student_no) FROM student);" );
 			
 			try {
 		        pstmt = conn.prepareStatement(sb.toString());
 		        pstmt.executeUpdate();
-		    } catch (SQLIntegrityConstraintViolationException e) {
-		        // 중복 INSERT 에러 처리
-		        e.printStackTrace(); // 예외를 출력하거나 로깅
 		    } catch (SQLException e) {
-		        e.printStackTrace(); // 예외를 출력하거나 로깅
-		    } 
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		
+		// sgh 구현확인필요
+		public boolean studentCheckIsExist() {
+			boolean exist = false;
+			
+				
+	             sb.append("SELECT COUNT(student_no) ");
+	             sb.append("FROM student_check "); 
+	             sb.append("WHERE (SELECT student_check_date FROM student_check WHERE student_check_date = sysdate) IS NULL; "); 
+
+	             try {
+					pstmt = conn.prepareStatement(sb.toString());
+					rs = pstmt.executeQuery();
+					ResultSet rs = pstmt.executeQuery();
+					
+					if (rs.next()) {
+						int count = rs.getInt(1);
+						exist = count > 0;
+					}
+	             } catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+	             }
+		            // 예외 처리 코드 작성
+		        
+
+		        return exist;
+		    }
+		
 			
 
 	// studentSearch-------------------------------------------------------------------------------------------------------------------------------
@@ -1389,7 +1598,7 @@ public class StudentDAO {
 			while (rs.next()) {
 				ClassNoteVO vo = new ClassNoteVO();
 				
-				vo.setClass_registerNo(rs.getInt("CLASS_REGISTER_NO"));
+				vo.setClassRegisterNo(rs.getInt("CLASS_REGISTER_NO"));
 				vo.setPay(rs.getBoolean("ISPAY"));
 				vo.setPayType(rs.getString("PAY_TYPE"));
 				vo.setStudentNo(rs.getInt("STUDENT_NO"));
@@ -1525,10 +1734,15 @@ public class StudentDAO {
 		}
 		return list;
 	}
+	//sgh sql 문 teacher_no부분 확인필요
 	public void teacherCheckInsertAll() {
+	
 		sb.setLength(0);
-		sb.append( "INSERT INTO TEACHER_CHECK VALUES ( TEACHER_CHECK_NO_SEQ.nextval, null, null, null, 2, to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd') )" );
-		// 2 -> TEACHER_NO_SEQ.nextval 조인해서 수정예정
+		sb.append( "INSERT INTO teacher_check" );
+		sb.append( "SELECT TEACHER_CHECK_NO_SEQ.nextval, null, null, null, TEACHER_NO ,  to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd') ) " );
+		sb.append( "FROM teacher " );
+		sb.append( "WHERE ROWNUM <= (SELECT COUNT(teacher_no) FROM teacher); " );
+		//seq 확인
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.executeUpdate();
@@ -1540,11 +1754,38 @@ public class StudentDAO {
 		
 	
 	}
+	// sgh 구현확인필요
+	public boolean teacherCheckIsExist() {
+		boolean exist = false;
+		
+			
+             sb.append("SELECT COUNT(teacher_no) ");
+             sb.append("FROM teacher_check "); 
+             sb.append("WHERE (SELECT teacher_check_date FROM teacher_check WHERE teacher_check_date = sysdate) IS NULL; "); 
+             try {
+				pstmt = conn.prepareStatement(sb.toString());
+				rs = pstmt.executeQuery();
+				ResultSet rs = pstmt.executeQuery();
+				
+				if (rs.next()) {
+					int count = rs.getInt(1);
+					exist = count > 0;
+				}
+             } catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+             }
+	            // 예외 처리 코드 작성
+	        
+
+	        return exist;
+	    }
+	//sgh 구현 확인 예정
 	public void teacherCheckInUpdateByName(ClassNoteVO vo) {
 		sb.setLength(0);
 		sb.append( "UPDATE TEACHER_CHECK " );
-		sb.append( "SET TEACHER_CHECK_IN = SYSDATE ) " );
-		sb.append( "WHERE TEACHER_NO IN= ( " );
+		sb.append( "SET TEACHER_CHECK_IN = SYSDATE " );
+		sb.append( "WHERE TEACHER_NO = ( " );
 		sb.append( "SELECT TEACHER_NO " );
 		sb.append( "FROM TEACHER " );
 		sb.append( "WHERE TEACHER_NAME = ? ) " );
@@ -1558,11 +1799,12 @@ public class StudentDAO {
 			e.printStackTrace();
 		}
 	}
+	//sgh 구현 확인 예정
 	public void teacherCheckOutUpdateByName(ClassNoteVO vo) {
 		sb.setLength(0);
 		sb.append( "UPDATE TEACHER_CHECK " );
-		sb.append( "SET TEACHER_CHECK_OUT = SYSDATE ) " );
-		sb.append( "WHERE TEACHER_NO IN= ( " );
+		sb.append( "SET TEACHER_CHECK_OUT = SYSDATE " );
+		sb.append( "WHERE TEACHER_NO = ( " );
 		sb.append( "SELECT TEACHER_NO " );
 		sb.append( "FROM TEACHER " );
 		sb.append( "WHERE TEACHER_NAME = ? ) " );
@@ -1576,12 +1818,15 @@ public class StudentDAO {
 			e.printStackTrace();
 		}
 	}
-	
-	public void teacherWorkTimeUpdateByNo(ClassNoteVO vo) {
+	//sgh 일한시간 sql문 확인필요
+	public void teacherWorkTimeUpdateByName(ClassNoteVO vo) {
 		sb.setLength(0);
-		sb.append( "UPDATE TEACHER_CHECK " );
-		sb.append( "SET TEACHER_WORK_TIME =  ) " );
-		sb.append( "WHERE TEACHER_CHECK_NO = ? ) " );
+		sb.append( "UPDATE TEACHER " );
+		sb.append( "SET TEACHER_WORKING_TIME = ( " );
+		sb.append( "SELECT TEACHER_CHECK_OUT - TEACHER_CHECK_IN " );
+		sb.append( "FROM TEACHER_CHECK tc " );
+		sb.append( "WHERE tc.TEACHER_NO = TEACHER.TEACHER_NO) " );
+		sb.append( "WHERE TEACHER_NAME = ? ; " );
 		
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
@@ -1661,9 +1906,6 @@ public class StudentDAO {
 					return list;
 				}
 
-				// -----------------------------------------------------------------------
-	
-	
-		
+
 
 }

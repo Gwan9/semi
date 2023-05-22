@@ -12,6 +12,7 @@ public class ClassNoteVO {
 	int noteNo;
 	String noteDate;
 	String noteContents;
+	String noteTitle;
 	int teacherNo;
 	String teacherId;
 	String teacherPw;
@@ -31,7 +32,7 @@ public class ClassNoteVO {
 	String teacherCheckOut;
 	String teacherWorkTime;
 	String teacherCheckDate;
-	int class_registerNo;
+	int classRegisterNo;
 	boolean isPay;
 	String payType;
 	int studentNo;

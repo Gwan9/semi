@@ -1,3 +1,6 @@
+<%@page import="VO.ClassNoteVO"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="DAO.StudentDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -59,7 +62,7 @@
 <script type="text/javascript">
 	$(function(){
 		$.ajax({
-			url:"lectureList.jsp",
+			url:"classNoteLectureList.jsp",
 			success:function(data){
 				var obj = JSON.parse(data);
 				for(var i = 0; i < obj.length; i++){
@@ -92,6 +95,53 @@
 </script>
 </head>
 <body>
+<%
+// 	로그인 확인 절차
+// 	Object obj = session.getAttribute("vo");
+// 	if(obj == null)
+// 		response.sendRedirect("../day10/login.jsp");
+
+	StudentDAO dao = new StudentDAO();
+	
+	int totalCount = dao.getTotalCount();
+	
+// 	한 페이지당 게시물 건수 : 20
+	int recordPerPage = 20;
+	int totalPage = (totalCount % recordPerPage == 0) ? totalCount / recordPerPage : totalCount / recordPerPage + 1;
+	
+	
+	String cp = request.getParameter("cp");
+	
+	int currentPage = 0;
+	
+	if(cp!=null)
+		 currentPage = Integer.parseInt(cp);
+	else
+		currentPage = 1;
+
+	int startPage = 1;
+	int endPage = totalPage;
+	
+	if(currentPage <= 5)
+		startPage = 1;
+	else if(currentPage >= 6)
+		startPage = currentPage-4;
+	
+	if(totalPage - currentPage <= 5)
+		endPage = totalPage;
+	else if(totalPage - currentPage > 5)
+		if(currentPage <= 5){
+			if(totalPage > 10){
+				endPage =10;
+			}else{
+				endPage = totalPage;
+			}
+		}
+		else
+			endPage = currentPage+4;
+	
+
+%>
 	<div class="container" >	<!-- 학습일지 큰 div -->
 		<div class="board" >
 			<select name="lectureClass" id="lectureClass">	<!-- 분반선택 콤보박스 -->
@@ -119,13 +169,28 @@
 			<div id="alter_btn" align="right">
 				
 				<input class="btn" type="button" value="등록" id="add" />
-				
-				
-				<input class="btn" type="button" value="수정" id="" />
-				<input class="btn" type="button" value="삭제" id="" />
 			</div> <br />
 			<div class="boardlist">
 				<table>
+				<%
+					int startno = (currentPage-1) * recordPerPage +1;
+					int endno = currentPage * recordPerPage;
+					
+					ArrayList<ClassNoteVO> list = dao.studentNoteSelectAll(startno, endno);
+					for(ClassNoteVO vo : list){
+						
+						%>
+						<tr>
+							<td><%=vo.getNoteNo() %></td>
+							<td><%=vo.getNoteDate() %></td>
+							<td><a href="classNoteDetail.jsp?NoteNo=<%= vo.getNoteNo() %>"> <%= vo.getNoteTitle() %> </a></td>
+							<td><%=vo.getNoteContents() %></td>
+							<td><%=vo.getClassRegisterNo() %></td>
+						</tr>
+						
+						<%
+					}
+				%>
 				</table>
 			</div>
 		</div>

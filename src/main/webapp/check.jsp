@@ -33,15 +33,21 @@ String today = sdf.format( nowDate);
 		$( "#divTeacher" ).hide();
 		$( "#divStudent" ).hide();
 		<%
-/* 화면 불러올 때 오늘자 학생 데이터 생성 */
+		/* 화면 불러올 때 오늘자 학생 데이터가 존재하지 않는다면 오늘자 데이터 생성 */
 		StudentDAO dao = new StudentDAO();
-		dao.studentCheckInsertAll();
-		System.out.println( "addAllStudent()" );
+		if (!dao.studentCheckIsExist()) {
+   			 dao.studentCheckInsertAll();
+   			 System.out.println("addAllStudent()");
+		}
 		
-		/* 화면 불러올 때 오늘자 교사 데이터 생성 */
-		StudentDAO dao2 = new StudentDAO();
-		dao2.teacherCheckInsertAll();
-		System.out.println( "addAllTeacher()"); 
+		
+		
+		/* 화면 불러올 때 오늘자 교사 데이터가 존재하지 않는다면 오늘자 데이터 생성 */
+			StudentDAO dao2 = new StudentDAO();
+		if (!dao.teacherCheckIsExist()){
+			dao2.teacherCheckInsertAll();
+			System.out.println( "addAllTeacher()"); 
+		}
 		%>
 			
 		// 교사or학생 옵션별 show, hide
@@ -73,7 +79,7 @@ String today = sdf.format( nowDate);
 		$( "#checkToday" ).on( "click", dateToday )
 		
 		// 입력 버튼 누를 시 등교 지각 조퇴 비고 값 입력
-		$( "#btnAllCommit" ).on( "click", allCommit )
+		//$( "#btnAllCommit" ).on( "click", allCommit )
 		
 		
 		// 출근버튼 클릭 시 출근시간 update
@@ -86,19 +92,31 @@ String today = sdf.format( nowDate);
 		    var formattedTime = hours + ':' + minutes + ':' + seconds;
 			$( "#textCheck" ).val(formattedTime);
 			
+			
 			$.ajax({
-				url : "checkIn.jsp",
+				url : "teacherCheckIn.jsp",
 				data : {
-					"teacherName" : $("divTeacher").val()
+					"teacherName" : $( "#textCheck" ).val()
 				},
 				success : function(data){
 					var obj = JSON.parse( data );
+					console.log(obj);
+					for ( var i=0; i<obj.length; i++ ) {
+						var txt = "<tbody><tr><td>" 
+						+ obj[i].teacherCheckIn
+						+ "</td><td>"
+						+ obj[i].teacherCheckOut
+						+ "</td><td>"
+						+ obj[i].teacherWorkTime
+						+ "</td></tr></tbody>";	
+						$("#tl2").append(txt);
+					}
 				}
 			})
 		})
 		
 		
-		// 출근버튼 클릭 시 출근시간 update
+		// 퇴근버튼 클릭 시 퇴근시간 update
 		
 		$( "#btnCheckOut" ).on( "click", function(){
 			var currentTime = new Date();
@@ -107,6 +125,26 @@ String today = sdf.format( nowDate);
 		    var seconds = currentTime.getSeconds().toString().padStart(2, '0');
 		    var formattedTime = hours + ':' + minutes + ':' + seconds;
 			$( "#textCheck" ).val(formattedTime);
+			$.ajax({
+				url : "teacherCheckOut.jsp",
+				data : {
+					"teacherName" : $("#textCheck").val()
+				},
+				success : function(data){
+					var obj = JSON.parse( data );
+					console.log(obj);
+					for ( var i=0; i<obj.length; i++ ) {
+						var txt = "<tbody><tr><td>" 
+						+ obj[i].teacherCheckIn
+						+ "</td><td>"
+						+ obj[i].teacherCheckOut
+						+ "</td><td>"
+						+ obj[i].teacherWorkTime
+						+ "</td></tr></tbody>";	
+						$("#tl2").append(txt);
+					}
+				}
+			})
 		})
 		
 	
@@ -183,6 +221,7 @@ String today = sdf.format( nowDate);
 		/* 오늘날짜 테이블 출력 */
 		function dateToday(){
 			$( "tbody" ).empty();
+			console.log( "dateToday 호출" );
 			$.ajax({
 				url : "checkOK.jsp", 
 				data : {
@@ -194,7 +233,7 @@ String today = sdf.format( nowDate);
 				
 					if( $("#selectStdTec").val() == 1 ){
 						var obj = JSON.parse( data );
-						console.log(obj);
+						console.log( obj );
 						for ( var i=0; i<obj.length; i++ ){
 							var txt = "<tbody><tr><td>"
 							+ obj[i].studentNo

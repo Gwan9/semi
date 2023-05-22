@@ -17,7 +17,7 @@ if( date1 != null && date2 != null && selectVal != null){
 	if( Integer.parseInt(selectVal) == 1 ){
 		JSONArray j = new JSONArray();
 		StudentDAO dao1 = new StudentDAO();
-		ArrayList<ClassNoteVO> list1 = dao1.studenCheckSelectAllByDate1Date2( date1, date2 );
+		ArrayList<ClassNoteVO> list1 = dao1.studentCheckSelectAllByDate1ToDate2( date1, date2 );
 		for( ClassNoteVO vo : list1){
 			JSONObject student = new JSONObject();
 			student.put( "studentNo", vo.getStudentNo() );
@@ -27,6 +27,7 @@ if( date1 != null && date2 != null && selectVal != null){
 			//student.put( "lectureClass", vo.getLectureClass() );
 			student.put( "studentPhone", vo.getStudentPhone() );
 			student.put( "studentParentsPhone", vo.getStudentParentsPhone() );
+			//student.put( "studentCheckNo", vo.getStudentCheckNo() );
 			student.put( "studentCheckIn", vo.getStudentCheckIn() );
 			student.put( "studentCheckLate", vo.getStudentCheckLate() );
 			student.put( "studentCheckLeave", vo.getStudentCheckLeave() );
@@ -37,7 +38,7 @@ if( date1 != null && date2 != null && selectVal != null){
 	}else if ( Integer.parseInt(selectVal) == 2 ){
 		JSONArray teacherArray = new JSONArray();
 		StudentDAO dao2 = new StudentDAO();
-		ArrayList<ClassNoteVO> list2 = dao2.teacherCheckSelectAllByDate1toDate2( date1, date2 );
+		ArrayList<ClassNoteVO> list2 = dao2.teacherCheckSelectAllByDate1ToDate2( date1, date2 );
 		for( ClassNoteVO vo : list2 ){
 			JSONObject teacher = new JSONObject();
 			teacher.put( "teacherCheckIn", vo.getTeacherCheckIn() );

@@ -7,7 +7,6 @@
     pageEncoding="UTF-8"%>
 <%
 
-
 String today = request.getParameter( "today" );
 String selectVal = request.getParameter( "selectVal" );
 
@@ -15,7 +14,7 @@ if( today != null && selectVal != null){
 
 	if( Integer.parseInt(selectVal) == 1 ){
 		
-		JSONArray j = new JSONArray();
+		JSONArray studentArray = new JSONArray();
 		StudentDAO dao1 = new StudentDAO();
 		ArrayList<ClassNoteVO> list1 = dao1.studentCheckSelectAllByDate( today );
 		
@@ -29,13 +28,18 @@ if( today != null && selectVal != null){
 			student.put( "lectureClass", vo.getLectureClass() );
 			student.put( "studentPhone", vo.getStudentPhone() );
 			student.put( "studentParentsPhone", vo.getStudentParentsPhone() );
+			student.put( "studentCheckNo", vo.getStudentCheckNo() );
 			student.put( "studentCheckIn", vo.getStudentCheckIn() );
 			student.put( "studentCheckLate", vo.getStudentCheckLate() );
 			student.put( "studentCheckLeave", vo.getStudentCheckLeave() );
-			j.add( student );
+			student.put( "studentCheckDate", vo.getStudentCheckDate() );
+			
+			studentArray.add( student );
 	}
-		out.println( j.toJSONString() );
-		System.out.println( j.toJSONString() );
+		out.println( studentArray.toJSONString() );
+		System.out.println( studentArray.toJSONString() );
+	
+	
 	}else if( Integer.parseInt(selectVal) == 2 ){
 		
 		JSONArray teacherArray = new JSONArray();
@@ -50,7 +54,7 @@ if( today != null && selectVal != null){
 			teacherArray.add( teacher );
 		}
 		out.println( teacherArray.toJSONString() );
-		System.out.println("교사");
+		System.out.println( teacherArray.toJSONString() );
 	}
 }
 %>
