@@ -15,8 +15,7 @@ String lectureName = request.getParameter("lectureName");
 String lectureClass = request.getParameter("lectureClass");
 String teacherName = request.getParameter("teacherName");
 //Null 체크
-if (today != null && selectVal != null && studentName != null && lectureName != null && lectureClass != null && teacherName != null) {
-	 today = today.trim();
+
 	 selectVal = selectVal.trim();
 	 studentName = studentName.trim();
 	 lectureName = lectureName.trim();
@@ -27,46 +26,47 @@ if (today != null && selectVal != null && studentName != null && lectureName != 
 		
 		JSONArray studentArray = new JSONArray();
 		StudentDAO dao1 = new StudentDAO();
-		ArrayList<ClassNoteVO> list1;
-		list1 = dao1.studentCheckSelectAllByDate(today);
+		ArrayList<ClassNoteVO> list;
+		list = dao1.studentCheckSelectAllByDate(today);
+	
 		if (studentName != null && !studentName.isEmpty()) {
-			list1 = dao1.studentSearchSelectAllByName(studentName);
+			list = dao1.studentSearchSelectAllByName(studentName);
 		}
 		// 날짜 + 반 선택
 		else if ("학생명선택".equals(studentName)&& !"반선택".equals(lectureClass) && "강의선택".equals(lectureName)) {
-			list1 = dao1.studentCheckSelectByLectureClassByDate(today, lectureClass);
+			list = dao1.studentCheckSelectByLectureClassByDate(today, lectureClass);
 		}
 		// 날짜 + 학생명 선택
 		else if (!"학생명선택".equals(studentName)&& "반선택".equals(lectureClass) && "강의선택".equals(lectureName)) {
-			list1 = dao1.studentCheckSelectByStudentNameByDate(today, studentName);
+			list = dao1.studentCheckSelectByStudentNameByDate(today, studentName);
 		}
 		// 날짜 + 강의 선택
 		else if ("학생명선택".equals(studentName)&& "반선택".equals(lectureClass) && !"강의선택".equals(lectureName)) {
-			list1 = dao1.studentCheckSelectByLectureNameByDate(today, lectureName);
+			list = dao1.studentCheckSelectByLectureNameByDate(today, lectureName);
 		}
 		// 날짜 + 반 선택 + 학생명 선택
 		else if (!"학생명선택".equals(studentName)&& !"반선택".equals(lectureClass) && "강의선택".equals(lectureName)) {
-			list1 = dao1.studentCheckSelectByStudentNameByLectureClassByDate(today, studentName, lectureClass);
+			list = dao1.studentCheckSelectByStudentNameByLectureClassByDate(today, studentName, lectureClass);
 		}
 		// 날짜 + 반 선택 + 강의 선택
 		else if ("학생명선택".equals(studentName)&& !"반선택".equals(lectureClass) && !"강의선택".equals(lectureName)) {
-			list1 = dao1.studentCheckSelectByLectureNameByLectureClassByDate(today, lectureName, lectureClass);
+			list = dao1.studentCheckSelectByLectureNameByLectureClassByDate(today, lectureName, lectureClass);
 		}
 		// 날짜 + 반 선택 + 강의 선택 + 학생명 선택
 		else if (!"학생명선택".equals(studentName)&& !"반선택".equals(lectureClass) && !"강의선택".equals(lectureName)) {
-			list1 = dao1.studentCheckSelectByLectureNameByLectureClassByStudentNameByDate(today, lectureName, lectureClass, studentName);
+			list = dao1.studentCheckSelectByLectureNameByLectureClassByStudentNameByDate(today, lectureName, lectureClass, studentName);
 		}
 		// 날짜 + 강의 선택 + 학생명 선택
 		else if (!"학생명선택".equals(studentName)&& "반선택".equals(lectureClass) && !"강의선택".equals(lectureName)) {
-			list1 = dao1.studentCheckSelectByLectureNameByStudentNameByDate(today, lectureName, studentName );
+			list = dao1.studentCheckSelectByLectureNameByStudentNameByDate(today, lectureName, studentName );
+		}else {
+			list = new ArrayList<>();
+			System.out.println(list);
 		}
 		
-		else {
-			list1 = new ArrayList<>();
-			System.out.println(list1);
-		}
 		
-		for( ClassNoteVO vo : list1 ){
+		
+		for( ClassNoteVO vo : list ){
 			JSONObject student = new JSONObject();
 			student.put( "studentNo", vo.getStudentNo() );
 			student.put( "studentName", vo.getStudentName() );
@@ -105,7 +105,10 @@ if (today != null && selectVal != null && studentName != null && lectureName != 
 			out.println( teacherArray.toJSONString() );
 			System.out.println( teacherArray.toJSONString() );
 		
+		}else {
+			list3 = new ArrayList<>();
+			System.out.println(list3);
 		}
 
-	}
+	
 %>

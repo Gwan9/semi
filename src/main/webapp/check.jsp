@@ -32,7 +32,7 @@ String today = sdf.format( nowDate);
 StudentDAO dao3 = new StudentDAO();
 ArrayList<ClassNoteVO> list1 = dao3.teacherSelectAll();
 StudentDAO dao4 = new StudentDAO();
-ArrayList<ClassNoteVO> list2 = dao4.studenSearchSelectAll();
+ArrayList<ClassNoteVO> list2 = dao4.studentSearchSelectAll();
 
 %>
 	$(function() {
@@ -224,12 +224,12 @@ ArrayList<ClassNoteVO> list2 = dao4.studenSearchSelectAll();
 					url : "checkAtoB.jsp",
 					data : {
 						// 넘겨주는 데이터 :
-						"selectVal" : $( "#selectStdTec" ).val(), // 학생인지 교사인지
-						"date1" : $( "#date1" ).val(), // 날짜 1 ~ 날짜 2	
-						"date2" : $( "#date2" ).val(),
-						"studentName" : $( "#studentName" ).val(), // 학생이름 
-						"lectureClass" : $( "#lectureClass" ).val(), // 강의명 
-						"lectureName" : $( "#lectureName" ).val() // 반이름
+						"selectVal" : $( "#selectStdTec" ).val().trim(), // 학생인지 교사인지
+						"date1" : $( "#date1" ).val().trim(), // 날짜 1 ~ 날짜 2	
+						"date2" : $( "#date2" ).val().trim(),
+						"studentName" : $( "#studentName" ).val().trim(), // 학생이름 
+						"lectureClass" : $( "#lectureClass" ).val().trim(), // 강의명 
+						"lectureName" : $( "#lectureName" ).val().trim() // 반이름
 					}, 
 					success : function(data){
 						
@@ -280,14 +280,14 @@ ArrayList<ClassNoteVO> list2 = dao4.studenSearchSelectAll();
 			$( "tbody" ).empty();
 			console.log( "dateToday 호출" );
 			$.ajax({
-				url : "CheckOk.jsp", 
+				url : "checkOkTest.jsp", 
 				data : {
-					"today" : $( "#today_txt" ).val(),
-					"selectVal" : $("#selectStdTec").val(),
-					"studentName" : $( "#studentName" ).val(), // 학생이름 
-					"lectureClass" : $( "#lectureClass" ).val(), // 강의명 
-					"lectureName" : $( "#lectureName" ).val() // 반이름
-					"lectureName" : $( "#teacherName" ).val() // 반이름
+					"today" : $( "#today_txt" ).val().trim(),
+					"selectVal" : $("#selectStdTec").val().trim(),
+					"studentName" : $( "#studentName" ).val().trim(), // 학생이름 
+					"lectureClass" : $( "#lectureClass" ).val().trim(), // 강의명 
+					"lectureName" : $( "#lectureName" ).val().trim(), // 반이름
+					"lectureName" : $( "#teacherName" ).val().trim() // 반이름
 					
 				},
 				success : function( data ) {

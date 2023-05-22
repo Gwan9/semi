@@ -30,7 +30,7 @@
 		StudentDAO dao3 = new StudentDAO();
 		ArrayList<ClassNoteVO> list1 = dao3.teacherSelectAll();
 		StudentDAO dao4 = new StudentDAO();
-		ArrayList<ClassNoteVO> list2 = dao4.studenSearchSelectAll();
+		ArrayList<ClassNoteVO> list2 = dao4.studentSearchSelectAll();
 	
 	%>
 	$(function() {
@@ -298,7 +298,7 @@ function dateToday(){
 	$( "tbody" ).empty();
 	console.log( "dateToday 호출" );
 	$.ajax({
-		url : "CheckOk2.jsp", 
+		url : "search.jsp", 
 		data : {
 			"today" : $( "#today_txt" ).val(),
 			"selectVal" : $("#selectStdTec").val(),
@@ -389,7 +389,7 @@ function dateToday(){
 	<div id="divStudent"> <!-- 학생 검색 옵션들 -->
 	
 		<select id="lectureClass">
-			<option selected value="">반 선택</option>
+			<option selected value="">반선택</option>
 			<% for (ClassNoteVO vo : list2) { %>
 	        <option value="<%= vo.getLectureClass() %>"><%= vo.getLectureClass() %></option>
 	    <% } %>
