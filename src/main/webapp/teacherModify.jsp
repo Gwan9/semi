@@ -52,11 +52,11 @@
 					<div>
 						<h5>아이디</h5>
 						<div><%= vo.getTeacherId() %></div>
-						<input type="button" value="중복확인" />
 					</div>
 					<div>
 						<h5>비밀번호</h5>
 						<div><%= vo.getTeacherPw() %></div>
+						<h5>비밀번호 수정</h5>
 						<input type="text" name="pw" id="" />
 					</div>
 					<div>
@@ -65,35 +65,35 @@
 					</div>
 					<div>
 						<h5>이름</h5>
-						<input type="text" name="name" id="" />
+						<div><%= vo.getTeacherName() %></div>
 					</div>
 					<div>
 						<h5>성별</h5>
-						<h5><input type="radio" name="gender" id="" value="남" />남
-						<input type="radio" name="gender" id="" value="여" />여</h5>
+						<div><%= vo.isTeacherGender() %></div>
 					</div>
 					<div>
 						<h5>생년월일</h5>
-						<input type="text" name="birth" id="" />
+						<div><%= vo.getTeacherBirth() %></div>
 					</div>
 					<div>
 						<h5>거주지</h5>
-						<input type="text" name="addrs" id="" />
+						<div><%= vo.getTeacherAddress() %></div>
 					</div>
 					<div>
 						<h5>연락처</h5>
-						<input type="text" name="phone" id="" />
+						<div><%= vo.getTeacherPhone() %></div>
 					</div>
 					<div>
 						<h5>EMAIL</h5>
-						<input type="text" name="email" id="" />
-						<select name="" id="">
-							<option value="직접입력">직접입력</option>
-						</select>
+						<div><%= vo.getTeacherPhone() %></div>
+						<h5>EMAIL 수정</h5>
+						<input type="text" name="email" id="" placeholder=" ex) teacher@naver.com " />
 					</div>
 					<div id="sub">
-						<input type="submit" value="가입하기" />
-						<input type="button" value="취소하기" />
+						<input type="submit" value="수정하기" />
+						<a href="main.jsp">
+							<input type="button" value="취소하기" />
+						</a>
 					</div>
 				</div>
 			</div>
