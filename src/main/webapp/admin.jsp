@@ -10,19 +10,34 @@
 <title>admin.jsp</title>
 
 <style type="text/css">
+
+#mainContainer {
+	width: 1100px;
+	background: gray;
+	margin: 0px auto;
+	border-radius: 20px;
+}
+
+.divider {
+  border-top: 3px solid black;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* --- */
 #container {
 	width: 1000px;
 	background: #E2E2E2;
 	margin: 0px auto;
 	/* 	화면에 보이지 않지만 자리를 차지함. */
 	visibility: hidden;
+	border-radius: 20px;
 }
 
 #teacher_or_student{
 	width: 100px;
 	height: 40px;
 	margin-left: 90px;
-	margin-top: 50px;
 }
 
 #lectureSelect {
@@ -90,6 +105,10 @@ table, th, td {
 	margin-bottom: 30px;
 }
 
+.delete_btn {
+	visibility: hidden;
+}
+
 #data {
 	display: none;
 }
@@ -101,14 +120,21 @@ table, th, td {
 	background: #FFE4C4;
 	margin: 0px auto;
 	visibility: visible;
+	border-radius: 20px;
 }
 
 
 #monthSelect {
 	width: 100px;
 	height: 40px;
-	margin-top: 80px;
 	margin-left: 90px;
+}
+
+#account_modify_btn {
+	width: 100px;
+	height: 40px;
+	margin-left: 30px;
+	visibility: hidden;
 }
 
 
@@ -116,7 +142,6 @@ table, th, td {
 	margin-left: 90px;
 	margin-bottom: 40px;
 }
-
 
 }
 </style>
@@ -129,12 +154,12 @@ table, th, td {
 		$(window).on("load", function() {
 			var marginLeft = $("#container").css("margin-left");
 			$("#teacher_or_student, #monthSelect").css("margin-left", marginLeft);
-			$("#msg1, #msg2").css("margin-left", marginLeft);
+			$("#msg1, #msg2, h1").css("margin-left", marginLeft);
 		})
 		$(window).on("resize", function() {
 			var marginLeft = $("#container").css("margin-left");
 			$("#teacher_or_student, #monthSelect").css("margin-left", marginLeft);
-			$("#msg1, #msg2").css("margin-left", marginLeft);
+			$("#msg1, #msg2, h1").css("margin-left", marginLeft);
 		});
 		
 		
@@ -156,6 +181,7 @@ table, th, td {
 				
 				
 				// 표 내용 바꾸기
+				$("#selectLabel").text("강의명 : ")
 				$("#labelName").text("강사명 : ");
 				
 				$("#th1").text("강사번호");
@@ -166,6 +192,9 @@ table, th, td {
 				$("#th6").text("담당 강의명");
 				
 				
+				$("#op1").val("lectureKor").html("국어");
+				$("#op2").val("lectureEng").html("영어");
+				$("#op3").val("lectureMath").html("수학");
 				
 				$.ajax({
 					type: "GET",
@@ -194,8 +223,8 @@ table, th, td {
 						        + "<td>" + obj[i].phone + "</td>"
 						        + "<td>" + obj[i].subject + "</td>"
 						        + "<td>" + obj[i].lectureStartDate + "</td>"
-						        + "<td>" + obj[i].LectureEndDate + "</td>"
-						        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+						        + "<td>" + obj[i].lectureEndDate + "</td>"
+						        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' class='delete_btn' value='삭제' /></a></td>"
 						        + "</tr>";
 
 								// 덧붙이기
@@ -205,6 +234,7 @@ table, th, td {
 								var tableHeight = $('#table_result').outerHeight();
 								var containerHeight = tableHeight + 270;
 								$('#container').css('height', containerHeight + 'px');
+								
 						}
 		
 					},
@@ -257,7 +287,7 @@ table, th, td {
 							        + "<td>" + obj[i].subject + "</td>"
 							        + "<td>" + obj[i].lectureStartDate + "</td>"
 							        + "<td>" + obj[i].LectureEndDate + "</td>"
-							        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+							        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' class='delete_btn' value='삭제' /></a></td>"
 							        + "</tr>";
 
 									// 덧붙이기
@@ -266,7 +296,7 @@ table, th, td {
 							
 							// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 							var tableHeight = $('#table_result').outerHeight();
-							var containerHeight = tableHeight + 320;
+							var containerHeight = tableHeight + 520;
 							$('#container').css('height', containerHeight + 'px');
 							
 			
@@ -331,7 +361,7 @@ table, th, td {
 								        + "<td>" + obj[i].subject + "</td>"
 								        + "<td>" + obj[i].lectureStartDate + "</td>"
 								        + "<td>" + obj[i].lectureEndDate + "</td>"
-								        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+								        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' class='delete_btn' value='삭제' /></a></td>"
 								        + "</tr>";
 
 										// 덧붙이기
@@ -414,13 +444,16 @@ table, th, td {
 								        + "<td>" + obj[i].subject + "</td>"
 								        + "<td>" + obj[i].lectureStartDate + "</td>"
 								        + "<td>" + obj[i].lectureEndDate + "</td>"
-								        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+								        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' class='delete_btn' value='삭제' /></a></td>"
 								        + "</tr>";
 
 										// 덧붙이기
 										$("#table_result").append(txt);
 								}
-								
+								// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+								var tableHeight = $('#table_result').outerHeight();
+								var containerHeight = tableHeight + 320;
+								$('#container').css('height', containerHeight + 'px');
 								
 							},
 							error: function(response, status, request) {
@@ -454,6 +487,7 @@ table, th, td {
 				$("#table_result tr:not(:first-child)").remove();
 				
 				// 표 내용 바꾸기
+				$("#selectLabel").text("수강반 : ")
 				$("#labelName").text("학생명 : ");
 				
 				$("#th1").text("학생번호");
@@ -463,7 +497,13 @@ table, th, td {
 				$("#th5").text("학교명");
 				$("#th6").text("수강반");
 				
+				$("#op1").val("lectureClsA").html("A");
+				$("#op2").val("lectureClsB").html("B");
+				$("#op3").val("lectureClsC").html("C");
 				
+		
+				
+				// 학생 목록 전체 출력
 				$.ajax({
 					type: "GET",
 					async: true,
@@ -491,7 +531,7 @@ table, th, td {
 						        + "<td>" + obj[i].lectureName + "</td>"
 						        + "<td>" + obj[i].lectureStartDate + "</td>"
 						        + "<td>" + obj[i].lectureEndDate + "</td>"
-						        + "<td><a href='deleteStudentOk.jsp?student_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+						        + "<td><a href='deleteStudentOk.jsp?student_no=" + obj[i].no + "'><input type='button' class='delete_btn' value='삭제' /></a></td>"
 						        + "</tr>";
 
 								// 덧붙이기
@@ -512,15 +552,7 @@ table, th, td {
 				
 				
 				
-				
-				//    수정 start
-				
 				$("#search").on("click", function() {
-					
-					// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
-					var tableHeight = $('#table_result').outerHeight();
-					var containerHeight = tableHeight + 270;
-					$('#container').css('height', containerHeight + 'px');
 					
 					$("#table_result tr:not(:first-child)").remove();
 					
@@ -537,7 +569,7 @@ table, th, td {
 //		 					console.log("성공");
 //		 					console.log(response);
 							
-							var obj = eval("(" + response + ")");
+							var obj = JSON.parse(response);
 							
 							console.log(obj);
 							
@@ -555,12 +587,17 @@ table, th, td {
 							        + "<td>" + obj[i].lectureName + "</td>"
 							        + "<td>" + obj[i].lectureStartDate + "</td>"
 							        + "<td>" + obj[i].lectureEndDate + "</td>"
-							        + "<td><a href='deleteStudentOk.jsp?student_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+							        + "<td><a href='deleteStudentOk.jsp?student_no=" + obj[i].no + "'><input type='button' class='delete_btn' value='삭제' /></a></td>"
 							        + "</tr>";
 
 									// 덧붙이기
 									$("#table_result").append(txt);
 							}
+							
+							// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+							var tableHeight = $('#table_result').outerHeight();
+							var containerHeight = tableHeight + 270;
+							$('#container').css('height', containerHeight + 'px');
 			
 						},
 						error: function(response, status, request) {
@@ -570,6 +607,8 @@ table, th, td {
 					}); // ajax end
 					
 				}); // search 버튼 클릭했을 때
+				
+				
 				
 				
 				$("#lectureSelect").change(function() {
@@ -591,12 +630,12 @@ table, th, td {
 					var requestData = {};
 					
 					
-					if ($("#lectureSelect").val() == "lectureKor") {
-						requestData.lectureSelect = $("option[value='lectureKor']").text();
-					} else if ($("#lectureSelect").val() == "lectureEng") {
-						requestData.lectureSelect = $("option[value='lectureEng']").text();
-					} else if ($("#lectureSelect").val() == "lectureMath") {
-						requestData.lectureSelect = $("option[value='lectureMath']").text();
+					if ($("#lectureSelect").val() == "lectureClsA") {
+						requestData.lectureSelect = $("option[value='lectureClsA']").text();
+					} else if ($("#lectureSelect").val() == "lectureClsB") {
+						requestData.lectureSelect = $("option[value='lectureClsB']").text();
+					} else if ($("#lectureSelect").val() == "lectureClsC") {
+						requestData.lectureSelect = $("option[value='lectureClsC']").text();
 					}
 						
 						// 선택하면 검색 결과가 나오게
@@ -604,7 +643,7 @@ table, th, td {
 						$.ajax({
 							type: "GET",
 							async: true,
-							url: "SearchTeacherSubjectOk.jsp",
+							url: "SearchStudentSubjectOk.jsp",
 							dataType: "html",
 							data: requestData, // requestData를 담은 객체
 							success: function(response, status, request) {
@@ -621,20 +660,25 @@ table, th, td {
 								for(var i=0; i<obj.length; i++) {
 									
 									txt = "<tr>"
-								        + "<th><a href='teacher_detail.jsp?teacher_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
+								        + "<th><a href='student_detail.jsp?student_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
 								        + "<td>" + obj[i].name + "</td>"
-								        + "<td>" + obj[i].id + "</td>"
-								        + "<td>" + obj[i].pw + "</td>"
 								        + "<td>" + obj[i].phone + "</td>"
-								        + "<td>" + obj[i].subject + "</td>"
+								        + "<td>" + obj[i].parentsPhone + "</td>"
+								        + "<td>" + obj[i].schoolName + "</td>"
+								        + "<td>" + obj[i].lectureName + "</td>"
 								        + "<td>" + obj[i].lectureStartDate + "</td>"
 								        + "<td>" + obj[i].lectureEndDate + "</td>"
-								        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+								        + "<td><a href='deleteStudentOk.jsp?student_no=" + obj[i].no + "'><input type='button' class='delete_btn' value='삭제' /></a></td>"
 								        + "</tr>";
 
 										// 덧붙이기
 										$("#table_result").append(txt);
 								}
+								
+								// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+								var tableHeight = $('#table_result').outerHeight();
+								var containerHeight = tableHeight + 320;
+								$('#container').css('height', containerHeight + 'px');
 				
 							},
 							error: function(response, status, request) {
@@ -683,7 +727,7 @@ table, th, td {
 						$.ajax({
 							type: "GET",
 							async: true,
-							url: "SearchTeacherDateOK.jsp",
+							url: "SearchStudentDateOK.jsp",
 							dataType: "html",
 							data: {"registDateStart":$("#registDateStart").val(),"registDateEnd":$("#registDateEnd").val()},
 							success: function(response, status, request) {
@@ -698,20 +742,25 @@ table, th, td {
 								for(var i=0; i<obj.length; i++) {
 									
 									txt = "<tr>"
-								        + "<th><a href='teacher_detail.jsp?teacher_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
+								        + "<th><a href='student_detail.jsp?student_no=" + obj[i].no + "'>" + obj[i].no + "</a></th>"
 								        + "<td>" + obj[i].name + "</td>"
-								        + "<td>" + obj[i].id + "</td>"
-								        + "<td>" + obj[i].pw + "</td>"
 								        + "<td>" + obj[i].phone + "</td>"
-								        + "<td>" + obj[i].subject + "</td>"
+								        + "<td>" + obj[i].parentsPhone + "</td>"
+								        + "<td>" + obj[i].schoolName + "</td>"
+								        + "<td>" + obj[i].lectureName + "</td>"
 								        + "<td>" + obj[i].lectureStartDate + "</td>"
 								        + "<td>" + obj[i].lectureEndDate + "</td>"
-								        + "<td><a href='deleteTeacherOk.jsp?teacher_no=" + obj[i].no + "'><input type='button' id='delete_btn' value='삭제' /></a></td>"
+								        + "<td><a href='deleteStudentOk.jsp?student_no=" + obj[i].no + "'><input type='button' class='delete_btn' value='삭제' /></a></td>"
 								        + "</tr>";
 
 										// 덧붙이기
 										$("#table_result").append(txt);
 								}
+								
+								// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+								var tableHeight = $('#table_result').outerHeight();
+								var containerHeight = tableHeight + 320;
+								$('#container').css('height', containerHeight + 'px');
 								
 								
 							},
@@ -725,8 +774,6 @@ table, th, td {
 				}
 				
 
-				
-				//   수정 end
 				
 			} else {
 				// 안내 메세지 표시하기
@@ -763,19 +810,110 @@ table, th, td {
 			
 		})
 		
+		// 편집 버튼을 눌렀을 때 삭제 버튼이 눈에 보이게
+		$("#modify_btn").on("click", function() {
+			$(".delete_btn").css("visibility", "visible");
+		});
 		
 
 		
 // 		-----------------------------------------------------------------------------------------
 		
 		
-
+		// 회계 프로그램
 		
+		// 월을 선택했을 경우
+		$("#monthSelect").change(function() {
+			
+			$("#msg2").css("visibility", "hidden");
+			
+			$("#table_accounting_result tr:not(:first-child)").remove();
+			
+			$("#account_modify_btn").css("visibility", "visible");
+			
+			
+			// 선택한 달 value 값 가져오기
+			var selectedMonth = $(this).val();
+			
+			// 선택한 달의 말일을 가져오기(0일 == 말일)
+		    var lastDay = new Date(2023, parseInt(selectedMonth), 0).getDate();
+		    
+			// 조회할 구간의 처음
+		    var startDate = "01-" + selectedMonth + "-2023 00:00:00";
+			// 조회할 구간의 마지막
+		    var endDate = lastDay + "-" + selectedMonth + "-2023 23:59:59";
+		    
+// 		    console.log(selectedMonth + " : " + lastDay + " : " + startDate + " : " + endDate);
+
+			
+			// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+			var tableHeight = $('#table_accounting_result').outerHeight();
+			var containerHeight = tableHeight + 650;
+			$('#container2').css('height', containerHeight + 'px');
+			
+						
+			$.ajax({
+				type: "GET",
+				async: true,
+				url: "SearchAccountingDateOK.jsp",
+				dataType: "html",
+				data: {"startDate":startDate,"endDate":endDate},
+				success: function(response, status, request) {
+					// console.log("성공");
+					
+					var obj = JSON.parse(response);
+					
+					console.log(obj);
+					
+					var txt = null;
+					
+					for(var i=0; i<obj.length; i++) {
+						
+						txt = "<tr>"
+					        + "<th><a href='student_detail.jsp?student_no=" + obj[i].registerno + "'>" + obj[i].registerno + "</a></th>"
+					        + "<td>" + obj[i].lectureClass + "</td>"
+					        + "<td>" + obj[i].studentName + "</td>"
+					        + "<td>" + obj[i].isPay + "</td>"
+					        + "<td>" + obj[i].lectureName + "</td>"
+					        + "<td>" + obj[i].lectureTuition + "</td>"
+					        + "<td>" + obj[i].payType + "</td>"
+					        + "<td>" + obj[i].lectureStartDate + "</td>"
+					        + "<td>" + obj[i].lectureEndDate + "</td>"
+					        + "<td>" + obj[i].studentDueDate + "</td>"
+					        + "<td>" + obj[i].studentParentsPhone + "</td>"
+					        + "<td><a href='deleteStudentOk.jsp?student_no=" + obj[i].no + "'><input type='button' class='delete_btn' value='삭제' /></a></td>"
+					        + "</tr>";
+
+							// 덧붙이기
+							$("#table_accounting_result").append(txt);
+					}
+					
+					// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
+					var tableHeight = $('#table_accounting_result').outerHeight();
+					var containerHeight = tableHeight + 120;
+					$('#container2').css('height', containerHeight + 'px');
+					
+				},
+				error: function(response, status, request) {
+					console.log("실패");
+				}
+			}); // ajax end
+			
+
+			// 편집 버튼을 눌렀을 때 삭제 버튼이 눈에 보이게
+			$("#account_modify_btn").on("click", function() {
+				$(".delete_btn").css("visibility", "visible");
+			});
+
+		});
 	});
 </script>
 
 </head>
 <body>
+	<div id="mainContainer">
+		
+		<h1>강사/학생 관리</h1>
 		<div>
 			<select id="teacher_or_student">
 				<option value="">선택</option>
@@ -798,15 +936,15 @@ table, th, td {
 			<br /> 
 			
 			<span id="lectureSelect_box"> 
-				<label class="label" for="">강의명 : </label>
+				<label class="label" for="" id="selectLabel" >강의명 : </label>
 				
 <!-- 			<input type="text" name="강의명" id="lecture_name" value="" /> -->
 				
 				<select id="lectureSelect">
 					<option value="">선택</option>
-					<option value="lectureKor">국어</option>
-					<option value="lectureEng">영어</option>
-					<option value="lectureMath">수학</option>
+					<option id="op1" value=""></option>
+					<option id="op2" value=""></option>
+					<option id="op3" value=""></option>
 				</select>	
 			</span> 
 			
@@ -849,34 +987,42 @@ table, th, td {
 				</div>
 			</div>
 			
-<!-- 			-------------------------------------------------------------------------- -->
+			<div class="divider"></div>
 			
+			
+<!-- 			-------------------------------------------------------------------------- -->
+			<h1>회계 관리</h1>
 			<div>
 				<select id="monthSelect">
 					<option value="">선택</option>
-					<option value="jan">1월</option>
-					<option value="feb">2월</option>
-					<option value="mar">3월</option>
-					<option value="apr">4월</option>
-					<option value="may">5월</option>
-					<option value="jun">6월</option>
-					<option value="jul">7월</option>
-					<option value="aug">8월</option>
-					<option value="sep">9월</option>
-					<option value="oct">10월</option>
-					<option value="nov">11월</option>
-					<option value="dec">12월</option>
+					<option value="01">1월</option>
+					<option value="02">2월</option>
+					<option value="03">3월</option>
+					<option value="04">4월</option>
+					<option value="05">5월</option>
+					<option value="06">6월</option>
+					<option value="07">7월</option>
+					<option value="08">8월</option>
+					<option value="09">9월</option>
+					<option value="10">10월</option>
+					<option value="11">11월</option>
+					<option value="12">12월</option>
 				</select>
+				
+				<span>
+					<input type="button" id="account_modify_btn" value="편집" />
+				</span>
 				
 				<div id="msg2" style="font-weight: bold">
 					조회하려는 달을 선택해주세요!
 				</div>
+				
 			</div>
 			
 			
 			<div id="container2">
 				<div>
-					<table>
+					<table id="table_accounting_result">
 						<tr>
 							<th>수강번호</th>
 							<th>수강반</th>
@@ -889,13 +1035,14 @@ table, th, td {
 							<th>수강종료일</th>
 							<th>납부일</th>
 							<th>학부모 전화번호</th>
+							<th>비고</th>
 						
 						</tr>
 						
 					<%
 					StudentDAO dao = new StudentDAO();
 					
-					ArrayList<ClassNoteVO> accountingList = dao.teacherSelectAllAccounting();
+					ArrayList<ClassNoteVO> accountingList = dao.accountingSelectByAll();
 					
 					for(ClassNoteVO vo : accountingList) {
 					%>	
@@ -912,30 +1059,30 @@ table, th, td {
 							<td><%= vo.getLectureEndDate() %></td>
 							<td><%= vo.getStudentDueDate() %></td>
 							<td><%= vo.getStudentParentsPhone() %></td>
-						
+							<td></td>
 							
 						</tr>
 					<%
 					}
 					%>
+					</table>
 					
-					<tr>
-						<td colspan="4">납입금 총액</td>
-						<td colspan="3">2</td>
-						<td rowspan="2" colspan="2">누적 총액</td>
-						<td rowspan="2" colspan="2">5</td>		
-					</tr>
-					
-					<tr>
-						<td colspan="4">미납금 총액</td>
-						<td colspan="3">4</td>
-					</tr>
-					
-					
+					<table>
+						<tr class="account_sum" >
+							<th colspan="4">납입금 총액</th>
+							<td colspan="3">2</td>
+							<th rowspan="2" colspan="2">누적 총액</th>
+							<td rowspan="2" colspan="2">5</td>		
+						</tr>
+						
+						<tr class="account_sum">
+							<th colspan="4">미납금 총액</th>
+							<td colspan="3">4</td>
+						</tr>
 					</table>
 				
 				</div>
 			</div>	
-		
+		</div>
 </body>
 </html>

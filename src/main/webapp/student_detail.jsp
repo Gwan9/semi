@@ -77,19 +77,20 @@ table, th, td {
 			<h1>학생정보</h1>
 
 			<%
-				String studentNo = request.getParameter("student_no");
+			String studentNo = request.getParameter("student_no");
+			
+			System.out.println("jsp에서의 값 : " + studentNo);
 
-				if (studentNo != null) {
-					int studentNoInt = Integer.parseInt(studentNo);
-					StudentDAO dao = new StudentDAO();
-					ArrayList<ClassNoteVO> list = dao.studentSearchSelectAllByNo(studentNoInt);
+			if (studentNo != null) {
+				int studentNoInt = Integer.parseInt(studentNo);
+				StudentDAO dao = new StudentDAO();
+				ClassNoteVO vo = dao.studentSearchSelectByNo(studentNoInt);
 				
-					for(ClassNoteVO vo : list) {
-				
+				System.out.println("jsp에서의 값 : " +vo);
 			%>
 
 			<div id="img">
-				<img src="<%=vo.getStudentPhoto()%>" alt="" name="photo" id="photo" />
+				<img src="<%=vo.getStudentPhoto() %>" alt="" name="photo" id="photo" />
 			</div>
 
 
@@ -97,9 +98,9 @@ table, th, td {
 				<table>
 					<tr>
 						<th>학생번호</th>
-						<td colspan="2"><%= vo.getStudentNo() %></td>
+						<td colspan="2"><%=vo.getStudentNo()%></td>
 						<th>이름</th>
-						<td colspan="2"><%= vo.getStudentName()%></td>
+						<td colspan="2"><%=vo.getStudentName()%></td>
 					</tr>
 					<tr>
 						<th>학년</th>
@@ -111,38 +112,39 @@ table, th, td {
 					</tr>
 					<tr>
 						<th>성별</th>
-						<td><%= vo.isStudentGender() %></td>
+						<td><%=vo.isStudentGender()%></td>
 						<th>이메일</th>
 						<td><%=vo.getStudentEmail()%></td>
 						<th>생년월일</th>
-						<td><%= vo.getStudentBirth() %></td>
+						<td><%=vo.getStudentBirth()%></td>
 					</tr>
 					<tr>
 						<th>등록일</th>
-						<td><%= vo.getStudentRegistDate() %></td>
+						<td><%=vo.getStudentRegistDate()%></td>
 						<th>학부모 이름</th>
-						<td><%= vo.getStudentParentsName() %></td>
+						<td><%=vo.getStudentParentsName()%></td>
 						<th>학부모 연락처</th>
-						<td><%= vo.getStudentParentsPhone() %></td>
+						<td><%=vo.getStudentParentsPhone()%></td>
 					</tr>
 					<tr>
 						<th>등록상태</th>
-						<td><%= vo.isStudentStatus() %></td>
+						<td><%=vo.isStudentStatus()%></td>
 						<th>주소지</th>
-						<td colspan="3"><%= vo.getStudentAddrs() %></td>
+						<td colspan="3"><%=vo.getStudentAddrs()%></td>
 					</tr>
 				</table>
 
 				<div id="modify_or_cancle">
-					<a href="student_modify_form.jsp?student_no=<%= vo.getStudentNo() %>"><input type="button" id="modify_btn" value="수정" /></a>
-					<input type="button" id="cancle_btn" value="뒤로가기" />
+					<a
+						href="student_modify_form.jsp?student_no=<%=vo.getStudentNo()%>"><input
+						type="button" id="modify_btn" value="수정" /></a> <input type="button"
+						id="cancle_btn" value="뒤로가기" />
 				</div>
 			</div>
-				<%
-					}
-				}
-				%>
-							
+			<%
+			}
+			%>
+
 		</div>
 	</div>
 </body>

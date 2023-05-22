@@ -120,11 +120,9 @@
 				if (studentNo != null) {
 					int studentNoInt = Integer.parseInt(studentNo);
 					StudentDAO dao = new StudentDAO();
-					ArrayList<ClassNoteVO> list = dao.studentSearchSelectAllByNo(studentNoInt);
+					ClassNoteVO vo = dao.studentSearchSelectByNo(studentNoInt);
 				
-					for(ClassNoteVO vo : list) {
-				
-			%>
+		%>
 		
 	<form action="student_modify_form_OK.jsp?student_no=<%= vo.getStudentNo() %>">
 		
@@ -210,7 +208,6 @@
 		</div>
 		
 		<%
-				}
 			}
 		%>
 		</form>

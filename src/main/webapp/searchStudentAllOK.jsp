@@ -11,7 +11,7 @@
 		JSONArray student = new JSONArray();
 		StudentDAO dao = new StudentDAO();
 		
-		ArrayList<ClassNoteVO> list = dao.studentSelectAll();
+		ArrayList<ClassNoteVO> list = dao.studentSelectByAll();
 		
 		for(ClassNoteVO vo : list) {
 		JSONObject study = new JSONObject();

@@ -3,22 +3,19 @@
 <%@page import="VO.ClassNoteVO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="org.json.simple.JSONArray"%>
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%
-	String studentName = request.getParameter("nameText");
+	String studentClass = request.getParameter("lectureSelect");
 
-	 	System.out.println(studentName);	
-		
-	// 	out.println(teacherName);
+	System.out.println(studentClass);
+
+	JSONArray student = new JSONArray();
+	StudentDAO dao = new StudentDAO();
 	
-	// 1. 강사 정보를 JSON 형태로 출력
-		JSONArray student = new JSONArray();
-		StudentDAO dao = new StudentDAO();
-		
-		ArrayList<ClassNoteVO> list = dao.studentSelectByName(studentName);
-		
-		for(ClassNoteVO vo : list) {
+	ArrayList<ClassNoteVO> list = dao.studentSelectBySubject(studentClass);
+	
+	for(ClassNoteVO vo : list) {
 		JSONObject study = new JSONObject();
 	
 		study.put("no", vo.getStudentNo());
@@ -35,4 +32,5 @@
 		}
 		
 		out.println(student);
+
 %>

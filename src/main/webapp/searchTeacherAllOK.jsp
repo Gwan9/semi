@@ -23,7 +23,7 @@
 		teach.put("phone", vo.getTeacherPhone());
 		teach.put("subject", vo.getTeacherSubject());
 		teach.put("lectureStartDate", vo.getLectureStartDate());
-		teach.put("LectureEndDate", vo.getLectureEndDate());
+		teach.put("lectureEndDate", vo.getLectureEndDate());
 	
 		teacher.add(teach);
 	
