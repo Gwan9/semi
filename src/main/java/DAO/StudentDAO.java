@@ -255,7 +255,7 @@ public class StudentDAO {
 	
 	// student - class_register - lecture 조인
 	
-	public ArrayList<ClassNoteVO> studenSearchSelectAll() {
+	public ArrayList<ClassNoteVO> studentSearchSelectAll() {
 
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 
@@ -1602,8 +1602,68 @@ public class StudentDAO {
 			return null;
 		}
 
+		
+		
+		
 		// -----------------------------------------------------------------------
 	
+		
+		//내 dao 추가
+				public ArrayList<ClassNoteVO> studentSelectAllByRegistDate(String date1, String date2){
+					ArrayList<ClassNoteVO> list = new ArrayList<>();
+					ClassNoteVO vo = null;
+			
+					sb.setLength(0);
+					sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+					sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+					sb.append("s.student_parents_name, s.student_parents_phone ");
+					sb.append("FROM student s, class_register c, lecture l ");
+					sb.append("WHERE s.student_no = c.student_no ");
+					sb.append("AND c.lecture_no = l.lecture_no ");
+					sb.append("AND TO_CHAR(student_regist_date, 'YYYY-MM-DD') "); 
+					sb.append("BETWEEN ? AND ? ");
+					
+					
+
+					try {
+						// 5. 문장객체 생성
+						pstmt = conn.prepareStatement(sb.toString());
+						pstmt.setString(1, date1); // bind 변수 값 주기
+						pstmt.setString(2, date2); // bind 변수 값 주기
+
+						// 6. 실행
+						rs = pstmt.executeQuery();
+
+						// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+						while (rs.next()) {
+
+							vo = new ClassNoteVO();
+
+							vo.setStudentNo(rs.getInt("student_no"));
+							vo.setStudentName(rs.getString("student_name"));
+							vo.setStudentSchoolName(rs.getString("student_school_name"));
+							vo.setStudentGrade(rs.getInt("student_grade"));
+							vo.setLectureClass(rs.getString("lecture_class"));
+							vo.setStudentPhone(rs.getString("student_phone"));
+							vo.setStudentRegistDate(rs.getString("student_regist_date"));
+							vo.setStudentGender(rs.getBoolean("student_gender"));
+							vo.setStudentParentsName(rs.getString("student_parents_name"));
+							vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+							
+							list.add(vo);
+
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					return list;
+				}
+
+				// -----------------------------------------------------------------------
 	
 	
+		
+
 }

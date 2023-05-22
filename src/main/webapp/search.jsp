@@ -16,11 +16,9 @@ String grade = request.getParameter("studentGrade").trim();
 String lectureClass = request.getParameter("lectureClass").trim();
 String lectureName = request.getParameter("lectureName").trim();
 
-//파라미터 잘 가져왔는지 확인
-/* System.out.println(lectureClass);
-System.out.println(lectureName);
-System.out.println(grade);
- */
+/* String date1 = request.getParameter("date1").trim();
+String date2 = request.getParameter("date2").trim(); */
+
 //-------------------------------------------------------------------------------
 //JSONArray 
 JSONArray j = new JSONArray();
@@ -78,6 +76,13 @@ else if (!"전체".equals(grade)&& !"전체".equals(lectureClass) && !"전체".e
 	int studentGrade = Integer.parseInt(grade);
 	list = dao.studentSearchSelectByGradeLectureClassLectureName(studentGrade, lectureClass, lectureName);
 } 
+
+//날짜
+/* if( date1 != null && date2 != null){
+	list = dao.studentSelectAllByRegisterDate( date1, date2 );
+} */
+
+
 
 //아니라면 그냥 기본 빈 리스트를 생성
 else {

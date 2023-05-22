@@ -133,12 +133,18 @@ table {
 		$("#lectureClass").on("change", search);
 		$("#lectureName").on("change", search);
 		$("#studentGrade").on("change", search);
-		/* 		&("#startDate").on("click", search);
-		 &("#endDate").on("click", search); */
-
+		
 		//이름은 조회버튼을 눌러야 조회
 		$("#searchBtn").on("click", search);
-
+		
+		//날짜
+		/* $("#date1").on("change", function () {
+			var date1 = $("#date1").val();
+		});
+		$("#date2").on("change", function () {
+			var date2 = $("#date2").val();
+		}); */
+		
 		// <전체 체크>
 		//checkAll을 누르면 모든 체크박스가 선택됨
 		$("#checkAll").on("change", function() { //체크박스가 변경될때마다 실행
@@ -243,9 +249,9 @@ table {
 						"studentGrade" : $("#studentGrade").val(),
 						"lectureClass" : $("#lectureClass").val(),
 						"lectureName" : $("#lectureName").val(),
-					//날짜
-					/* 	"startDate" : $("#startDate").val(),
-						"endDate" : $("#endDate").val(), */
+					
+					/* 	"date1" : $("#date1").val(),
+						"date2" : $("#date2").val() */
 					},
 
 					//성공했다면
@@ -335,8 +341,8 @@ table {
 					<option value="2">2</option>
 					<option value="3">3</option>
 				</select> 이름 <input type="text" name="studentName" id="studentName" /> <br />
-				등록일 <input type="date" name="startDate" id="" /> 부터 <input
-					type="date" name="endDate" id="" /> 까지
+				등록일 <input type="date" name="date1" id="date1" /> 부터 <input
+					type="date" name="date2" id="date2" /> 까지
 
 				<!-- <input type="button" value="조회" id="searchBtn" /> <br /> <br /> -->
 				<button type="button" id="searchBtn" class="btn btn-warning btn-xs">조회</button>
