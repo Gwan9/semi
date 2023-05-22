@@ -11,6 +11,9 @@
 String date1 = request.getParameter( "date1" );
 String date2 = request.getParameter( "date2" );
 String selectVal = request.getParameter( "selectVal" );
+String studentName = request.getParameter( "studentName" );
+String lectureClass = request.getParameter( "lectureClass" );
+String lectureName = request.getParameter( "lectureName" );
 
 if( date1 != null && date2 != null && selectVal != null){
 	
@@ -24,13 +27,12 @@ if( date1 != null && date2 != null && selectVal != null){
 			student.put( "studentName", vo.getStudentName() );
 			student.put( "studentSchoolName", vo.getStudentSchoolName() );
 			student.put( "studentGrade", vo.getStudentGrade() );
-			//student.put( "lectureClass", vo.getLectureClass() );
+			student.put( "lectureClass", vo.getLectureClass() );
 			student.put( "studentPhone", vo.getStudentPhone() );
 			student.put( "studentParentsPhone", vo.getStudentParentsPhone() );
-			//student.put( "studentCheckNo", vo.getStudentCheckNo() );
-			student.put( "studentCheckIn", vo.getStudentCheckIn() );
-			student.put( "studentCheckLate", vo.getStudentCheckLate() );
-			student.put( "studentCheckLeave", vo.getStudentCheckLeave() );
+			student.put( "studentCheckNo", vo.getStudentCheckNo() );
+			student.put( "studentCheckLate", vo.getStudentCheckStatus() );
+			student.put( "studentCheckDate", vo.getStudentCheckDate() );
 			j.add( student );
 		}
 		out.println( j.toJSONString() );
@@ -41,6 +43,8 @@ if( date1 != null && date2 != null && selectVal != null){
 		ArrayList<ClassNoteVO> list2 = dao2.teacherCheckSelectAllByDate1ToDate2( date1, date2 );
 		for( ClassNoteVO vo : list2 ){
 			JSONObject teacher = new JSONObject();
+			teacher.put( "teacherNo", vo.getTeacherNo() );
+			teacher.put( "teacherName", vo.getTeacherName() );
 			teacher.put( "teacherCheckIn", vo.getTeacherCheckIn() );
 			teacher.put( "teacherCheckOut", vo.getTeacherCheckOut() );
 			teacher.put( "teacherWorkTime", vo.getTeacherWorkTime() );

@@ -54,10 +54,9 @@ public class ClassNoteVO {
 	int lectureTuition;
 	int studentCheckNo;
 	int studentCheck;
-	String studentCheckIn;
-	String studentCheckLate;
-	String studentCheckLeave;
 	String studentCheckDate;
+	String studentCheckStatus;
+	String studentCheckType;
 	int noticeNo;
 	String noticeDate;
 	String noticeTitle;

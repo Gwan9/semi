@@ -15,8 +15,8 @@ public class StudentDAO {
 	// 기본생성자 (JDBC의 1-3단계)
 	// 1. 환경변수
 	String driver = "oracle.jdbc.driver.OracleDriver";
-//	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
-	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
+	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
+//	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
 	String user = "scott";
 	String password = "tiger";
 	Connection conn;
@@ -479,6 +479,7 @@ public class StudentDAO {
 				vo.setStudentAddrs(rs.getString("student_addrs"));
 				vo.setStudentPhoto(rs.getString("student_photo"));
 				vo.setStudentStatus(rs.getBoolean("student_status"));
+				
 
 				list.add(vo);
 
@@ -500,31 +501,31 @@ public class StudentDAO {
 		ClassNoteVO vo = null;
 	
 		sb.setLength(0);
-		sb.append("SELECT * ");
-		sb.append("FROM STUDENT_CHECK ");
-		sb.append("INNER JOIN STUDENT ");
-		sb.append("ON STUDENT_CHECK.STUDENT_NO = STUDENT.STUDENT_NO ");
-		sb.append("WHERE STUDENT_CHECK.STUDENT_CHECK_DATE = ? ");
 		
+		sb.append("SELECT * ");
+		sb.append("FROM student s, lecture l, student_check sc, class_register c ");
+		sb.append("WHERE sc.student_no = s.student_no ");
+		sb.append("AND s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND sc.STUDENT_CHECK_DATE=?  ");
 		// 5. 문장객체
 		try {
 		pstmt = conn.prepareStatement(sb.toString());
 		pstmt.setString(1, date);
 		rs = pstmt.executeQuery();
 		while ( rs.next() ) {
-		    vo = new ClassNoteVO();
+			vo = new ClassNoteVO();
 		    vo.setStudentNo(rs.getInt("student_no"));
 			vo.setStudentName(rs.getString("student_name"));
 			vo.setStudentSchoolName(rs.getString("student_school_name"));
 			vo.setStudentGrade(rs.getInt("student_grade"));
-			//vo.setLectureClass(rs.getString("lecture_class"));
+			vo.setLectureClass(rs.getString("lecture_class"));
 			vo.setStudentPhone(rs.getString("student_phone"));
 			vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
 		    vo.setStudentCheckNo(rs.getInt("student_check_no"));
-		    vo.setStudentCheckIn(rs.getString("student_check_in"));
-		    vo.setStudentCheckLate(rs.getString("student_check_late"));
-		    vo.setStudentCheckLeave(rs.getString("student_check_leave"));
 		    vo.setStudentCheckDate(rs.getString("student_check_date"));
+		    vo.setStudentCheckStatus(rs.getString("student_check_status"));
+		    vo.setStudentCheckStatus(rs.getString("student_check_type"));
 		    list.add(vo);
 	    System.out.println("LIST " + list);
 		}
@@ -536,7 +537,7 @@ public class StudentDAO {
 	return list;
 	}
 	// STUDENT_CHECK - STUDENT 조인하고 시작날짜 끝 날짜 값으로 
-	public ArrayList<ClassNoteVO> studenCheckSelectAllByDate1Date2(String date1, String date2){
+	public ArrayList<ClassNoteVO> studentCheckSelectAllByDate1ToDate2(String date1, String date2){
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
 			
@@ -560,14 +561,13 @@ public class StudentDAO {
 				vo.setStudentName(rs.getString("student_name"));
 				vo.setStudentSchoolName(rs.getString("student_school_name"));
 				vo.setStudentGrade(rs.getInt("student_grade"));
-				//vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setLectureClass(rs.getString("lecture_class"));
 				vo.setStudentPhone(rs.getString("student_phone"));
 				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
 			    vo.setStudentCheckNo(rs.getInt("student_check_no"));
-			    vo.setStudentCheckIn(rs.getString("student_check_in"));
-			    vo.setStudentCheckLate(rs.getString("student_check_late"));
-			    vo.setStudentCheckLeave(rs.getString("student_check_leave"));
 			    vo.setStudentCheckDate(rs.getString("student_check_date"));
+			    vo.setStudentCheckStatus(rs.getString("student_check_status"));
+			    vo.setStudentCheckStatus(rs.getString("student_check_type"));
 			    
 			    list.add(vo);
 			    System.out.println("LIST " + list);
@@ -581,50 +581,88 @@ public class StudentDAO {
 	}	
 	
 	// sgh 변경 확인 필요
-		public void studentCheckInsertAll() {
-			sb.setLength(0);
-			sb.append( "INSERT INTO student_check" );
-			sb.append( "SELECT STUDENT_CHECK_NO_SEQ.nextval, null, student_no, to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd')" );
-			sb.append( "FROM student" );
-			sb.append( "WHERE ROWNUM <= (SELECT COUNT(student_no) FROM student);" );
-			
-			try {
-		        pstmt = conn.prepareStatement(sb.toString());
-		        pstmt.executeUpdate();
-		    } catch (SQLException e) {
+	public void studentCheckInsertAll() {
+		sb.setLength(0);
+		sb.append("INSERT INTO STUDENT_CHECK ");
+		sb.append("(STUDENT_CHECK_NO, STUDENT_CHECK_DATE, STUDENT_NO, STUDENT_CHECK_STATUS, STUDENT_CHECK_TYPE) ");
+		sb.append("SELECT STUDENT_CHECK_NO_SEQ.nextval, TRUNC(SYSDATE), STUDENT_NO, NULL, 0 ");
+		sb.append("FROM STUDENT ");
+		sb.append("WHERE ROWNUM <= (SELECT COUNT(STUDENT_NO) FROM STUDENT)");
+		
+		
+	    try {
+	        pstmt = conn.prepareStatement(sb.toString());
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        // 예외 처리
+	        e.printStackTrace();
+	    }
+	}
+	
+	// sgh 구현확인필요
+	public boolean studentCheckIsExist(String date) {
+		boolean exist = false;
+		
+			 sb.setLength(0);
+             sb.append("SELECT student_no ");
+             sb.append("FROM student_check "); 
+             sb.append("WHERE student_check_date = ? "); 
+
+             try {
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setString(1, date);
+				rs = pstmt.executeQuery();
+				
+				if (rs.next()) {
+					exist = true;
+				}
+             } catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-		}
+             }
+	            // 예외 처리 코드 작성
+	        
+
+	        return exist;
+	    }
+	
 		
-		// sgh 구현확인필요
-		public boolean studentCheckIsExist() {
-			boolean exist = false;
+		
+		
+		
+	public ArrayList<ClassNoteVO> studentCheckUpdateByTypeByNo(int studentCheckType, int studentNo ) {
+	    ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+	    ClassNoteVO vo = null;
+	    sb.setLength(0);
+	    sb.append("update student_check ");
+	    sb.append("set student_check_type = ? ");
+	    sb.append("WHERE student_no = ? ");
+	    sb.append("UPDATE student_check ");
+	    sb.append("SET student_check_status = ");
+	    sb.append("CASE ");
+	    sb.append("WHEN student_check_type = 1 THEN '등교' ");
+	    sb.append("WHEN student_check_type = 2 THEN '지각' ");
+	    sb.append("WHEN student_check_type = 3 THEN '조퇴' ");
+	    sb.append("WHEN student_check_type = 4 THEN '결석' ");
+	    sb.append("ELSE student_check_status -- 기존 값 유지 ");
+	    sb.append("END WHERE student_no = ? ");
+	    sb.append("and student_check_type = ?; ");
+	    
+	    try {
+	        pstmt = conn.prepareStatement(sb.toString());
+	        pstmt.setInt(1, studentCheckType);
+	        pstmt.setInt(2, studentNo);
+	        pstmt.setInt(3, studentNo);
+	        pstmt.setInt(4, studentCheckType);
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return list;
+	}
+
 			
-				
-	             sb.append("SELECT COUNT(student_no) ");
-	             sb.append("FROM student_check "); 
-	             sb.append("WHERE (SELECT student_check_date FROM student_check WHERE student_check_date = sysdate) IS NULL; "); 
-
-	             try {
-					pstmt = conn.prepareStatement(sb.toString());
-					rs = pstmt.executeQuery();
-					ResultSet rs = pstmt.executeQuery();
-					
-					if (rs.next()) {
-						int count = rs.getInt(1);
-						exist = count > 0;
-					}
-	             } catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-	             }
-		            // 예외 처리 코드 작성
-		        
-
-		        return exist;
-		    }
-		
 			
 
 	// studentSearch-------------------------------------------------------------------------------------------------------------------------------
@@ -1217,15 +1255,20 @@ public class StudentDAO {
 		return vo;
 
 	}
-	public ArrayList<ClassNoteVO> teacherSelectAllByDate(String date){
+	//sgh checkOk.jsp 오늘 날짜로 선생님 데이터 조회
+	public ArrayList<ClassNoteVO> teacherSelectAllByDate(String date, String teacherName){
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 		ClassNoteVO vo = null;
 		
 		sb.setLength(0);
-		sb.append( "select * from teacher_check where teacher_check_date = ? " );
+		sb.append( "select * from teacher_check tc , teacher t " );
+		sb.append( "where t.teacher_no = tc.teacher_no " );
+		sb.append( "and teacher_check_date = ? teacher_name = ? " );
+		
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setString(1, date);
+			pstmt.setString(2, teacherName);
 			rs = pstmt.executeQuery();
 			
 		System.out.println(rs.next());
@@ -1236,6 +1279,10 @@ public class StudentDAO {
 			vo.setTeacherCheckOut(rs.getString( "teacher_check_out" ) );
 			vo.setTeacherWorkTime(rs.getString( "teacher_work_time" ) );
 			vo.setTeacherCheckDate(rs.getString( "teacher_check_date" ) );
+			vo.setTeacherCheckDate(rs.getString( "lecture_name" ) );
+			vo.setTeacherCheckDate(rs.getString( "teacher_name" ) );
+			vo.setTeacherCheckDate(rs.getString( "teacher_subject" ) );
+			vo.setTeacherCheckDate(rs.getString( "teacher_phone" ) );
 			vo.setTeacherNo(rs.getInt( "teacher_no" ) );
 			list.add(vo);
 		}
@@ -1246,12 +1293,15 @@ public class StudentDAO {
 		}
 		return list;
 	}
+	//sgh checkOk.jsp date1 ~ date2 로 선생님 데이터 조회
 	public ArrayList<ClassNoteVO> teacherCheckSelectAllByDate1toDate2(String date1, String date2){
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 		ClassNoteVO vo = null;
 		
 		sb.setLength(0);
-		sb.append( "SELECT * FROM TEACHER_CHECK WHERE TO_CHAR(TEACHER_CHECK_DATE, 'YYYY-MM-DD') BETWEEN ? AND ? " );
+		sb.append( "SELECT * " );
+		sb.append( "FROM TEACHER_CHECK tc, teacher t " );
+		sb.append( "WHERE TO_CHAR(TEACHER_CHECK_DATE, 'YYYY-MM-DD') BETWEEN ? AND ? " );
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setString(1, date1);
@@ -1738,11 +1788,11 @@ public class StudentDAO {
 	public void teacherCheckInsertAll() {
 	
 		sb.setLength(0);
-		sb.append( "INSERT INTO teacher_check" );
-		sb.append( "SELECT TEACHER_CHECK_NO_SEQ.nextval, null, null, null, TEACHER_NO ,  to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd') ) " );
-		sb.append( "FROM teacher " );
-		sb.append( "WHERE ROWNUM <= (SELECT COUNT(teacher_no) FROM teacher); " );
-		//seq 확인
+		sb.append("INSERT INTO teacher_check ");
+		sb.append("(TEACHER_CHECK_NO, TEACHER_NO, TEACHER_CHECK_DATE) ");
+		sb.append("SELECT TEACHER_CHECK_NO_SEQ.nextval, TEACHER_NO, TRUNC(SYSDATE) ");
+		sb.append("FROM TEACHER ");
+		
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.executeUpdate();
@@ -1755,26 +1805,25 @@ public class StudentDAO {
 	
 	}
 	// sgh 구현확인필요
-	public boolean teacherCheckIsExist() {
+	public boolean teacherCheckIsExist(String date) {
 		boolean exist = false;
 		
+		 sb.setLength(0);
+         sb.append("SELECT teacher_check_no ");
+         sb.append("FROM teacher_check "); 
+         sb.append("WHERE teacher_check_date = ? "); 
+         try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, date);
+			rs = pstmt.executeQuery();
 			
-             sb.append("SELECT COUNT(teacher_no) ");
-             sb.append("FROM teacher_check "); 
-             sb.append("WHERE (SELECT teacher_check_date FROM teacher_check WHERE teacher_check_date = sysdate) IS NULL; "); 
-             try {
-				pstmt = conn.prepareStatement(sb.toString());
-				rs = pstmt.executeQuery();
-				ResultSet rs = pstmt.executeQuery();
-				
-				if (rs.next()) {
-					int count = rs.getInt(1);
-					exist = count > 0;
-				}
-             } catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-             }
+			if (rs.next()) {
+				exist = true;
+			}
+         } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+         }
 	            // 예외 처리 코드 작성
 	        
 
@@ -1839,14 +1888,70 @@ public class StudentDAO {
 	}
 	
 	
-		// -----------------------------------------------------------------------
+	// -----------------------------------------------------------------------
 
-		// 수강 기간을 특정하여 조회하기 위한 메서드
-		public ArrayList<ClassNoteVO> selectAtoB(String startDate, String endDate) {
+	// 수강 기간을 특정하여 조회하기 위한 메서드
+	public ArrayList<ClassNoteVO> selectAtoB(String startDate, String endDate) {
 
-			return null;
+		return null;
+	}
+
+	// -----------------------------------------------------------------------
+
+	
+	// 날짜 + 강의명으로 출석 조회
+	public ArrayList<ClassNoteVO> studentCheckSelectByLectureClassByDate(String date, String lectureClass) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT * ");
+		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND s.student_no = sc.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND sc.student_check_date= ? AND l.lecture_class=? ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, date);
+			pstmt.setString(2, lectureClass);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+				vo.setStudentCheckNo(rs.getInt("student_check_no"));
+				vo.setStudentCheckDate(rs.getString("student_check_date"));
+				vo.setStudentCheckStatus(rs.getString("student_check_status"));
+				vo.setStudentCheckStatus(rs.getString("student_check_type"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
+		return list;
+	}
 		
 		
 		
@@ -1854,58 +1959,390 @@ public class StudentDAO {
 	
 		
 		//내 dao 추가
-				public ArrayList<ClassNoteVO> studentSelectAllByRegistDate(String date1, String date2){
-					ArrayList<ClassNoteVO> list = new ArrayList<>();
-					ClassNoteVO vo = null;
-			
-					sb.setLength(0);
-					sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
-					sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
-					sb.append("s.student_parents_name, s.student_parents_phone ");
-					sb.append("FROM student s, class_register c, lecture l ");
-					sb.append("WHERE s.student_no = c.student_no ");
-					sb.append("AND c.lecture_no = l.lecture_no ");
-					sb.append("AND TO_CHAR(student_regist_date, 'YYYY-MM-DD') "); 
-					sb.append("BETWEEN ? AND ? ");
-					
-					
+	public ArrayList<ClassNoteVO> studentSelectAllByRegistDate(String date1, String date2){
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
+		ClassNoteVO vo = null;
 
-					try {
-						// 5. 문장객체 생성
-						pstmt = conn.prepareStatement(sb.toString());
-						pstmt.setString(1, date1); // bind 변수 값 주기
-						pstmt.setString(2, date2); // bind 변수 값 주기
+		sb.setLength(0);
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND TO_CHAR(student_regist_date, 'YYYY-MM-DD') "); 
+		sb.append("BETWEEN ? AND ? ");
+		
+		
 
-						// 6. 실행
-						rs = pstmt.executeQuery();
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, date1); // bind 변수 값 주기
+			pstmt.setString(2, date2); // bind 변수 값 주기
 
-						// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
-						while (rs.next()) {
+			// 6. 실행
+			rs = pstmt.executeQuery();
 
-							vo = new ClassNoteVO();
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
 
-							vo.setStudentNo(rs.getInt("student_no"));
-							vo.setStudentName(rs.getString("student_name"));
-							vo.setStudentSchoolName(rs.getString("student_school_name"));
-							vo.setStudentGrade(rs.getInt("student_grade"));
-							vo.setLectureClass(rs.getString("lecture_class"));
-							vo.setStudentPhone(rs.getString("student_phone"));
-							vo.setStudentRegistDate(rs.getString("student_regist_date"));
-							vo.setStudentGender(rs.getBoolean("student_gender"));
-							vo.setStudentParentsName(rs.getString("student_parents_name"));
-							vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
-							
-							list.add(vo);
+				vo = new ClassNoteVO();
 
-						}
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+				
+				list.add(vo);
 
-					return list;
-				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
 
 
+		// 날짜 + 학생명으로 출석 조회
+	public ArrayList<ClassNoteVO> studentCheckSelectByStudentNameByDate(String date, String studentName) {
 
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT * ");
+		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND s.student_no = sc.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND sc.student_check_date= ? AND s.student_name= ? ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, date);
+			pstmt.setString(2, studentName);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+				vo.setStudentCheckNo(rs.getInt("student_check_no"));
+				vo.setStudentCheckDate(rs.getString("student_check_date"));
+				vo.setStudentCheckStatus(rs.getString("student_check_status"));
+				vo.setStudentCheckStatus(rs.getString("student_check_type"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+	// 날짜 + 강의명으로 출석 조회
+	public ArrayList<ClassNoteVO> studentCheckSelectByLectureNameByDate(String date, String lectureName) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT * ");
+		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND s.student_no = sc.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND sc.student_check_date= ? AND l.lecture_name= ? ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, date);
+			pstmt.setString(2, lectureName);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+				vo.setStudentCheckNo(rs.getInt("student_check_no"));
+				vo.setStudentCheckDate(rs.getString("student_check_date"));
+				vo.setStudentCheckStatus(rs.getString("student_check_status"));
+				vo.setStudentCheckStatus(rs.getString("student_check_type"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+	// 날짜 + 강의명 + 학생명으로 출석 조회
+	public ArrayList<ClassNoteVO> studentCheckSelectByLectureNameByStudentNameByDate(String date, String lectureName, String studentName) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT * ");
+		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND s.student_no = sc.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND sc.student_check_date= ? AND l.lecture_name= ? AND s.student_name = ? ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, date);
+			pstmt.setString(2, lectureName);
+			pstmt.setString(3, studentName);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+				vo.setStudentCheckNo(rs.getInt("student_check_no"));
+				vo.setStudentCheckDate(rs.getString("student_check_date"));
+				vo.setStudentCheckStatus(rs.getString("student_check_status"));
+				vo.setStudentCheckStatus(rs.getString("student_check_type"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+	// 날짜 + 학생명 + 분반명 으로 출석 조회
+	public ArrayList<ClassNoteVO> studentCheckSelectByStudentNameByLectureClassByDate(String date, String studentName, String lectureClass) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT * ");
+		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND s.student_no = sc.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND sc.student_check_date= ? AND s.student_name= ? AND l.lecture_class = ? ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, date);
+			pstmt.setString(2, studentName);
+			pstmt.setString(3, lectureClass);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+				vo.setStudentCheckNo(rs.getInt("student_check_no"));
+				vo.setStudentCheckDate(rs.getString("student_check_date"));
+				vo.setStudentCheckStatus(rs.getString("student_check_status"));
+				vo.setStudentCheckStatus(rs.getString("student_check_type"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+		// 날짜 + 강의명 + 분반명 으로 출석 조회
+	public ArrayList<ClassNoteVO> studentCheckSelectByLectureNameByLectureClassByDate(String date, String lectureName, String lectureClass) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT * ");
+		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND s.student_no = sc.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND sc.student_check_date= ? AND l.lecture_name= ? AND l.lecture_Class = ? ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, date);
+			pstmt.setString(2, lectureName);
+			pstmt.setString(3, lectureClass);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+				vo.setStudentCheckNo(rs.getInt("student_check_no"));
+				vo.setStudentCheckDate(rs.getString("student_check_date"));
+				vo.setStudentCheckStatus(rs.getString("student_check_status"));
+				vo.setStudentCheckStatus(rs.getString("student_check_type"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+	// 날짜 + 강의명 + 분반명 + 학생명으로 출석 조회
+	public ArrayList<ClassNoteVO> studentCheckSelectByLectureNameByLectureClassByStudentNameByDate(String date, String lectureName, String lectureClass, String studentName) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT * ");
+		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND s.student_no = sc.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND sc.student_check_date= ? AND l.lecture_name= ? AND l.lectureClass = ? AND s.student_name = ? ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, date);
+			pstmt.setString(2, lectureName);
+			pstmt.setString(3, lectureClass);
+			pstmt.setString(4, studentName);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+				vo.setStudentCheckNo(rs.getInt("student_check_no"));
+				vo.setStudentCheckDate(rs.getString("student_check_date"));
+				vo.setStudentCheckStatus(rs.getString("student_check_status"));
+				vo.setStudentCheckStatus(rs.getString("student_check_type"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+	
+	
+	
 }
+
