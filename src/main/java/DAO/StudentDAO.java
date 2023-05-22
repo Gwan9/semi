@@ -45,7 +45,7 @@ public class StudentDAO {
 	
 	// Note-------------------------------------------------------------------------------------------------------------------------------
 	
-<<<<<<< HEAD
+
 	public int getTotalCount() {
 		int cnt = 0;
 		
@@ -223,8 +223,8 @@ public class StudentDAO {
 		return list;
 	}
 	
-=======
->>>>>>> refs/heads/main
+
+
 	public ArrayList<ClassNoteVO> studentNoteSelectAll(String lectureName){
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
