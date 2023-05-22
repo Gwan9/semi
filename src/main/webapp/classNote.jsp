@@ -61,6 +61,32 @@
 </style>
 <script type="text/javascript">
 	$(function(){
+		$("#lectureClass, #lectureName").on("change", function() {
+		    var lectureClass = $("#lectureClass").val();
+		    var lectureName = $("#lectureName").val();
+		    
+		    $.ajax({
+		      url: "classNoteList.jsp",
+		      data: {
+		        "lectureClass": lectureClass,
+		        "lectureName": lectureName
+		      },
+		      success: function(data) {
+		        var obj = JSON.parse(data);
+		        $("table").empty(); // 기존 테이블 내용 비우기
+		        
+		        for (var i = 0; i < obj.length; i++) {
+		          var txt = "<tr><td>" + obj[i].noteno + 
+		          			"</td><td>" + obj[i].lecturename+ 
+		          			"</td><td>" + obj[i].lectureclass + 
+		          			"</td><td>" + obj[i].studentname+ 
+		          			"</td><td>" + "<a href='classNoteDetail.jsp?NoteNo="+obj[i].noteno + "'>" + obj[i].notetitle + "</a>"+ 
+		          			"</td></tr>";
+		          $("table").append(txt);
+		        }
+		      }
+		    });
+		  });
 		$.ajax({
 			url:"classNoteLectureList.jsp",
 			success:function(data){
@@ -145,13 +171,13 @@
 	<div class="container" >	<!-- 학습일지 큰 div -->
 		<div class="board" >
 			<select name="lectureClass" id="lectureClass">	<!-- 분반선택 콤보박스 -->
-			    <option value="">분반</option>
-			    <option value="A반">A반</option>
-			    <option value="B반">B반</option>
-			    <option value="C반">C반</option>
+			    <option value="전체">분반</option>
+			    <option value="A">A반</option>
+			    <option value="B">B반</option>
+			    <option value="C">C반</option>
 			</select>
 			<select name="lectureName" id="lectureName">
-				<option value="">강의명</option>
+				<option value="전체">강의명</option>
 			</select>
 			
 			<label for="">이름 : </label>
