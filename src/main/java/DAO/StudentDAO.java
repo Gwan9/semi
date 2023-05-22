@@ -1811,10 +1811,13 @@ public class StudentDAO {
 		ClassNoteVO vo = new ClassNoteVO();
 
 		// 4. SQL 문
-		sb.setLength(0); // 초기화
-		sb.append("SELECT * ");
-		sb.append("FROM STUDENT ");
-		sb.append("WHERE STUDENT_NAME = ? ");
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, s.student_email, s.student_birth, s.student_addrs, ");
+		sb.append("l.lecture_class, s.student_phone, s.student_regist_date, s.student_gender, s.student_photo, l.LECTURE_START_DATE, l.LECTURE_END_DATE, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s ");
+		sb.append("FULL OUTER JOIN class_register c ON s.student_no = c.student_no ");
+		sb.append("FULL OUTER JOIN lecture l ON c.lecture_no = l.lecture_no ");
+		sb.append("WHERE s.student_name = ? ");
 
 		try {
 			// 5. 문장객체 생성
@@ -1835,7 +1838,6 @@ public class StudentDAO {
 				vo.setStudentSchoolName(rs.getString("student_school_name")); // 학교명
 				vo.setStudentPhone(rs.getString("student_phone")); // 휴대전화
 
-				// 성별
 				boolean g;
 				if (rs.getString("student_gender") == "1") {
 					g = true;
@@ -1851,8 +1853,12 @@ public class StudentDAO {
 				vo.setLectureClass(rs.getString("lecture_class")); // 수강반
 				vo.setStudentAddrs(rs.getString("student_addrs"));// 주소
 				vo.setStudentPhoto(rs.getString("student_photo"));
+				vo.setLectureStartDate(rs.getString("LECTURE_START_DATE"));
+				vo.setLectureEndDate(rs.getString("LECTURE_END_DATE"));
 
 				list.add(vo);
+
+				System.out.println("dao 에서의 값 : " + vo);
 
 			}
 		} catch (SQLException e) {
