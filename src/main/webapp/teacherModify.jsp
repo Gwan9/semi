@@ -9,6 +9,7 @@
 <head>
 <meta charset="UTF-8">
 <title>teacherModify.jsp</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <style type="text/css">
 	*{
 		margin: 0;
@@ -40,6 +41,7 @@
 					StudentDAO dao = new StudentDAO();
 					ClassNoteVO vo = dao.teacherSelectAllByNo(no);
 						if(vo != null){
+			
 			%>			
 			<div id="container">
 			
@@ -69,7 +71,12 @@
 					</div>
 					<div>
 						<h5>성별</h5>
-						<div><%= vo.isTeacherGender() %></div>
+						<div><% if(vo.isTeacherGender() == false) %>
+						남 
+						<%} else {%>
+						여 
+						</div>
+						<%} %>
 					</div>
 					<div>
 						<h5>생년월일</h5>
@@ -104,4 +111,6 @@
 			%>
 			
 </body>
+
+</script>
 </html>

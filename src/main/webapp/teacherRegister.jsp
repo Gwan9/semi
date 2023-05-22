@@ -215,7 +215,7 @@
 				</div>
 				<div>
 					<h5>성별</h5>
-					<h5><input type="radio" name="gender" id="male" value="남" />남
+					<h5><input type="radio" name="gender" id="male" value="남" checked="checked"/>남
 					<input type="radio" name="gender" id="female" value="여" />여</h5>
 					<div id="msg6"></div>
 				</div>
