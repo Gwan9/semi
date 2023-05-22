@@ -1,7 +1,5 @@
-
-<%@page import="DAO.StudentDAO"%>
 <%@page import="VO.ClassNoteVO"%>
-
+<%@page import="DAO.StudentDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -32,7 +30,7 @@
 </style>
 </head>
 <body>
-	<h1>teacherModify</h1>
+	<div id="container">
 		<form action="teacherModifyOk.jsp">
 			<%
 				String n = request.getParameter("no");
@@ -43,7 +41,6 @@
 						if(vo != null){
 			
 			%>			
-			<div id="container">
 			
 				<div id="center">
 					<div>
@@ -71,12 +68,9 @@
 					</div>
 					<div>
 						<h5>성별</h5>
-						<div><% if(vo.isTeacherGender() == false) %>
-						남 
-						<%} else {%>
-						여 
+						<div><% if(vo.isTeacherGender() == false) out.println("남");
+									else out.println("여"); %>
 						</div>
-						<%} %>
 					</div>
 					<div>
 						<h5>생년월일</h5>
@@ -92,7 +86,7 @@
 					</div>
 					<div>
 						<h5>EMAIL</h5>
-						<div><%= vo.getTeacherPhone() %></div>
+						<div><%= vo.getTeacherEmail() %></div>
 						<h5>EMAIL 수정</h5>
 						<input type="text" name="email" id="" placeholder=" ex) teacher@naver.com " />
 					</div>
@@ -103,8 +97,8 @@
 						</a>
 					</div>
 				</div>
-			</div>
 		</form>
+	</div>
 			<% 
 					}
 				}

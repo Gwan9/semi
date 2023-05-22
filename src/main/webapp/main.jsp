@@ -31,6 +31,8 @@
 		Object obj = session.getAttribute("vo");
 		if(obj != null){ //로그인 되어 있는 상태 확인
 			ClassNoteVO vo = (ClassNoteVO)obj;
+			
+			session.setAttribute("vo", vo);
 	%>
 			<div id="container">
 			
