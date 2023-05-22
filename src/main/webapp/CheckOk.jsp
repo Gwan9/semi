@@ -13,6 +13,7 @@ String selectVal = request.getParameter( "selectVal" ).trim();
 String studentName = request.getParameter( "studentName" ).trim();
 String lectureName = request.getParameter( "lectureName" ).trim();
 String lectureClass = request.getParameter( "lectureClass" ).trim();
+String teacherName = request.getParameter( "teacherName" ).trim();
 
 
 if( today != null && selectVal != null){
@@ -47,7 +48,7 @@ if( today != null && selectVal != null){
 		
 		JSONArray teacherArray = new JSONArray();
 		StudentDAO dao2 = new StudentDAO();
-		ArrayList<ClassNoteVO> list2 = dao2.teacherSelectAllByDate( today );
+		ArrayList<ClassNoteVO> list2 = dao2.teacherSelectAllByDate( today, teacherName );
 		
 		for( ClassNoteVO vo : list2 ){
 			JSONObject teacher = new JSONObject();

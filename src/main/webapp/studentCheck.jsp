@@ -8,6 +8,7 @@
 <%
 String studentCheckType = request.getParameter("studentCheckType");
 String studentNo = request.getParameter("studentNo");
+String lectureClass = request.getParameter("lectureClass");
 
 if( studentCheckType != null && studentNo != null ){
 	
