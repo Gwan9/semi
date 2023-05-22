@@ -1,4 +1,5 @@
 
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="VO.ClassNoteVO"%>
 <%@page import="DAO.StudentDAO"%>
 <%@page import="java.util.ArrayList"%>
@@ -82,7 +83,7 @@ table {
 
 #btns {
 	position: relative;
-	left: 710px;
+	left: 809px;
 	bottom: -75px;
 }
 
@@ -138,12 +139,12 @@ table {
 		$("#searchBtn").on("click", search);
 		
 		//날짜
-		/* $("#date1").on("change", function () {
+		 $("#date1").on("change", function () {
 			var date1 = $("#date1").val();
 		});
 		$("#date2").on("change", function () {
 			var date2 = $("#date2").val();
-		}); */
+		}); 
 		
 		// <전체 체크>
 		//checkAll을 누르면 모든 체크박스가 선택됨
@@ -250,8 +251,8 @@ table {
 						"lectureClass" : $("#lectureClass").val(),
 						"lectureName" : $("#lectureName").val(),
 					
-					/* 	"date1" : $("#date1").val(),
-						"date2" : $("#date2").val() */
+					 	"date1" : $("#date1").val(),
+						"date2" : $("#date2").val() 
 					},
 
 					//성공했다면
@@ -287,7 +288,7 @@ table {
 									+ " </td><td> "
 									+ obj[i].studentPhone
 									+ " </td><td> "
-									+ obj[i].studentRegistDate.substring(0, 8)
+									+ obj[i].studentRegistDate.substring(0, 10)
 									+ " </td><td> "
 									+ (obj[i].studentGender ? "남" : "여")
 									+ " </td><td> "
@@ -384,7 +385,7 @@ table {
 						<td><%=vo.getStudentGrade()%></td>
 						<td><%=vo.getLectureClass()%></td>
 						<td><%=vo.getStudentPhone()%></td>
-						<td><%=vo.getStudentRegistDate().substring(0, 8)%></td>
+						<td><%=vo.getStudentRegistDate().substring(0, 10)%></td>
 						<td><%=vo.isStudentGender() == true ? "남" : "여"%></td>
 						<td><%=vo.getStudentParentsName()%></td>
 						<td><%=vo.getStudentParentsPhone()%></td>
@@ -401,8 +402,6 @@ table {
 						value="EXCEL" id="EXCEL" /> <input type="button" value="인쇄"
 						id="인쇄" /> -->
 				<!-- 부트스트랩 이용한 버튼 -->
-				<button type="button" class="btn btn-dark custom-btn-xs">PDF</button>
-				<button type="button" class="btn btn-dark custom-btn-xs">EXCEL</button>
 				<button type="button" class="btn btn-dark custom-btn-xs"
 					id="printBtn">인쇄</button>
 			</div>

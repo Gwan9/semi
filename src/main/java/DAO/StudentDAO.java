@@ -1,6 +1,6 @@
 package DAO;
 
-import java.sql.Connection;
+import java.sql.Connection; 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -1865,7 +1865,7 @@ public class StudentDAO {
 					sb.append("FROM student s, class_register c, lecture l ");
 					sb.append("WHERE s.student_no = c.student_no ");
 					sb.append("AND c.lecture_no = l.lecture_no ");
-					sb.append("AND TO_CHAR(student_regist_date, 'YYYY-MM-DD') "); 
+					sb.append("AND s.student_regist_date "); 
 					sb.append("BETWEEN ? AND ? ");
 					
 					
@@ -1904,6 +1904,28 @@ public class StudentDAO {
 					}
 
 					return list;
+				}
+				
+				//페이징을 위한 
+				public int getTotalCountStudent() {
+					int cnt = 0;
+					
+					sb.setLength(0);
+					sb.append("select count(*) cnt from student ");
+					
+					try {
+						pstmt = conn.prepareStatement(sb.toString());
+						rs = pstmt.executeQuery();
+						
+						rs.next();
+						cnt = rs.getInt("cnt");
+						
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					
+					
+					return cnt;
 				}
 
 
