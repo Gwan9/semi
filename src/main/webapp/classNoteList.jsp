@@ -16,19 +16,15 @@
 	String lectureClass = request.getParameter("lectureClass").trim();
 	
 	if(lectureName.equals("전체") && lectureClass.equals("전체")){
-		System.out.println("전체");
 		list = dao.studentNoteSelectAll();
 		
 	}else if(!lectureName.equals("전체") && lectureClass.equals("전체")){
-		System.out.println("name");
 		list = dao.studentNoteSelectAll(lectureName);
 		
 	}else if(!lectureName.equals("전체") && !lectureClass.equals("전체")){
-		System.out.println("name,class");
 		list = dao.studentNoteSelectAll(lectureName, lectureClass);
 		
 	}else if(lectureName.equals("전체") && !lectureClass.equals("전체")){
-		System.out.println("class");
 		list = dao.studentNoteSelectAllbyLectureClass(lectureClass);
 		
 	}

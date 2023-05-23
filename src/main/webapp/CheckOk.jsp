@@ -7,8 +7,14 @@
     pageEncoding="UTF-8"%>
 <%
 
-String today = request.getParameter( "today" );
-String selectVal = request.getParameter( "selectVal" );
+// 파라미터 값
+String today = request.getParameter( "today" ).trim();
+String selectVal = request.getParameter( "selectVal" ).trim();
+String studentName = request.getParameter( "studentName" ).trim();
+String lectureName = request.getParameter( "lectureName" ).trim();
+String lectureClass = request.getParameter( "lectureClass" ).trim();
+String teacherName = request.getParameter( "teacherName" ).trim();
+
 
 if( today != null && selectVal != null){
 
@@ -29,9 +35,7 @@ if( today != null && selectVal != null){
 			student.put( "studentPhone", vo.getStudentPhone() );
 			student.put( "studentParentsPhone", vo.getStudentParentsPhone() );
 			student.put( "studentCheckNo", vo.getStudentCheckNo() );
-			student.put( "studentCheckIn", vo.getStudentCheckIn() );
-			student.put( "studentCheckLate", vo.getStudentCheckLate() );
-			student.put( "studentCheckLeave", vo.getStudentCheckLeave() );
+			student.put( "studentCheckLate", vo.getStudentCheckStatus() );
 			student.put( "studentCheckDate", vo.getStudentCheckDate() );
 			
 			studentArray.add( student );
@@ -44,13 +48,15 @@ if( today != null && selectVal != null){
 		
 		JSONArray teacherArray = new JSONArray();
 		StudentDAO dao2 = new StudentDAO();
-		ArrayList<ClassNoteVO> list2 = dao2.teacherSelectAllByDate( today );
+		ArrayList<ClassNoteVO> list2 = dao2.teacherSelectAllByDate( today, teacherName );
 		
 		for( ClassNoteVO vo : list2 ){
 			JSONObject teacher = new JSONObject();
+			teacher.put( "teacherNo", vo.getTeacherNo() );
 			teacher.put( "teacherCheckIn", vo.getTeacherCheckIn() );
 			teacher.put( "teacherCheckOut", vo.getTeacherCheckOut() );
-			teacher.put( "teacherCheckTime", vo.getTeacherWorkTime() );
+			teacher.put( "teacherCheckWorkTime", vo.getTeacherWorkTime() );
+			teacher.put( "teacherCheckDate", vo.getTeacherWorkTime() );
 			teacherArray.add( teacher );
 		}
 		out.println( teacherArray.toJSONString() );
