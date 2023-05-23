@@ -15,8 +15,8 @@ public class StudentDAO {
 	// 기본생성자 (JDBC의 1-3단계)
 	// 1. 환경변수
 	String driver = "oracle.jdbc.driver.OracleDriver";
-//	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
-	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
+	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
+//	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
 	String user = "scott";
 	String password = "tiger";
 	Connection conn;
@@ -2342,7 +2342,26 @@ public class StudentDAO {
 		return list;
 	}
 	
-	
+	public void updateOne(ClassNoteVO vo) {
+		sb.setLength(0);
+		sb.append("UPDATE teacher ");
+		sb.append("SET teacher_pw = ?, teacher_phone = ?, teacher_email = ? ");
+		sb.append("WHERE teacher_no = ? ");
+		
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, vo.getTeacherPw());
+			pstmt.setString(2, vo.getTeacherPhone());
+			pstmt.setString(3, vo.getTeacherEmail());
+			pstmt.setInt(4, vo.getTeacherNo());
+			
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 }
 

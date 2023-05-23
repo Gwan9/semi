@@ -48,17 +48,12 @@
 	StudentDAO dao = new StudentDAO();
 	dao.teacherInsertByAll(vo);
 	
-	session.setAttribute("vo", vo);
+	//session.setAttribute("vo", vo);
 	
-	
-	
-		
 	%>
 	<script type="text/javascript">
-		window.setTimeout(function(){
-			alert("회원가입을 축하합니다");
-			location.href = "main.jsp";
-		})
+		alert("회원가입을 축하합니다");
+		location.href = "main.jsp";
 	</script>
 </body>
 

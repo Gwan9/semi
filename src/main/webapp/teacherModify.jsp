@@ -14,7 +14,7 @@
 		padding: 0;
 	}
 	#container{
-		width: 250px;
+		width: 280px;
 		height: 100%;
 		margin: auto;
 		background: #F4EEDD;
@@ -30,81 +30,73 @@
 </style>
 </head>
 <body>
-	<div id="container">
-		<form action="teacherModifyOk.jsp">
-			<%
-				String n = request.getParameter("no");
-				if(n != null){
-					int no = Integer.parseInt(n);
-					StudentDAO dao = new StudentDAO();
-					ClassNoteVO vo = dao.teacherSelectAllByNo(no);
-						if(vo != null){
+	<%
+		String n = request.getParameter("no");
+		if(n != null){
 			
-			%>			
+			int no = Integer.parseInt(n);
 			
-				<div id="center">
-					<div>
-						<h5>사진</h5>
-						<div id="photo"><img src="" alt="증명사진" /></div>
-						<div id="findimg"><input type="button" value="파일찾기" /></div>			
-					</div>
-					<div>
-						<h5>아이디</h5>
-						<div><%= vo.getTeacherId() %></div>
-					</div>
-					<div>
-						<h5>비밀번호</h5>
-						<div><%= vo.getTeacherPw() %></div>
-						<h5>비밀번호 수정</h5>
-						<input type="text" name="pw" id="" />
-					</div>
-					<div>
-						<h5>비밀번호 재확인</h5>
-						<input type="text" name="" id="" />
-					</div>
-					<div>
-						<h5>이름</h5>
-						<div><%= vo.getTeacherName() %></div>
-					</div>
-					<div>
-						<h5>성별</h5>
-						<div><% if(vo.isTeacherGender() == false) out.println("남");
-									else out.println("여"); %>
-						</div>
-					</div>
-					<div>
-						<h5>생년월일</h5>
-						<div><%= vo.getTeacherBirth() %></div>
-					</div>
-					<div>
-						<h5>거주지</h5>
-						<div><%= vo.getTeacherAddress() %></div>
-					</div>
-					<div>
-						<h5>연락처</h5>
-						<div><%= vo.getTeacherPhone() %></div>
-					</div>
-					<div>
-						<h5>EMAIL</h5>
-						<div><%= vo.getTeacherEmail() %></div>
-						<h5>EMAIL 수정</h5>
-						<input type="text" name="email" id="" placeholder=" ex) teacher@naver.com " />
-					</div>
-					<div id="sub">
-						<input type="submit" value="수정하기" />
-						<a href="main.jsp">
-							<input type="button" value="취소하기" />
-						</a>
+			StudentDAO dao = new StudentDAO();
+			
+			ClassNoteVO vo = dao.teacherSelectAllByNo(no);
+				
+		if(vo != null){
+	
+	%>			
+			
+				
+	<form action="teacherModifyOk.jsp">
+		<div id="container">
+			<div id="center">
+				<div>
+					<h5>사진</h5>
+					<div id="photo"><img src="" alt="증명사진" /></div>
+					<div id="findimg"><input type="button" value="파일찾기" /></div>			
+				</div>
+				<div>
+					<h5>아이디</h5>
+					<div><%= vo.getTeacherId() %></div>
+				</div>
+				<div>
+					<h5>이름</h5>
+					<div><%= vo.getTeacherName() %></div>
+				</div>
+				<div>
+					<h5>성별</h5>
+					<div><% if(vo.isTeacherGender() == false) out.println("남");
+							else out.println("여"); %>
 					</div>
 				</div>
-		</form>
-	</div>
-			<% 
-					}
-				}
-			%>
-			
+				<div>
+					<h5>생년월일</h5>
+					<div><%= vo.getTeacherBirth() %></div>
+				</div>
+				<div>
+					<h5>거주지</h5>
+					<div><%= vo.getTeacherAddress() %></div>
+				</div>
+				<div>
+					<h5>연락처</h5>
+					<div><%= vo.getTeacherPhone() %></div>
+				</div>
+				<div>
+					<h5>EMAIL</h5>
+					<div><%= vo.getTeacherEmail() %></div>
+				</div>
+				<div id = "sub">
+					<a href="teacherModifyForm.jsp?no=<%= vo.getTeacherNo() %>">
+						<input type="button" value="수정하기" />
+					</a>
+					<a href="main.jsp">
+						<input type="button" value="취소하기" />
+					</a>
+				</div>	
+			</div>
+		</div>
+	</form>
+	<% 
+			}
+		}
+	%>	
 </body>
-
-</script>
 </html>

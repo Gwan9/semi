@@ -12,18 +12,25 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript">
-	window.onload = function(){
-		var btn = document.getElementById("loginbtn");
-		btn.onclick = function(){
-			console.log("test");
-			var frm = document.frm;
-			//입력값 유효성 검사
+// 	window.onload = function(){
+// 		var btn = document.getElementById("loginbtn");
+	$(function(){
+		$("#loginbtn").on("click", function(){
+				console.log("test");
+				var frm = document.frm;
+				//입력값 유효성 검사
+				
+				frm.action = "teacherLoginOk.jsp";
+				frm.method = "get";
+				frm.submit();
 			
-			frm.action = "teacherLoginOk.jsp";
-			frm.method = "get";
-			frm.submit();
-		}
-	}
+		})
+		
+		$("#bannerside").on("click", function(){
+			location.href = "main.jsp";
+		})
+	})
+// 	}
 </script>
 </head>
 <body>
@@ -36,7 +43,9 @@
 	%>
 			<div id="container">
 			
-				<jsp:include page="bannerside.jsp" />
+				<div id="bannerside">
+					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTidgN85-7IXfj0yaEUlldBQ8OCjxO7Jhqbbw&usqp=CAU" alt="banner" />
+				</div>
 				
 				<div id="loginside">
 					<form action="teacherModify.jsp" name="frm" method="get">
@@ -56,9 +65,40 @@
 					</form>
 				</div>
 				
-				<jsp:include page="leftside.jsp" />
+				<div id="leftside">
+					<div id="notice">
+						<ul>
+							<li>공지1</li>
+							<li>공지2</li>
+							<li>공지3</li>
+						</ul>
+					</div>
+					
+					<div id="classnote">
+						<ul>
+							<li>학습일지1</li>
+							<li>학습일지2</li>
+							<li>학습일지3</li>
+						</ul>
+					</div>
+				</div>
 			
-				<jsp:include page="rightside.jsp" />
+				<div id="rightside">
+					<div id="todayclass">
+						<ul>
+							<li>오늘의강의1</li>
+							<li>오늘의강의2</li>
+							<li>오늘의강의3</li>
+						</ul>
+					</div>
+					<div id="birthday">
+						<ul>
+							<li>생일1</li>
+							<li>생일2</li>
+							<li>생일3</li>
+						</ul>
+					</div>
+				</div>
 				
 			</div>		
 	<% 
@@ -66,7 +106,9 @@
 	%>			
 			<div id="container">
 			
-				<jsp:include page="bannerside.jsp" />
+				<div id="bannerside">
+					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTidgN85-7IXfj0yaEUlldBQ8OCjxO7Jhqbbw&usqp=CAU" alt="banner" />
+				</div>
 				
 				<div id="loginside">
 					<form action="teacherLoginOk.jsp" name="frm" method="get">
@@ -90,9 +132,41 @@
 					</form>
 				</div>
 				
-				<jsp:include page="leftside.jsp" />
+				<div id="leftside">
+					<div id="notice">
+						<ul>
+							<li>공지1</li>
+							<li>공지2</li>
+							<li>공지3</li>
+						</ul>
+					</div>
+					
+					<div id="classnote">
+						<ul>
+							<li>학습일지1</li>
+							<li>학습일지2</li>
+							<li>학습일지3</li>
+						</ul>
+					</div>
+				</div>
 			
-				<jsp:include page="rightside.jsp" />
+				<div id="rightside">
+					<div id="todayclass">
+						<ul>
+							<li>오늘의강의1</li>
+							<li>오늘의강의2</li>
+							<li>오늘의강의3</li>
+						</ul>
+					</div>
+					
+					<div id="birthday">
+						<ul>
+							<li>생일1</li>
+							<li>생일2</li>
+							<li>생일3</li>
+						</ul>
+					</div>
+				</div>
 				
 			</div>
 				
