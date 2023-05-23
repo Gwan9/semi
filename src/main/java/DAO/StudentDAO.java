@@ -15,8 +15,8 @@ public class StudentDAO {
 	// 기본생성자 (JDBC의 1-3단계)
 	// 1. 환경변수
 	String driver = "oracle.jdbc.driver.OracleDriver";
-	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
-//	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
+//	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
+	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
 	String user = "scott";
 	String password = "tiger";
 	Connection conn;
