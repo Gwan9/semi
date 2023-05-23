@@ -7,19 +7,23 @@
     pageEncoding="UTF-8"%>
 
 <%
-	JSONArray JA = new JSONArray();
-	
+	JSONArray noteArray = new JSONArray();	
+
 	StudentDAO dao = new StudentDAO();
-	
-	
 	
 	ArrayList<ClassNoteVO> list = dao.classNoteGetThree();
 	
 	for(ClassNoteVO vo : list){
-		JSONObject jb = new JSONObject();
-		jb.put("NoteTitle", vo.getNoteTitle());
+	
+		JSONObject note = new JSONObject();
 		
-		JA.add(jb);
+		note.put("noteno", vo.getNoteNo());
+		note.put("notedate", vo.getNoteDate());
+		note.put("notetitle", vo.getNoteTitle());
+		note.put("notecontents", vo.getNoteContents());
+		note.put("teacherno", vo.getTeacherNo());
+	
+		noteArray.add(note);
 	}
+	out.println(noteArray.toJSONString());
 %>
-out.println(JA);

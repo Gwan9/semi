@@ -7,6 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <title>MainPage</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <style type="text/css">
 *{
 		margin: 0;
@@ -86,11 +87,26 @@
 		list-style-type: none;
 	}
 </style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript">
 // 	window.onload = function(){
 // 		var btn = document.getElementById("loginbtn");
 	$(function(){
+		$("input").on("click", function(){
+			console.log("출력 버튼 눌림");
+		$.ajax({
+			url:"classNoteTitle.jsp",
+			success:function(data){
+				console.log(data);
+// 				var data2 = data.trim();
+// 				var dList = data2.split(",");
+// 				console.dir(dList);
+// 				for(i = 0; i <= obj.length; i++){
+// 					var txt = "<tr><td>" + obj[i].NoteTitle + "</td></tr>"
+// 					$("#classnote table").append(txt);
+// 				}
+			}
+		});
+		
 		$("#loginbtn").on("click", function(){
 				console.log("test");
 				var frm = document.frm;
@@ -106,19 +122,10 @@
 			location.href = "main.jsp";
 		})
 		
-		$.ajax({
-			url:"classNoteTitle.jsp"
-			success:function(data){
-				var obj = JSON.parse(data);
-				for(i = 0; i <= obj.length; i++){
-					var txt = "<tr><td>" + obj[i].NoteTitle + "</td></tr>"
-					$("#classnote table").append(txt);
-				}
-			}
+		
 		})
-	})
 	
-// 	}
+ 	})
 </script>
 </head>
 <body>
@@ -167,7 +174,7 @@
 						
 						</table>
 					</div>
-				</div>
+	
 			
 				<div id="rightside">
 					<div id="todayclass">
@@ -229,7 +236,14 @@
 					
 					<div id="classnote">
 						<table>
-						
+<h1>AJAX JSON</h1>
+	
+	<input type="button" value="출력" />
+	
+	<ul>
+		<li>목록</li>
+	</ul>
+				</div>						
 						</table>
 					</div>
 				</div>

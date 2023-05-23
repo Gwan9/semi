@@ -82,5 +82,14 @@ public class ClassNoteVO {
 		this.teacherGender = g;
 		
 	}
+
+	public ClassNoteVO(int noteno, String notedate, String notetitle, String notecontents, int teacherno) {
+		this.noteNo = noteno;
+		this.noteDate = notedate;
+		this.noteTitle = notetitle;
+		this.noteContents = notecontents;
+		this.teacherNo = teacherno;
+		
+	}
 }
 

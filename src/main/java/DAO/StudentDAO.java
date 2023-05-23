@@ -15,8 +15,8 @@ public class StudentDAO {
 	// 기본생성자 (JDBC의 1-3단계)
 	// 1. 환경변수
 	String driver = "oracle.jdbc.driver.OracleDriver";
-	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
-//	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
+//	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
+	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
 	String user = "scott";
 	String password = "tiger";
 	Connection conn;
@@ -2365,33 +2365,28 @@ public class StudentDAO {
 	}
 	
 	public ArrayList<ClassNoteVO> classNoteGetThree(){
-		
-		ClassNoteVO vo = null;
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 		
 		sb.setLength(0);
-		sb.append("SELECT note_title ");
-		sb.append("FROM ( SELECT note_title FROM class_note ");
-		sb.append("ORDER BY note_no desc ) ");
-		sb.append("WHERE ROWNUM <= 3 ");
-		
+		//sb.append("SELECT note_no, note_title, note_contents FROM ( SELECT note_no, note_title, note_contents FROM class_note ORDER BY note_date desc ) WHERE ROWNUM <= 3 ");
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				
-				vo.setNoteTitle(rs.getString("note_title"));
-				
-				vo = new ClassNoteVO();
+				int noteno = rs.getInt("note_no");
+				String notedate = rs.getString("note_date");
+				String notetitle = rs.getString("note_title");
+				String notecontents = rs.getString("note_contents");
+				int teacherno = rs.getInt("teacher_no");
+				ClassNoteVO vo = new ClassNoteVO(noteno, notedate, notetitle, notecontents, teacherno);
+				list.add(vo);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		return null;
-		
+		return list;
 	}
 }
 
