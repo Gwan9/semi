@@ -1292,11 +1292,13 @@ public class StudentDAO {
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 
 		// 4. SQL 문
-		sb.append("SELECT S.STUDENT_NO, S.STUDENT_NAME, S.STUDENT_PHONE, S.STUDENT_PARENTS_PHONE, S.STUDENT_SCHOOL_NAME, L.LECTURE_CLASS, L.LECTURE_START_DATE, L.LECTURE_END_DATE ");
+		sb.append(
+				"SELECT S.STUDENT_NO, S.STUDENT_NAME, S.STUDENT_PHONE, S.STUDENT_PARENTS_PHONE, S.STUDENT_SCHOOL_NAME, L.LECTURE_CLASS, L.LECTURE_START_DATE, L.LECTURE_END_DATE ");
 		sb.append("FROM CLASS_REGISTER CR ");
 		sb.append("FULL OUTER JOIN STUDENT S ON CR.STUDENT_NO = S.STUDENT_NO ");
 		sb.append("FULL OUTER JOIN LECTURE L ON CR.LECTURE_NO = L.LECTURE_NO ");
-		sb.append("WHERE L.LECTURE_START_DATE BETWEEN TO_DATE(? || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(? || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS') ");
+		sb.append(
+				"WHERE L.LECTURE_START_DATE BETWEEN TO_DATE(? || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(? || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS') ");
 
 		try {
 			// 5. 문장 객체화
@@ -1324,8 +1326,8 @@ public class StudentDAO {
 				vo.setLectureEndDate(rs.getString("LECTURE_END_DATE"));
 
 				list.add(vo);
-				
-				System.out.println("dao에서 출력되는 값 : "+ vo);
+
+				System.out.println("dao에서 출력되는 값 : " + vo);
 
 			}
 		} catch (SQLException e) {
@@ -1811,8 +1813,10 @@ public class StudentDAO {
 		ClassNoteVO vo = new ClassNoteVO();
 
 		// 4. SQL 문
-		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, s.student_email, s.student_birth, s.student_addrs, ");
-		sb.append("l.lecture_class, s.student_phone, s.student_regist_date, s.student_gender, s.student_photo, l.LECTURE_START_DATE, l.LECTURE_END_DATE, ");
+		sb.append(
+				"SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, s.student_email, s.student_birth, s.student_addrs, ");
+		sb.append(
+				"l.lecture_class, s.student_phone, s.student_regist_date, s.student_gender, s.student_photo, l.LECTURE_START_DATE, l.LECTURE_END_DATE, ");
 		sb.append("s.student_parents_name, s.student_parents_phone ");
 		sb.append("FROM student s ");
 		sb.append("FULL OUTER JOIN class_register c ON s.student_no = c.student_no ");
@@ -2158,39 +2162,37 @@ public class StudentDAO {
 
 		return list;
 	}
-	
-	
-	
+
 	// 회계 프로그램 -- 월별 출력하기
-	
+
 	public ArrayList<ClassNoteVO> accountingSelectByDate(String startDate, String endDate) {
-		
+
 		// vo 초기화
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
-		
+
 		// 4. SQL 문
 		sb.setLength(0); // 초기화
-		sb.append("SELECT CR.CLASS_REGISTER_NO, L.LECTURE_CLASS, S.STUDENT_NAME, CR.ISPAY, L.LECTURE_NAME, L.LECTURE_TUITION, CR.PAY_TYPE, L.LECTURE_START_DATE, L.LECTURE_END_DATE, S.STUDENT_DUE_DATE, S.STUDENT_PARENTS_PHONE ");
+		sb.append(
+				"SELECT CR.CLASS_REGISTER_NO, L.LECTURE_CLASS, S.STUDENT_NAME, CR.ISPAY, L.LECTURE_NAME, L.LECTURE_TUITION, CR.PAY_TYPE, L.LECTURE_START_DATE, L.LECTURE_END_DATE, S.STUDENT_DUE_DATE, S.STUDENT_PARENTS_PHONE ");
 		sb.append("FROM CLASS_REGISTER CR ");
 		sb.append("FULL OUTER JOIN STUDENT S ON CR.STUDENT_NO = S.STUDENT_NO ");
 		sb.append("FULL OUTER JOIN LECTURE L ON CR.LECTURE_NO = L.LECTURE_NO ");
-		sb.append("WHERE L.LECTURE_START_DATE BETWEEN TO_DATE(?, 'DD-MM-YYYY HH24:MI:SS') AND TO_DATE(?, 'DD-MM-YYYY HH24:MI:SS') ");
+		sb.append(
+				"WHERE L.LECTURE_START_DATE BETWEEN TO_DATE(?, 'DD-MM-YYYY HH24:MI:SS') AND TO_DATE(?, 'DD-MM-YYYY HH24:MI:SS') ");
 
-		
 		try {
 			// 5. 문장 객체화
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setString(1, startDate);
 			pstmt.setString(2, endDate);
 
-			
 			// 6. 실행
 			rs = pstmt.executeQuery();
-			
+
 			// 7. 레코드별 로직 처리
 			while (rs.next()) {
 				ClassNoteVO vo = new ClassNoteVO();
-				
+
 				vo.setClass_registerNo(rs.getInt("CLASS_REGISTER_NO"));
 				vo.setLectureClass(rs.getString("LECTURE_CLASS"));
 				vo.setStudentName(rs.getString("STUDENT_NAME"));
@@ -2202,21 +2204,231 @@ public class StudentDAO {
 				vo.setLectureEndDate(rs.getString("LECTURE_END_DATE"));
 				vo.setStudentDueDate(rs.getString("STUDENT_DUE_DATE"));
 				vo.setStudentParentsPhone(rs.getString("STUDENT_PARENTS_PHONE"));
-				
+
 				list.add(vo);
 			}
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return list;
 	}
 
+	// CLASS_REGISTER 수강번호를 클릭하면 수강정보 출력
+
+	// CLASS_REGISTER_NO 을 사용해서 조회하기 위한 메서드(HW)
+	public ClassNoteVO registerSelectByNo(int classRegisterNo) {
+
+		// vo 초기화
+		ClassNoteVO vo = new ClassNoteVO();
+
+		// 4. SQL 문
+		sb.setLength(0); // 초기화
+		sb.append("SELECT CLASS_REGISTER_NO, ISPAY, PAY_TYPE,STUDENT_NO,TEACHER_NO,LECTURE_NO ");
+		sb.append("FROM CLASS_REGISTER ");
+		sb.append("WHERE CLASS_REGISTER_NO = ? ");
+
+		try {
+			// 5. SQL 문장 객체
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, classRegisterNo);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드 별 로직 처리
+			while (rs.next()) {
+				vo = new ClassNoteVO();
+
+				vo.setClass_registerNo(classRegisterNo);
+
+				boolean g;
+				if (rs.getString("ISPAY") == "1") {
+					g = true;
+				} else {
+					g = false;
+				}
+
+				vo.setStudentNo(rs.getInt("STUDENT_NO"));
+				vo.setTeacherNo(rs.getInt("TEACHER_NO"));
+				vo.setLectureNo(rs.getInt("LECTURE_NO"));
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return vo;
+
+	}
+	
+	
+	// CLASS_REGISTER 수강정보 수정하는 메서드
+	
+		public void registerUpdateAllByNo(ClassNoteVO vo) {
+
+			// 4. SQL문 작성
+			sb.setLength(0); // 초기화
+			sb.append("UPDATE CLASS_REGISTER ");
+			sb.append(
+					"SET ISPAY = ?, PAY_TYPE = ?, STUDENT_NO = ?, TEACHER_NO = ?, LECTURE_NO = ? ");
+			sb.append("WHERE CLASS_REGISTER_NO = ? ");
+
+			try {
+				// 5. 문장 객체화
+				pstmt = conn.prepareStatement(sb.toString());
+				
+				pstmt.setBoolean(1, vo.isPay());
+				pstmt.setString(2, vo.getPayType());
+				pstmt.setInt(3, vo.getStudentNo());
+				pstmt.setInt(4, vo.getTeacherNo());
+				pstmt.setInt(5, vo.getLectureNo());
+				pstmt.setInt(6, vo.getClass_registerNo());
+				
+				// 6. 실행
+				int result = pstmt.executeUpdate();
+
+				if (result == 1) {
+					System.out.println("데이터 수정 성공!");
+				}
+
+				// 7. 레코드 별 로직 처리
+				while (rs.next()) {
+					
+					boolean g;
+					if (rs.getString("student_gender") == "1") {
+						g = true;
+					} else {
+						g = false;
+					}
+
+					vo.setPay(g);
+					vo.setPayType(driver);
+					vo.setStudentNo(result);
+					vo.setTeacherNo(result);
+					vo.setLectureNo(result);
+					vo.setClass_registerNo(result);
+
+				}
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
 	
 	
 	
+	
+	
+	
+	
+	
+	// -----------------------------------------------------------------------------------
+	
+	// 강의 신규 등록하는 메서드
+	
+	
+	
+	
+
+	// 수강번호 => LECTURE 강의번호를 클릭하면 강의 상세정보 출력
+
+	// LECTURE_NO 을 사용해서 조회하기 위한 메서드
+	public ClassNoteVO lectureSelectByNo(int lectureNo) {
+
+		// vo 초기화
+		ClassNoteVO vo = new ClassNoteVO();
+
+		// 4. SQL 문
+		sb.setLength(0); // 초기화
+		sb.append(
+				"SELECT LECTURE_NO, LECTURE_NAME, LECTURE_CLASS, LECTURE_START_DATE, LECTURE_END_DATE, LECTURE_TUITION ");
+		sb.append("FROM LECTURE ");
+		sb.append("WHERE LECTURE_NO = ? ");
+
+		try {
+			// 5. SQL 문장 객체
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, lectureNo);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드 별 로직 처리
+			while (rs.next()) {
+				vo = new ClassNoteVO();
+
+				vo.setLectureNo(lectureNo);
+				vo.setLectureName(rs.getString("LECTURE_NAME"));
+				vo.setLectureClass(rs.getString("LECTURE_CLASS"));
+				vo.setLectureStartDate(rs.getString("LECTURE_START_DATE"));
+				vo.setLectureEndDate(rs.getString("LECTURE_END_DATE"));
+				vo.setLectureTuition(rs.getInt("LECTURE_TUITION"));
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return vo;
+
+	}
+
+	// 강의 정보 수정하는 메서드
+	
+	public void lectureUpdateAllByNo(ClassNoteVO vo) {
+
+		// 4. SQL문 작성
+		sb.setLength(0); // 초기화
+		sb.append("UPDATE LECTURE ");
+		sb.append(
+				"SET LECTURE_NAME = ?, LECTURE_CLASS = ?, LECTURE_START_DATE = ?, LECTURE_END_DATE = ?, LECTURE_TUITION = ? ");
+		sb.append("WHERE LECTURE_NO = ? ");
+
+		try {
+			// 5. 문장 객체화
+			pstmt = conn.prepareStatement(sb.toString());
+
+			pstmt.setString(1, vo.getLectureName());
+			pstmt.setString(2, vo.getLectureClass());
+			pstmt.setString(3, vo.getLectureStartDate());
+			pstmt.setString(4, vo.getLectureEndDate());
+			pstmt.setInt(5, vo.getLectureTuition());
+			pstmt.setInt(6, vo.getLectureNo());
+	
+			// 6. 실행
+			int result = pstmt.executeUpdate();
+
+			if (result == 1) {
+				System.out.println("데이터 수정 성공!");
+			}
+
+			// 7. 레코드 별 로직 처리
+			while (rs.next()) {
+
+				vo.setLectureNo(rs.getInt("LECTURE_NO"));
+				vo.setLectureName(rs.getString("LECTURE_NAME"));
+				vo.setLectureClass(rs.getString("LECTURE_CLASS"));
+				vo.setLectureStartDate(rs.getString("LECTURE_START_DATE"));
+				vo.setLectureEndDate(rs.getString("LECTURE_END_DATE"));
+				vo.setLectureTuition(rs.getInt("LECTURE_TUITION"));
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 	// teacherCheck-------------------------------------------------------------------------------------------------------------------------------
 
@@ -2389,13 +2601,20 @@ public class StudentDAO {
 	}
 
 	// -----------------------------------------------------------------------
-
-	// 수강 기간을 특정하여 조회하기 위한 메서드
-	public ArrayList<ClassNoteVO> selectAtoB(String startDate, String endDate) {
-
-		return null;
-	}
-
-	// -----------------------------------------------------------------------
+	
+	// close 메서드
+	
+	public void close() {
+		try {
+			if(rs != null) rs.close();
+			if(pstmt != null) pstmt.close();
+			if(conn != null) conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+}
+	
+	
 
 }

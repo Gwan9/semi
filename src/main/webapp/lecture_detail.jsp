@@ -73,69 +73,44 @@ table, th, td {
 <body>
 	<div id="container">
 		<div id="title">
-			<h1>학생정보</h1>
+			<h1>수강납부정보</h1>
 
 			<%
-			String studentNo = request.getParameter("student_no");
+			String lectureNo = request.getParameter("lecture_no");
 			
-			System.out.println("jsp에서의 값 : " + studentNo);
+			System.out.println("jsp에서의 값 : " + lectureNo);
 
-			if (studentNo != null) {
-				int studentNoInt = Integer.parseInt(studentNo);
+			if (lectureNo != null) {
+				int lectureNoInt = Integer.parseInt(lectureNo);
 				StudentDAO dao = new StudentDAO();
-				ClassNoteVO vo = dao.studentSearchSelectByNo(studentNoInt);
+				ClassNoteVO vo = dao.lectureSelectByNo(lectureNoInt);
 				
 				System.out.println("jsp에서의 값 : " +vo);
 			%>
-
-			<div id="img">
-				<img src="<%=vo.getStudentPhoto() %>" alt="" name="photo" id="photo" />
-			</div>
-
-
+			
 			<div id="table">
 				<table>
 					<tr>
-						<th>학생번호</th>
-						<td colspan="2"><%=vo.getStudentNo()%></td>
-						<th>이름</th>
-						<td colspan="2"><%=vo.getStudentName()%></td>
+						<th>강의번호</th>
+						<th>강의명</th>
+						<th>분반</th>
+						<th>수강시작일</th>
+						<th>수강종료일</th>
+						<th>수강료</th>
 					</tr>
 					<tr>
-						<th>학년</th>
-						<td><%=vo.getStudentGrade()%></td>
-						<th>학교명</th>
-						<td><%=vo.getStudentSchoolName()%></td>
-						<th>연락처</th>
-						<td><%=vo.getStudentPhone()%></td>
-					</tr>
-					<tr>
-						<th>성별</th>
-						<td><%=vo.isStudentGender()%></td>
-						<th>이메일</th>
-						<td><%=vo.getStudentEmail()%></td>
-						<th>생년월일</th>
-						<td><%=vo.getStudentBirth()%></td>
-					</tr>
-					<tr>
-						<th>등록일</th>
-						<td><%=vo.getStudentRegistDate()%></td>
-						<th>학부모 이름</th>
-						<td><%=vo.getStudentParentsName()%></td>
-						<th>학부모 연락처</th>
-						<td><%=vo.getStudentParentsPhone()%></td>
-					</tr>
-					<tr>
-						<th>등록상태</th>
-						<td><%=vo.isStudentStatus()%></td>
-						<th>주소지</th>
-						<td colspan="3"><%=vo.getStudentAddrs()%></td>
+						<td><%=vo.getLectureNo()%></td>
+						<td><%=vo.getLectureName()%></td>
+						<td><%=vo.getLectureClass()%></td>
+						<td><%=vo.getLectureStartDate()%></td>
+						<td><%=vo.getLectureEndDate()%></td>
+						<td><%=vo.getLectureTuition()%></td>
 					</tr>
 				</table>
 
 				<div id="modify_or_cancle">
 					<a
-						href="student_modify_form.jsp?student_no=<%=vo.getStudentNo()%>"><input
+						href="lecture_modify.jsp?lecture_no=<%=vo.getLectureNo()%>"><input
 						type="button" id="modify_btn" value="수정" /></a> <input type="button"
 						id="cancle_btn" value="뒤로가기" />
 				</div>

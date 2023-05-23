@@ -17,7 +17,6 @@
 	
 	table {
 		width: 800px;
-		height: 300px;
 	}
 	
 	table, th, td {

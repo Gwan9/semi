@@ -73,69 +73,42 @@ table, th, td {
 <body>
 	<div id="container">
 		<div id="title">
-			<h1>학생정보</h1>
+			<h1>수강납부정보</h1>
 
 			<%
-			String studentNo = request.getParameter("student_no");
+			String classRegisterNo = request.getParameter("class_register_no");
 			
-			System.out.println("jsp에서의 값 : " + studentNo);
+			System.out.println("jsp에서의 값 : " + classRegisterNo);
 
-			if (studentNo != null) {
-				int studentNoInt = Integer.parseInt(studentNo);
+			if (classRegisterNo != null) {
+				int classRegisterNoInt = Integer.parseInt(classRegisterNo);
 				StudentDAO dao = new StudentDAO();
-				ClassNoteVO vo = dao.studentSearchSelectByNo(studentNoInt);
+				ClassNoteVO vo = dao.registerSelectByNo(classRegisterNoInt);
 				
 				System.out.println("jsp에서의 값 : " +vo);
 			%>
-
-			<div id="img">
-				<img src="<%=vo.getStudentPhoto() %>" alt="" name="photo" id="photo" />
-			</div>
-
-
+			
 			<div id="table">
 				<table>
 					<tr>
+						<th>수강번호</th>
+						<th>강사번호</th>
+						<th>강의번호</th>
 						<th>학생번호</th>
-						<td colspan="2"><%=vo.getStudentNo()%></td>
-						<th>이름</th>
-						<td colspan="2"><%=vo.getStudentName()%></td>
+						<th>납부여부</th>
 					</tr>
 					<tr>
-						<th>학년</th>
-						<td><%=vo.getStudentGrade()%></td>
-						<th>학교명</th>
-						<td><%=vo.getStudentSchoolName()%></td>
-						<th>연락처</th>
-						<td><%=vo.getStudentPhone()%></td>
-					</tr>
-					<tr>
-						<th>성별</th>
-						<td><%=vo.isStudentGender()%></td>
-						<th>이메일</th>
-						<td><%=vo.getStudentEmail()%></td>
-						<th>생년월일</th>
-						<td><%=vo.getStudentBirth()%></td>
-					</tr>
-					<tr>
-						<th>등록일</th>
-						<td><%=vo.getStudentRegistDate()%></td>
-						<th>학부모 이름</th>
-						<td><%=vo.getStudentParentsName()%></td>
-						<th>학부모 연락처</th>
-						<td><%=vo.getStudentParentsPhone()%></td>
-					</tr>
-					<tr>
-						<th>등록상태</th>
-						<td><%=vo.isStudentStatus()%></td>
-						<th>주소지</th>
-						<td colspan="3"><%=vo.getStudentAddrs()%></td>
+						<td><%=vo.getClass_registerNo()%></td>
+						<td><a href='teacher_detail.jsp?teacher_no=<%=vo.getTeacherNo()%>'><%=vo.getTeacherNo()%></a></td>
+						<td><a href='lecture_detail.jsp?lecture_no=<%=vo.getLectureNo()%>'><%=vo.getLectureNo()%></a></td>
+						<td><a href='student_detail.jsp?student_no=<%=vo.getStudentNo()%>'><%=vo.getStudentNo()%></a></td>
+						<td><%=vo.isPay()%></td>
 					</tr>
 				</table>
 
 				<div id="modify_or_cancle">
 					<a
-						href="student_modify_form.jsp?student_no=<%=vo.getStudentNo()%>"><input
+						href="register_modify.jsp?class_register_no=<%=vo.getClass_registerNo()%>"><input
 						type="button" id="modify_btn" value="수정" /></a> <input type="button"
 						id="cancle_btn" value="뒤로가기" />
 				</div>

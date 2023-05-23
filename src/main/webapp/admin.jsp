@@ -870,7 +870,7 @@ table, th, td {
 					for(var i=0; i<obj.length; i++) {
 						
 						txt = "<tr>"
-					        + "<th><a href='student_detail.jsp?student_no=" + obj[i].registerno + "'>" + obj[i].registerno + "</a></th>"
+					        + "<th><a href='register_detail.jsp?class_register_no=" + obj[i].registerno + "'>" + obj[i].registerno + "</a></th>"
 					        + "<td>" + obj[i].lectureClass + "</td>"
 					        + "<td>" + obj[i].studentName + "</td>"
 					        + "<td>" + obj[i].isPay + "</td>"
