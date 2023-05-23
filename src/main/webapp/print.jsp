@@ -28,21 +28,53 @@ width: 1080px;
 margin: auto;
 
 }
-#list{
+#printList{
 margin-top:30px;
 width: 800px;
-
 }
 
-#printBtn{
-position: relative;
-left: 680px;
+
+/* 테이블 전체 */
+table.tableCss {
+	width: 800px;
+	font-size: 70%;
+	border-collapse: collapse;
+	text-align: left;
+	margin-left: 1px;
+}
+
+/* 테이블 헤드 */
+table.tableCss th {
+	/* width: 130px; */
+	padding: 7px;
+	font-weight: bold;
+	color: white;
+	/* vertical-align: top; */
+	background: #D8D9DB;
+}
+
+/* 테이블 내용 부분 */
+table.tableCss td {
+	width: 20px;
+	padding: 7px;
+	border-bottom: 1px solid white;
+	background-color: #F3F6F7;
+	color: #686868;
+}
+
+
+#printBtn {
+	position: relative;
+	left: 690px;
+	bottom: -20px;
+	background-color: #A6A9AE;
+	border: 1px solid white;
 }
 
 #back {
 position:relative;
-left: 700px;
-top: 0px;
+left: 710px;
+top: 20px;
 	width: 30px;
 	height: 30px;
 }
@@ -62,7 +94,7 @@ String selectedList = request.getParameter("selectedList");
 
 <div id="container">
 
-<div id="list">
+<div id="printList">
 
 	<script>
 		var selectedList = '<%= selectedList %>';
@@ -71,7 +103,7 @@ String selectedList = request.getParameter("selectedList");
 
 		// 선택된 학생 정보를 테이블로 출력
 		//thead
-		var tableHtml = "<table class='table table-dark table-striped table-hover'>";
+		var tableHtml = "<table class='tableCss'>";
 		tableHtml += "<tr>";
 		tableHtml += "<th>학생명</th>";
 		tableHtml += "<th>학교명</th>";
@@ -113,7 +145,7 @@ String selectedList = request.getParameter("selectedList");
 
 	<% } %>
 <a href="studentList.jsp"><img
-			src="https://cdn-icons-png.flaticon.com/512/0/340.png"
+			src="https://media.istockphoto.com/id/1452220399/ko/%EB%B2%A1%ED%84%B0/%EB%92%A4%EB%A1%9C-%ED%99%94%EC%82%B4%ED%91%9C-%EC%95%84%EC%9D%B4%EC%BD%98%EC%9E%85%EB%8B%88%EB%8B%A4-%EC%99%BC%EC%AA%BD%EC%9C%BC%EB%A1%9C-%EB%8F%8C%EC%95%84%EA%B0%80%EA%B8%B0-%EB%B2%A1%ED%84%B0-%EA%B7%B8%EB%A6%BC.jpg?s=612x612&w=0&k=20&c=OIiES0-dasbonq_cxTn0oGuycE4b_sLr63HrY3yglVw="
 			alt="뒤로가기버튼이미지" id="back" /></a>
 </div>
 	
