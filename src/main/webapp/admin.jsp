@@ -9,11 +9,12 @@
 <meta charset="UTF-8">
 <title>admin.jsp</title>
 
+<link rel="stylesheet" href="semi.css">
+
 <style type="text/css">
 
 #mainContainer {
 	width: 1100px;
-	background: gray;
 	margin: 0px auto;
 	border-radius: 20px;
 }
@@ -25,7 +26,7 @@
 }
 
 /* --- */
-#container {
+#container1 {
 	width: 1000px;
 	background: #E2E2E2;
 	margin: 0px auto;
@@ -152,12 +153,12 @@ table, th, td {
 	$(function() {
 		// 창이 켜지고, 크기가 조정될 때마다 #teacher_or_student의 margin-left 값을 읽어와 #container에 동일한 값으로 설정
 		$(window).on("load", function() {
-			var marginLeft = $("#container").css("margin-left");
+			var marginLeft = $("#container1").css("margin-left");
 			$("#teacher_or_student, #monthSelect").css("margin-left", marginLeft);
 			$("#msg1, #msg2, h1").css("margin-left", marginLeft);
 		})
 		$(window).on("resize", function() {
-			var marginLeft = $("#container").css("margin-left");
+			var marginLeft = $("#container1").css("margin-left");
 			$("#teacher_or_student, #monthSelect").css("margin-left", marginLeft);
 			$("#msg1, #msg2, h1").css("margin-left", marginLeft);
 		});
@@ -177,7 +178,7 @@ table, th, td {
 				// 안내 메세지 숨기기
 				$("#msg1").css("visibility", "hidden");
 				// 표 표시하기
-				$("#container").css("visibility", "visible");
+				$("#container1").css("visibility", "visible");
 				
 				
 				// 표 내용 바꾸기
@@ -233,7 +234,7 @@ table, th, td {
 								// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 								var tableHeight = $('#table_result').outerHeight();
 								var containerHeight = tableHeight + 270;
-								$('#container').css('height', containerHeight + 'px');
+								$('#container1').css('height', containerHeight + 'px');
 								
 						}
 		
@@ -251,7 +252,7 @@ table, th, td {
 					// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 					var tableHeight = $('#table_result').outerHeight();
 					var containerHeight = tableHeight + 270;
-					$('#container').css('height', containerHeight + 'px');
+					$('#container1').css('height', containerHeight + 'px');
 					
 					$("#table_result tr:not(:first-child)").remove();
 					
@@ -297,7 +298,7 @@ table, th, td {
 							// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 							var tableHeight = $('#table_result').outerHeight();
 							var containerHeight = tableHeight + 520;
-							$('#container').css('height', containerHeight + 'px');
+							$('#container1').css('height', containerHeight + 'px');
 							
 			
 						},
@@ -372,7 +373,7 @@ table, th, td {
 								// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 								var tableHeight = $('#table_result').outerHeight();
 								var containerHeight = tableHeight + 320;
-								$('#container').css('height', containerHeight + 'px');
+								$('#container1').css('height', containerHeight + 'px');
 				
 							},
 							error: function(response, status, request) {
@@ -411,7 +412,7 @@ table, th, td {
 						// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 						var tableHeight = $('#table_result').outerHeight();
 						var containerHeight = tableHeight + 650;
-						$('#container').css('height', containerHeight + 'px');
+						$('#container1').css('height', containerHeight + 'px');
 						
 						$("#table_result tr:not(:first-child)").remove();
 						
@@ -453,7 +454,7 @@ table, th, td {
 								// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 								var tableHeight = $('#table_result').outerHeight();
 								var containerHeight = tableHeight + 320;
-								$('#container').css('height', containerHeight + 'px');
+								$('#container1').css('height', containerHeight + 'px');
 								
 							},
 							error: function(response, status, request) {
@@ -482,7 +483,7 @@ table, th, td {
 				// 안내 메세지 숨기기
 				$("#msg1").css("visibility", "hidden");
 				// 표 표시하기
-				$("#container").css("visibility", "visible");
+				$("#container1").css("visibility", "visible");
 				
 				$("#table_result tr:not(:first-child)").remove();
 				
@@ -540,7 +541,7 @@ table, th, td {
 								// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 								var tableHeight = $('#table_result').outerHeight();
 								var containerHeight = tableHeight + 270;
-								$('#container').css('height', containerHeight + 'px');
+								$('#container1').css('height', containerHeight + 'px');
 						}
 		
 					},
@@ -597,7 +598,7 @@ table, th, td {
 							// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 							var tableHeight = $('#table_result').outerHeight();
 							var containerHeight = tableHeight + 270;
-							$('#container').css('height', containerHeight + 'px');
+							$('#container1').css('height', containerHeight + 'px');
 			
 						},
 						error: function(response, status, request) {
@@ -620,7 +621,7 @@ table, th, td {
 					// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 					var tableHeight = $('#table_result').outerHeight();
 					var containerHeight = tableHeight + 320;
-					$('#container').css('height', containerHeight + 'px');
+					$('#container1').css('height', containerHeight + 'px');
 					
 					
 					$("#table_result tr:not(:first-child)").remove();
@@ -678,7 +679,7 @@ table, th, td {
 								// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 								var tableHeight = $('#table_result').outerHeight();
 								var containerHeight = tableHeight + 320;
-								$('#container').css('height', containerHeight + 'px');
+								$('#container1').css('height', containerHeight + 'px');
 				
 							},
 							error: function(response, status, request) {
@@ -717,7 +718,7 @@ table, th, td {
 						// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 						var tableHeight = $('#table_result').outerHeight();
 						var containerHeight = tableHeight + 650;
-						$('#container').css('height', containerHeight + 'px');
+						$('#container1').css('height', containerHeight + 'px');
 						
 						$("#table_result tr:not(:first-child)").remove();
 						
@@ -760,7 +761,7 @@ table, th, td {
 								// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 								var tableHeight = $('#table_result').outerHeight();
 								var containerHeight = tableHeight + 320;
-								$('#container').css('height', containerHeight + 'px');
+								$('#container1').css('height', containerHeight + 'px');
 								
 								
 							},
@@ -806,7 +807,7 @@ table, th, td {
 			// container 의 css 값을 표의 마지막 행으로부터 40px 더한 값으로 주기
 			var tableHeight = $('#table_result').outerHeight();
 			var containerHeight = tableHeight + 270;
-			$('#container').css('height', containerHeight + 'px');
+			$('#container1').css('height', containerHeight + 'px');
 			
 		})
 		
@@ -912,6 +913,13 @@ table, th, td {
 </head>
 <body>
 	<div id="mainContainer">
+	
+		<div class="sideMenu1">학생목록</div>
+		<div class="sideMenu2">출결관리</div>
+		<div class="sideMenu3">수업관리</div>
+		<div class="sideMenu4">학습일지</div>
+		<div class="sideMenu5">관리자</div>
+		
 		
 		<h1>강사/학생 관리</h1>
 		<div>
@@ -924,14 +932,8 @@ table, th, td {
 			<div id="msg1" style="font-weight: bold">
 				강사 또는 학생을 선택해주세요!
 			</div>
-		</div>
-<!-- 				<label><input type="radio" name="teacher_or_student" -->
-<!-- 					id="teacher_or_student" value="teacher" />교사</label> <label><input -->
-<!-- 					type="radio" name="teacher_or_student" id="teacher_or_student" -->
-<!-- 					value="student" />학생</label> -->
 			
 			
-		<div id="container">
 
 			<br /> 
 			
@@ -968,6 +970,13 @@ table, th, td {
 				<input type="button" id="modify_btn" value="편집" />
 			</div>
 
+		</div>
+<!-- 				<label><input type="radio" name="teacher_or_student" -->
+<!-- 					id="teacher_or_student" value="teacher" />교사</label> <label><input -->
+<!-- 					type="radio" name="teacher_or_student" id="teacher_or_student" -->
+<!-- 					value="student" />학생</label> -->
+		<div id="container1">
+		
 			<div id="table">
 				<table id="table_result">
 					<tr>
@@ -1021,6 +1030,9 @@ table, th, td {
 			
 			
 			<div id="container2">
+			
+				<br /> 
+					
 				<div>
 					<table id="table_accounting_result">
 						<tr>
@@ -1044,7 +1056,21 @@ table, th, td {
 					
 					ArrayList<ClassNoteVO> accountingList = dao.accountingSelectByAll();
 					
+					int totalPayment = 0; // 납입금 총액을 저장할 변수 초기화
+					int totalOutstanding = 0; // 미납금 총액을 저장할 변수 초기화
+					
 					for(ClassNoteVO vo : accountingList) {
+						
+						int lectureTuition = vo.getLectureTuition();
+					    boolean isPay = vo.isPay();
+
+					    if (isPay) {
+					        totalPayment += lectureTuition;
+					    } else {
+					        totalOutstanding += lectureTuition;
+					    }
+					    
+					    
 					%>	
 						<tr>
 							
@@ -1070,14 +1096,14 @@ table, th, td {
 					<table>
 						<tr class="account_sum" >
 							<th colspan="4">납입금 총액</th>
-							<td colspan="3">2</td>
+							<th colspan="3"><%= totalPayment %>원</th>
 							<th rowspan="2" colspan="2">누적 총액</th>
-							<td rowspan="2" colspan="2">5</td>		
+							<th rowspan="2" colspan="2"><%= totalPayment + totalOutstanding %>원</th>		
 						</tr>
 						
 						<tr class="account_sum">
 							<th colspan="4">미납금 총액</th>
-							<td colspan="3">4</td>
+							<th colspan="3"><%= totalOutstanding %>원</th>
 						</tr>
 					</table>
 				
