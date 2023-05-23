@@ -26,99 +26,9 @@
 	integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
 	crossorigin="anonymous"></script>
 
-<style>
-* {
-	margin: auto;
-	padding: 0;
-}
 
-#container {
-	width: 1080px;
-	margin: auto;
-}
-
-#studentList {
-	position: relative;
-	width: 900px;
-	height: 600px;
-	background: #C7C7CA;
-	border-radius: 13px;
-	z-index: 5; /*  z-index 적용하려면 position을 줘야 함 
-	 				 숫자가 작을수록 아래고 높을수록 위 */
-}
-
-#student1 {
-	padding: 10px;
-	position: relative;
-	top: 40px;
-	width: 800px;
-	height: 150px;
-	background-color: #212529;
-	color: white;
-	font-size: 90%;
-	/* border-radius: 13px;
-	border: 2px solid #FFCA2C; */
-}
-
-#student2 {
-	position: relative;
-	top: 60px;
-	width: 800px;
-	height: 330px;
-	background: #212529;
-	overflow: auto; /* 영역을 넘어갈 때 스크롤바 생성 */
-	overflow-x: white-space; /* 가로 스크롤은 없애기 */
-	/* border-radius: 13px; */
-}
-
-table {
-	width: 750px;
-	font-size: 80%;
-}
-
-#searchBtn {
-	position: relative;
-	left: 300px;
-}
-
-#btns {
-	position: relative;
-	left: 809px;
-	bottom: -75px;
-}
-
-.custom-btn-xs {
-	font-size: 10px;
-	padding: 5px 10px;
-}
-
-.sideMenu1 {
-	position: relative;
-	left: -480px;
-	bottom: -130px;
-	border-radius: 10px;
-	background-color: #FFCA2C;
-	width: 110px;
-	height: 40px;
-	z-index: 1;
-	padding-left: 12px;
-	padding-top: 8px;
-}
-
-.sideMenu2 {
-	position: relative;
-	left: -480px;
-	bottom: -135px;
-	border-radius: 10px;
-	background-color: #212529;
-	color: white;
-	width: 110px;
-	height: 40px;
-	z-index: 2;
-	padding-left: 12px;
-	padding-top: 8px;
-}
-</style>
+<!-- css파일 링크 -->
+<link rel="stylesheet" href="semi.css">
 
 
 <!-- ajax CDN -->
@@ -134,18 +44,18 @@ table {
 		$("#lectureClass").on("change", search);
 		$("#lectureName").on("change", search);
 		$("#studentGrade").on("change", search);
-		
+
 		//이름은 조회버튼을 눌러야 조회
 		$("#searchBtn").on("click", search);
-		
+
 		//날짜
-		 $("#date1").on("change", function () {
+		$("#date1").on("change", function() {
 			var date1 = $("#date1").val();
 		});
-		$("#date2").on("change", function () {
+		$("#date2").on("change", function() {
 			var date2 = $("#date2").val();
-		}); 
-		
+		});
+
 		// <전체 체크>
 		//checkAll을 누르면 모든 체크박스가 선택됨
 		$("#checkAll").on("change", function() { //체크박스가 변경될때마다 실행
@@ -217,8 +127,8 @@ table {
 	//----------------------------------------------------------------------------------------
 	// 팝업 - #을 누르면 해당 studentName이 디테일 팝업으로 전달됨
 	function show(studentName) {
-		var w = 500;
-		var h = 670;
+		var w = 530;
+		var h = 830;
 		var x = 500;
 		var y = 100;
 
@@ -229,7 +139,7 @@ table {
 		window.open("detail.jsp?studentName=" + studentName, "_blank", spec);
 		//(열려질 페이지, 새 창에서 페이지를 열라는 의미의 타겟(target) 속성 값, spec)
 	}
-	
+
 	//셀렉트 옵션을 바꿨을 때 작동
 	function search() {
 		//기존 테이블 행 삭제 (비워주기)
@@ -250,9 +160,9 @@ table {
 						"studentGrade" : $("#studentGrade").val(),
 						"lectureClass" : $("#lectureClass").val(),
 						"lectureName" : $("#lectureName").val(),
-					
-					 	"date1" : $("#date1").val(),
-						"date2" : $("#date2").val() 
+
+						"date1" : $("#date1").val(),
+						"date2" : $("#date2").val()
 					},
 
 					//성공했다면
@@ -317,15 +227,19 @@ table {
 	//DAO 생성
 	StudentDAO dao = new StudentDAO();
 	%>
-	<div id="container">
+
+	<div id="canvas">
 		<!-- 사이드 메뉴바 -->
 		<div class="sideMenu1">학생목록</div>
 		<div class="sideMenu2">출결관리</div>
+		<div class="sideMenu3">수업관리</div>
+		<div class="sideMenu4">학습일지</div>
+		<div class="sideMenu5">관리자</div>
 
-		<div id="studentList">
+		<div id="container">
 			<div id="student1">
 				<h5>학생 정보 조회</h5>
-				<hr style="border: 1.2px solid" />
+				<hr />
 				분반 <select name="lectureClass" id="lectureClass">
 					<option value="전체">전체</option>
 					<option value="A">A반</option>
@@ -350,9 +264,11 @@ table {
 				<br /> <br />
 			</div>
 
+
 			<div id="student2">
-				<table id="sl" class="table table-dark table-striped table-hover">
-					<thead>
+				<table id="sl" class="tableCss">
+					<!-- 상단의 헤드부분은 스크롤 시 내려가지 않고 고정 -->
+					<thead style="position: sticky; top: 0;">
 						<tr>
 							<th><input type="checkbox" name="checkAll" id="checkAll" /></th>
 							<th>학생명</th>
@@ -368,7 +284,6 @@ table {
 					</thead>
 
 					<%
-
 					ArrayList<ClassNoteVO> list = dao.studentSearchSelectAll();
 					for (ClassNoteVO vo : list) {
 					%>
@@ -390,12 +305,13 @@ table {
 						<td><%=vo.getStudentParentsName()%></td>
 						<td><%=vo.getStudentParentsPhone()%></td>
 					</tr>
-					
+
 					<%
 					}
 					%>
 				</table>
-			</div> <!-- student2 끝 -->
+			</div>
+			<!-- student2 끝 -->
 
 			<div id="btns">
 				<!-- 	<input type="button" value="PDF" id="PDF" /> <input type="button"
@@ -405,8 +321,9 @@ table {
 				<button type="button" class="btn btn-dark custom-btn-xs"
 					id="printBtn">인쇄</button>
 			</div>
-		</div> <!-- studentList 끝 -->
-	</div> <!-- container끝  -->
+		</div>
+		<!-- container 끝 -->
+	</div>
 </body>
 </html>
 
