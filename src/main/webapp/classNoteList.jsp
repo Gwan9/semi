@@ -38,7 +38,7 @@
 		notelist.put("studentname", vo.getStudentName());
 		notelist.put("lecturename", vo.getLectureName());
 		notelist.put("lectureclass", vo.getLectureClass());
-		
+		notelist.put("teachername", vo.getTeacherName());
 
 		JA.add(notelist);
 	}

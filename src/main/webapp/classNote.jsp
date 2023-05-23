@@ -19,12 +19,12 @@
 		width : 1080px;
 		height : 680px;
 		background : gray;
-		padding-bottom : 0;
-		padding-top : 30px;
+		padding : 30px;
 	}
 	.board {
 		padding : 20px;
 		margin : auto;
+		margin-bottom:0;
 		width : 80%;
 		height : 80%;
 		background : silver;
@@ -77,10 +77,12 @@
 		        
 		        for (var i = 0; i < obj.length; i++) {
 		          var txt = "<tr><td>" + obj[i].noteno + 
-		          			"</td><td>" + obj[i].lecturename+ 
+		          			"</td><td>" + obj[i].lecturename + 
 		          			"</td><td>" + obj[i].lectureclass + 
-		          			"</td><td>" + obj[i].studentname+ 
-		          			"</td><td>" + "<a href='classNoteDetail.jsp?NoteNo="+obj[i].noteno + "'>" + obj[i].notetitle + "</a>"+ 
+		          			"</td><td>" + obj[i].studentname + 
+		          			"</td><td>" + "<a href='classNoteDetail.jsp?NoteNo="+obj[i].noteno + "'>" + obj[i].notetitle + "</a>"+
+		          			"</td><td>" + obj[i].notedate +
+		          			"</td><td>" + obj[i].teachername +
 		          			"</td></tr>";
 		          $("table").append(txt);
 		        }
@@ -102,16 +104,16 @@
 		})
 		
 		$("#stdSelect").on("click",function(){
-			console.log("클릭");
+			$("table").empty();
 			$.ajax({
-				url:"studentList.jsp",
+				url:"classNoteStudentList.jsp",
 				data:{
 					"studentName" : $("#studentName").val()
 				},
 				success:function(data){
 					var obj = JSON.parse(data);
 					for(var i = 0; i < obj.length; i++){
-						var txt = "<tr><td>" + obj[i].no + "</td><td>" + obj[i].name + "</td><td>" + obj[i].grade + "</td></tr>";
+						var txt = "<tr><td>" + obj[i].noteno + "</td><td>" + obj[i].lecturename + "</td><td>" + obj[i].lectureclass + "</td><td>" + obj[i].studentname + "</td><td>" + "<a href='classNoteDetail.jsp?NoteNo="+obj[i].noteno + "'>" + obj[i].notetitle + "</td><td>"+ obj[i].teachername + "</td><td>"+ obj[i].notedate + "</td></tr>";
 						$("table").append(txt);
 					}
 				}
@@ -125,7 +127,7 @@
 // 	로그인 확인 절차
 // 	Object obj = session.getAttribute("vo");
 // 	if(obj == null)
-// 		response.sendRedirect("../day10/login.jsp");
+// 		response.sendRedirect("../main.jsp");
 
 	StudentDAO dao = new StudentDAO();
 	
@@ -211,7 +213,10 @@
 							<td><%=vo.getNoteDate() %></td>
 							<td><a href="classNoteDetail.jsp?NoteNo=<%= vo.getNoteNo() %>"> <%= vo.getNoteTitle() %> </a></td>
 							<td><%=vo.getNoteContents() %></td>
-							<td><%=vo.getClassRegisterNo() %></td>
+							<td><%=vo.getStudentName() %></td>
+							<td><%=vo.getLectureName() %></td>
+							<td><%=vo.getLectureClass() %></td>
+							<td><%=vo.getTeacherName() %></td>
 						</tr>
 						
 						<%

@@ -163,7 +163,7 @@ public class StudentDAO {
 
 		sb.setLength(0);
 		sb.append(
-				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class "
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class, t.teacher_name "
 						+ "from class_note cn "
 						+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
 						+ "join lecture l on cr.lecture_no = l.lecture_no "
@@ -184,6 +184,45 @@ public class StudentDAO {
 				vo.setStudentName(rs.getString("student_name"));
 				vo.setLectureName(rs.getString("lecture_name"));
 				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setTeacherName(rs.getString("teacher_name"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	public ArrayList<ClassNoteVO> studentNoteSelectStudentName(String name) {
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
+		ClassNoteVO vo = new ClassNoteVO();
+
+		sb.setLength(0);
+		sb.append(
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class, T.TEACHER_NAME "
+				+ "from class_note cn "
+				+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
+				+ "join lecture l ON cr.lecture_no = l.lecture_no "
+				+ "join student s ON cr.student_no = s.student_no "
+				+ "join teacher T ON cr.teacher_no = T.teacher_no "
+				+ "where s.student_name = ? ");
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, name);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				vo.setNoteNo(rs.getInt("note_no"));
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contents"));
+				vo.setTeacherNo(rs.getInt("class_register_no"));
+				vo.setStudentName(name);
+				vo.setLectureName(rs.getString("lecture_name"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setTeacherName(rs.getString("teacher_name"));
 
 				list.add(vo);
 			}
@@ -200,14 +239,21 @@ public class StudentDAO {
 
 		sb.setLength(0);
 		sb.append(
-				"SELECT rn, cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class "
-						+ "FROM (SELECT ROWNUM rn, note_no, note_date, note_title, note_contents, class_register_no "
-						+ "      FROM (SELECT note_no, note_date, note_title, note_contents, class_register_no "
-						+ "            FROM class_note " + "            ORDER BY note_no DESC) "
-						+ "      WHERE ROWNUM <= ?) cn "
-						+ "JOIN class_register cr ON cn.class_register_no = cr.class_register_no "
-						+ "join lecture l on cr.lecture_no = l.lecture_no "
-						+ "JOIN student s ON cr.student_no = s.student_no " + "WHERE rn >= ? ");
+				  "SELECT rn, cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class, t.teacher_name "
+				  + "FROM ("
+				  + "  SELECT ROWNUM rn, cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no "
+				  + "  FROM ("
+				  + "    SELECT cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no "
+				  + "    FROM class_note cn "
+				  + "    ORDER BY note_no DESC "
+				  + "  ) cn "
+				  + "  WHERE ROWNUM <= ?"
+				  + ") cn "
+				  + "JOIN class_register cr ON cn.class_register_no = cr.class_register_no "
+				  + "JOIN lecture l ON cr.lecture_no = l.lecture_no "
+				  + "JOIN student s ON cr.student_no = s.student_no "
+				  + "JOIN teacher t ON cr.teacher_no = t.teacher_no "
+				  + "WHERE rn >= ?");
 
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
@@ -226,6 +272,7 @@ public class StudentDAO {
 				vo.setStudentName(rs.getString("student_name"));
 				vo.setLectureName(rs.getString("lecture_name"));
 				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setTeacherName(rs.getString("teacher_name"));
 
 				list.add(vo);
 
@@ -244,13 +291,12 @@ public class StudentDAO {
 
 		sb.setLength(0);
 		sb.append(
-				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class "
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class, t.teacher_name "
 						+ "from class_note cn "
 						+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
 						+ "join lecture l on cr.lecture_no = l.lecture_no "
 						+ "join student s on cr.student_no = s.student_no "
-						+ "join teacher t on cr.teacher_no = t.teacher_no " 
-						+ "where lecture_name = ? ");
+						+ "join teacher t on cr.teacher_no = t.teacher_no " + "where lecture_name = ? ");
 
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
@@ -269,6 +315,7 @@ public class StudentDAO {
 				vo.setStudentName(rs.getString("student_name"));
 				vo.setLectureName(rs.getString("lecture_name"));
 				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setTeacherName(rs.getString("teacher_name"));
 
 				list.add(vo);
 
@@ -286,7 +333,7 @@ public class StudentDAO {
 
 		sb.setLength(0);
 		sb.append(
-				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class "
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class, t.teacher_name "
 						+ "from class_note cn "
 						+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
 						+ "join lecture l on cr.lecture_no = l.lecture_no "
@@ -312,6 +359,7 @@ public class StudentDAO {
 				vo.setStudentName(rs.getString("student_name"));
 				vo.setLectureName(rs.getString("lecture_name"));
 				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setTeacherName(rs.getString("teacher_name"));
 
 				list.add(vo);
 
@@ -329,7 +377,7 @@ public class StudentDAO {
 
 		sb.setLength(0);
 		sb.append(
-				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class "
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class, t.teacher_name "
 						+ "from class_note cn "
 						+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
 						+ "join lecture l on cr.lecture_no = l.lecture_no "
@@ -354,6 +402,7 @@ public class StudentDAO {
 				vo.setStudentName(rs.getString("student_name"));
 				vo.setLectureName(rs.getString("lecture_name"));
 				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setTeacherName(rs.getString("teacher_name"));
 
 				list.add(vo);
 
@@ -586,9 +635,9 @@ public class StudentDAO {
 				vo.setStudentPhone(rs.getString("student_phone"));
 				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
 				vo.setStudentCheckNo(rs.getInt("student_check_no"));
-				vo.setStudentCheckIn(rs.getString("student_check_in"));
-				vo.setStudentCheckLate(rs.getString("student_check_late"));
-				vo.setStudentCheckLeave(rs.getString("student_check_leave"));
+//				vo.setStudentCheckIn(rs.getString("student_check_in"));
+//				vo.setStudentCheckLate(rs.getString("student_check_late"));
+//				vo.setStudentCheckLeave(rs.getString("student_check_leave"));
 				vo.setStudentCheckDate(rs.getString("student_check_date"));
 				list.add(vo);
 				System.out.println("LIST " + list);
@@ -630,9 +679,9 @@ public class StudentDAO {
 				vo.setStudentPhone(rs.getString("student_phone"));
 				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
 				vo.setStudentCheckNo(rs.getInt("student_check_no"));
-				vo.setStudentCheckIn(rs.getString("student_check_in"));
-				vo.setStudentCheckLate(rs.getString("student_check_late"));
-				vo.setStudentCheckLeave(rs.getString("student_check_leave"));
+//				vo.setStudentCheckIn(rs.getString("student_check_in"));
+//				vo.setStudentCheckLate(rs.getString("student_check_late"));
+//				vo.setStudentCheckLeave(rs.getString("student_check_leave"));
 				vo.setStudentCheckDate(rs.getString("student_check_date"));
 
 				list.add(vo);
