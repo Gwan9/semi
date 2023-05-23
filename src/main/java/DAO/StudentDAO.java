@@ -15,8 +15,13 @@ public class StudentDAO {
 	// 기본생성자 (JDBC의 1-3단계)
 	// 1. 환경변수
 	String driver = "oracle.jdbc.driver.OracleDriver";
+<<<<<<< HEAD
 	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
 	//String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
+=======
+//	String url = "jdbc:oracle:thin:@192.168.0.26:1521:orcl"; // CWK
+	String url = "jdbc:oracle:thin:@localhost:1521:orcl"; // localhost
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
 	String user = "scott";
 	String password = "tiger";
 	Connection conn;
@@ -87,6 +92,7 @@ public class StudentDAO {
 		}
 	}
 
+<<<<<<< HEAD
 	public ArrayList<ClassNoteVO> studentNoteSelectAll() {
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = new ClassNoteVO();
@@ -115,6 +121,8 @@ public class StudentDAO {
 		return list;
 	}
 
+=======
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
 	public void studentNoteDeleteOne(int noteno) {
 		sb.setLength(0);
 		sb.append("delete from class_note where note_no = ? ");
@@ -185,15 +193,67 @@ public class StudentDAO {
 		return vo;
 	}
 
+<<<<<<< HEAD
+=======
+	public ArrayList<ClassNoteVO> studentNoteSelectAll() {
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
+		ClassNoteVO vo = new ClassNoteVO();
+
+		sb.setLength(0);
+		sb.append(
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class "
+						+ "from class_note cn "
+						+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
+						+ "join lecture l on cr.lecture_no = l.lecture_no "
+						+ "join student s on cr.student_no = s.student_no "
+						+ "join teacher t on cr.teacher_no = t.teacher_no ");
+
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				vo.setNoteNo(rs.getInt("note_no"));
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contents"));
+				vo.setTeacherNo(rs.getInt("class_register_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setLectureName(rs.getString("lecture_name"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
 	public ArrayList<ClassNoteVO> studentNoteSelectAll(int startno, int endno) {
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
 
 		sb.setLength(0);
+<<<<<<< HEAD
 		sb.append("select rn, note_no, note_date, note_title, note_contents, class_register_no "
 				+ " from (select rownum rn, note_no, note_date, note_title, note_contents, class_register_no "
 				+ " from (select note_no, note_date, note_title, note_contents, class_register_no from class_note order by note_no desc) "
 				+ " where rownum <= ?) " + " where rn >= ? ");
+=======
+		sb.append(
+				"SELECT rn, cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class "
+						+ "FROM (SELECT ROWNUM rn, note_no, note_date, note_title, note_contents, class_register_no "
+						+ "      FROM (SELECT note_no, note_date, note_title, note_contents, class_register_no "
+						+ "            FROM class_note " + "            ORDER BY note_no DESC) "
+						+ "      WHERE ROWNUM <= ?) cn "
+						+ "JOIN class_register cr ON cn.class_register_no = cr.class_register_no "
+						+ "join lecture l on cr.lecture_no = l.lecture_no "
+						+ "JOIN student s ON cr.student_no = s.student_no " + "WHERE rn >= ? ");
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
 
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
@@ -209,6 +269,12 @@ public class StudentDAO {
 				vo.setNoteTitle(rs.getString("note_title"));
 				vo.setNoteContents(rs.getString("note_contents"));
 				vo.setClassRegisterNo(rs.getInt("class_register_no"));
+<<<<<<< HEAD
+=======
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setLectureName(rs.getString("lecture_name"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
 
 				list.add(vo);
 
@@ -226,10 +292,21 @@ public class StudentDAO {
 		ClassNoteVO vo = null;
 
 		sb.setLength(0);
+<<<<<<< HEAD
 		sb.append("select lecture_name, lecture_class, student_name " + "from (select * "
 				+ "from student s, teacher t, lecture l, class_register c, class_note n "
 				+ "where n.teacher_no = t.teacher_no and c.teacher_no = t.teacher_no and c.lecture_no = l.lecture_no "
 				+ "and c.student_no = s.student_no)" + "where lecture_name = ? ");
+=======
+		sb.append(
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class "
+						+ "from class_note cn "
+						+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
+						+ "join lecture l on cr.lecture_no = l.lecture_no "
+						+ "join student s on cr.student_no = s.student_no "
+						+ "join teacher t on cr.teacher_no = t.teacher_no " 
+						+ "where lecture_name = ? ");
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
 
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
@@ -239,9 +316,19 @@ public class StudentDAO {
 
 			while (rs.next()) {
 				vo = new ClassNoteVO();
+
+				vo.setNoteNo(rs.getInt("note_no"));
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contents"));
+				vo.setClassRegisterNo(rs.getInt("class_register_no"));
+				vo.setStudentName(rs.getString("student_name"));
 				vo.setLectureName(rs.getString("lecture_name"));
 				vo.setLectureClass(rs.getString("lecture_class"));
+<<<<<<< HEAD
 				vo.setStudentName(rs.getString("student_name"));
+=======
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
 
 				list.add(vo);
 
@@ -258,10 +345,21 @@ public class StudentDAO {
 		ClassNoteVO vo = null;
 
 		sb.setLength(0);
+<<<<<<< HEAD
 		sb.append("select lecture_name, lecture_class, student_name " + "from (select * "
 				+ "from student s, teacher t, lecture l, class_register c, class_note n "
 				+ "where n.teacher_no = t.teacher_no and c.teacher_no = t.teacher_no and c.lecture_no = l.lecture_no "
 				+ "and c.student_no = s.student_no)" + "where lecture_name = ? and where lecture_class = ? ");
+=======
+		sb.append(
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class "
+						+ "from class_note cn "
+						+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
+						+ "join lecture l on cr.lecture_no = l.lecture_no "
+						+ "join student s on cr.student_no = s.student_no "
+						+ "join teacher t on cr.teacher_no = t.teacher_no "
+						+ "where l.lecture_name = ? and l.lecture_class = ? ");
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
 
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
@@ -272,9 +370,68 @@ public class StudentDAO {
 
 			while (rs.next()) {
 				vo = new ClassNoteVO();
+
+				vo.setNoteNo(rs.getInt("note_no"));
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contents"));
+				vo.setClassRegisterNo(rs.getInt("class_register_no"));
+				vo.setStudentName(rs.getString("student_name"));
 				vo.setLectureName(rs.getString("lecture_name"));
 				vo.setLectureClass(rs.getString("lecture_class"));
+<<<<<<< HEAD
 				vo.setStudentName(rs.getString("student_name"));
+=======
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
+
+				list.add(vo);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+<<<<<<< HEAD
+	// lecture-------------------------------------------------------------------------------------------------------------------------------
+	public ArrayList<ClassNoteVO> lectureSelectAll() {
+=======
+	public ArrayList<ClassNoteVO> studentNoteSelectAllbyLectureClass(String Class) {
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
+		ClassNoteVO vo = null;
+
+<<<<<<< HEAD
+=======
+		sb.setLength(0);
+		sb.append(
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class "
+						+ "from class_note cn "
+						+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
+						+ "join lecture l on cr.lecture_no = l.lecture_no "
+						+ "join student s on cr.student_no = s.student_no "
+						+ "join teacher t on cr.teacher_no = t.teacher_no " + "where l.lecture_class = ? ");
+
+		try {
+
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, Class);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				vo = new ClassNoteVO();
+
+				vo.setNoteNo(rs.getInt("note_no"));
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contents"));
+				vo.setClassRegisterNo(rs.getInt("class_register_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setLectureName(rs.getString("lecture_name"));
+				vo.setLectureClass(rs.getString("lecture_class"));
 
 				list.add(vo);
 
@@ -291,6 +448,7 @@ public class StudentDAO {
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
 
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
 		sb.setLength(0);
 		sb.append("select * from lecture ");
 
@@ -467,7 +625,6 @@ public class StudentDAO {
 				vo.setStudentAddrs(rs.getString("student_addrs"));
 				vo.setStudentPhoto(rs.getString("student_photo"));
 				vo.setStudentStatus(rs.getBoolean("student_status"));
-				
 
 				list.add(vo);
 
@@ -487,7 +644,6 @@ public class StudentDAO {
 		ClassNoteVO vo = null;
 
 		sb.setLength(0);
-		
 		sb.append("SELECT * ");
 		sb.append("FROM STUDENT_CHECK ");
 		sb.append("INNER JOIN STUDENT ");
@@ -577,7 +733,24 @@ public class StudentDAO {
 				"SELECT STUDENT_CHECK_NO_SEQ.nextval, null, student_no, to_date(to_char(sysdate, 'YYYY-MM-dd'),'YYYY-MM-dd')");
 		sb.append("FROM student");
 		sb.append("WHERE ROWNUM <= (SELECT COUNT(student_no) FROM student);");
+<<<<<<< HEAD
+=======
 
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	// sgh 구현확인필요
+	public boolean studentCheckIsExist() {
+		boolean exist = false;
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
+
+<<<<<<< HEAD
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.executeUpdate();
@@ -609,7 +782,13 @@ public class StudentDAO {
 			e.printStackTrace();
 		}
 		// 예외 처리 코드 작성
+=======
+		sb.append("SELECT COUNT(student_no) ");
+		sb.append("FROM student_check ");
+		sb.append("WHERE (SELECT student_check_date FROM student_check WHERE student_check_date = sysdate) IS NULL; ");
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
 
+<<<<<<< HEAD
 	        return exist;
 	    }
 
@@ -646,10 +825,25 @@ public class StudentDAO {
 	    }
 	    
 	    return list;
-	}
+=======
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			rs = pstmt.executeQuery();
+			ResultSet rs = pstmt.executeQuery();
 
-			
-			
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				exist = count > 0;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// 예외 처리 코드 작성
+
+		return exist;
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
+	}
 
 	// studentSearch-------------------------------------------------------------------------------------------------------------------------------
 
@@ -1238,46 +1432,38 @@ public class StudentDAO {
 		return vo;
 
 	}
-	//sgh checkOk.jsp 오늘 날짜로 선생님 데이터 조회
-	public ArrayList<ClassNoteVO> teacherSelectAllByDate(String date, String teacherName){
+
+	public ArrayList<ClassNoteVO> teacherSelectAllByDate(String date) {
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 		ClassNoteVO vo = null;
 
 		sb.setLength(0);
-		sb.append( "select * from teacher_check tc , teacher t " );
-		sb.append( "where t.teacher_no = tc.teacher_no " );
-		sb.append( "and teacher_check_date = ? teacher_name = ? " );
-		
+		sb.append("select * from teacher_check where teacher_check_date = ? ");
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setString(1, date);
-			pstmt.setString(2, teacherName);
 			rs = pstmt.executeQuery();
-			
-		System.out.println(rs.next());
-		while ( rs.next() ) {
-			vo = new ClassNoteVO();
-			vo.setTeacherCheckNo(rs.getInt( "teacher_check_no" ) );
-			vo.setTeacherCheckIn(rs.getString( "teacher_check_in" ) );
-			vo.setTeacherCheckOut(rs.getString( "teacher_check_out" ) );
-			vo.setTeacherWorkTime(rs.getString( "teacher_work_time" ) );
-			vo.setTeacherCheckDate(rs.getString( "teacher_check_date" ) );
-			vo.setTeacherCheckDate(rs.getString( "lecture_name" ) );
-			vo.setTeacherCheckDate(rs.getString( "teacher_name" ) );
-			vo.setTeacherCheckDate(rs.getString( "teacher_subject" ) );
-			vo.setTeacherCheckDate(rs.getString( "teacher_phone" ) );
-			vo.setTeacherNo(rs.getInt( "teacher_no" ) );
-			list.add(vo);
-		}
-		
+
+			System.out.println(rs.next());
+			while (rs.next()) {
+				vo = new ClassNoteVO();
+				vo.setTeacherCheckNo(rs.getInt("teacher_check_no"));
+				vo.setTeacherCheckIn(rs.getString("teacher_check_in"));
+				vo.setTeacherCheckOut(rs.getString("teacher_check_out"));
+				vo.setTeacherWorkTime(rs.getString("teacher_work_time"));
+				vo.setTeacherCheckDate(rs.getString("teacher_check_date"));
+				vo.setTeacherNo(rs.getInt("teacher_no"));
+				list.add(vo);
+			}
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return list;
 	}
-	//sgh checkOk.jsp date1 ~ date2 로 선생님 데이터 조회
-	public ArrayList<ClassNoteVO> teacherCheckSelectAllByDate1toDate2(String date1, String date2){
+
+	public ArrayList<ClassNoteVO> teacherCheckSelectAllByDate1toDate2(String date1, String date2) {
 		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
 		ClassNoteVO vo = null;
 
@@ -1785,7 +1971,7 @@ public class StudentDAO {
 	}
 
 	// sgh 구현확인필요
-	public boolean teacherCheckIsExist(String date) {
+	public boolean teacherCheckIsExist() {
 		boolean exist = false;
 
 		sb.append("SELECT COUNT(teacher_no) ");
@@ -1880,22 +2066,19 @@ public class StudentDAO {
 	
 	// -----------------------------------------------------------------------
 
-	
-	// 날짜 + 강의명으로 출석 조회
-	public ArrayList<ClassNoteVO> studentCheckSelectByLectureClassByDate(String date, String lectureClass) {
-
-		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
-
+	// 내 dao 추가
+	public ArrayList<ClassNoteVO> studentSelectAllByRegistDate(String date1, String date2) {
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
 		ClassNoteVO vo = null;
 
-		// 4. sql문 작성
 		sb.setLength(0);
-
-		sb.append("SELECT * ");
-		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s, class_register c, lecture l ");
 		sb.append("WHERE s.student_no = c.student_no ");
-		sb.append("AND s.student_no = sc.student_no ");
 		sb.append("AND c.lecture_no = l.lecture_no ");
+<<<<<<< HEAD
 		sb.append("AND sc.student_check_date= ? AND l.lecture_class=? ");
 		try {
 			// 5. 문장객체 생성
@@ -2075,6 +2258,10 @@ public class StudentDAO {
 					
 	
 		
+=======
+		sb.append("AND TO_CHAR(student_regist_date, 'YYYY-MM-DD') ");
+		sb.append("BETWEEN ? AND ? ");
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
 
 		try {
 			// 5. 문장객체 생성
@@ -2100,68 +2287,13 @@ public class StudentDAO {
 				vo.setStudentGender(rs.getBoolean("student_gender"));
 				vo.setStudentParentsName(rs.getString("student_parents_name"));
 				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
-				
-				list.add(vo);
 
+<<<<<<< HEAD
 					ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
-
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return list;
-	}
-				
-
-
-		// 날짜 + 학생명으로 출석 조회
-	public ArrayList<ClassNoteVO> studentCheckSelectByStudentNameByDate(String date, String studentName) {
-
-		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
-
-		ClassNoteVO vo = null;
-
-		// 4. sql문 작성
-		sb.setLength(0);
-
-		sb.append("SELECT * ");
-		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
-		sb.append("WHERE s.student_no = c.student_no ");
-		sb.append("AND s.student_no = sc.student_no ");
-		sb.append("AND c.lecture_no = l.lecture_no ");
-		sb.append("AND sc.student_check_date= ? AND s.student_name= ? ");
-		try {
-			// 5. 문장객체 생성
-			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.setString(1, date);
-			pstmt.setString(2, studentName);
-
-			// 6. 실행
-			rs = pstmt.executeQuery();
-
-			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
-			while (rs.next()) {
-
-				vo = new ClassNoteVO();
-
-				vo.setStudentNo(rs.getInt("student_no"));
-				vo.setStudentName(rs.getString("student_name"));
-				vo.setStudentSchoolName(rs.getString("student_school_name"));
-				vo.setStudentGrade(rs.getInt("student_grade"));
-				vo.setLectureClass(rs.getString("lecture_class"));
-				vo.setStudentPhone(rs.getString("student_phone"));
-				vo.setStudentRegistDate(rs.getString("student_regist_date"));
-				vo.setStudentGender(rs.getBoolean("student_gender"));
-				vo.setStudentParentsName(rs.getString("student_parents_name"));
-				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
-				vo.setStudentCheckNo(rs.getInt("student_check_no"));
-				vo.setStudentCheckDate(rs.getString("student_check_date"));
-				vo.setStudentCheckStatus(rs.getString("student_check_status"));
-				vo.setStudentCheckStatus(rs.getString("student_check_type"));
-
+=======
 				list.add(vo);
+>>>>>>> branch 'main' of https://github.com/Gwan9/semi.git
+
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -2170,283 +2302,5 @@ public class StudentDAO {
 
 		return list;
 	}
-	// 날짜 + 강의명으로 출석 조회
-	public ArrayList<ClassNoteVO> studentCheckSelectByLectureNameByDate(String date, String lectureName) {
 
-		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
-
-		ClassNoteVO vo = null;
-
-		// 4. sql문 작성
-		sb.setLength(0);
-
-		sb.append("SELECT * ");
-		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
-		sb.append("WHERE s.student_no = c.student_no ");
-		sb.append("AND s.student_no = sc.student_no ");
-		sb.append("AND c.lecture_no = l.lecture_no ");
-		sb.append("AND sc.student_check_date= ? AND l.lecture_name= ? ");
-		try {
-			// 5. 문장객체 생성
-			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.setString(1, date);
-			pstmt.setString(2, lectureName);
-
-			// 6. 실행
-			rs = pstmt.executeQuery();
-
-			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
-			while (rs.next()) {
-
-				vo = new ClassNoteVO();
-
-				vo.setStudentNo(rs.getInt("student_no"));
-				vo.setStudentName(rs.getString("student_name"));
-				vo.setStudentSchoolName(rs.getString("student_school_name"));
-				vo.setStudentGrade(rs.getInt("student_grade"));
-				vo.setLectureClass(rs.getString("lecture_class"));
-				vo.setStudentPhone(rs.getString("student_phone"));
-				vo.setStudentRegistDate(rs.getString("student_regist_date"));
-				vo.setStudentGender(rs.getBoolean("student_gender"));
-				vo.setStudentParentsName(rs.getString("student_parents_name"));
-				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
-				vo.setStudentCheckNo(rs.getInt("student_check_no"));
-				vo.setStudentCheckDate(rs.getString("student_check_date"));
-				vo.setStudentCheckStatus(rs.getString("student_check_status"));
-				vo.setStudentCheckStatus(rs.getString("student_check_type"));
-
-				list.add(vo);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return list;
-	}
-	// 날짜 + 강의명 + 학생명으로 출석 조회
-	public ArrayList<ClassNoteVO> studentCheckSelectByLectureNameByStudentNameByDate(String date, String lectureName, String studentName) {
-
-		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
-
-		ClassNoteVO vo = null;
-
-		// 4. sql문 작성
-		sb.setLength(0);
-
-		sb.append("SELECT * ");
-		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
-		sb.append("WHERE s.student_no = c.student_no ");
-		sb.append("AND s.student_no = sc.student_no ");
-		sb.append("AND c.lecture_no = l.lecture_no ");
-		sb.append("AND sc.student_check_date= ? AND l.lecture_name= ? AND s.student_name = ? ");
-		try {
-			// 5. 문장객체 생성
-			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.setString(1, date);
-			pstmt.setString(2, lectureName);
-			pstmt.setString(3, studentName);
-
-			// 6. 실행
-			rs = pstmt.executeQuery();
-
-			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
-			while (rs.next()) {
-
-				vo = new ClassNoteVO();
-
-				vo.setStudentNo(rs.getInt("student_no"));
-				vo.setStudentName(rs.getString("student_name"));
-				vo.setStudentSchoolName(rs.getString("student_school_name"));
-				vo.setStudentGrade(rs.getInt("student_grade"));
-				vo.setLectureClass(rs.getString("lecture_class"));
-				vo.setStudentPhone(rs.getString("student_phone"));
-				vo.setStudentRegistDate(rs.getString("student_regist_date"));
-				vo.setStudentGender(rs.getBoolean("student_gender"));
-				vo.setStudentParentsName(rs.getString("student_parents_name"));
-				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
-				vo.setStudentCheckNo(rs.getInt("student_check_no"));
-				vo.setStudentCheckDate(rs.getString("student_check_date"));
-				vo.setStudentCheckStatus(rs.getString("student_check_status"));
-				vo.setStudentCheckStatus(rs.getString("student_check_type"));
-
-				list.add(vo);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return list;
-	}
-	// 날짜 + 학생명 + 분반명 으로 출석 조회
-	public ArrayList<ClassNoteVO> studentCheckSelectByStudentNameByLectureClassByDate(String date, String studentName, String lectureClass) {
-
-		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
-
-		ClassNoteVO vo = null;
-
-		// 4. sql문 작성
-		sb.setLength(0);
-
-		sb.append("SELECT * ");
-		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
-		sb.append("WHERE s.student_no = c.student_no ");
-		sb.append("AND s.student_no = sc.student_no ");
-		sb.append("AND c.lecture_no = l.lecture_no ");
-		sb.append("AND sc.student_check_date= ? AND s.student_name= ? AND l.lecture_class = ? ");
-		try {
-			// 5. 문장객체 생성
-			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.setString(1, date);
-			pstmt.setString(2, studentName);
-			pstmt.setString(3, lectureClass);
-
-			// 6. 실행
-			rs = pstmt.executeQuery();
-
-			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
-			while (rs.next()) {
-
-				vo = new ClassNoteVO();
-
-				vo.setStudentNo(rs.getInt("student_no"));
-				vo.setStudentName(rs.getString("student_name"));
-				vo.setStudentSchoolName(rs.getString("student_school_name"));
-				vo.setStudentGrade(rs.getInt("student_grade"));
-				vo.setLectureClass(rs.getString("lecture_class"));
-				vo.setStudentPhone(rs.getString("student_phone"));
-				vo.setStudentRegistDate(rs.getString("student_regist_date"));
-				vo.setStudentGender(rs.getBoolean("student_gender"));
-				vo.setStudentParentsName(rs.getString("student_parents_name"));
-				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
-				vo.setStudentCheckNo(rs.getInt("student_check_no"));
-				vo.setStudentCheckDate(rs.getString("student_check_date"));
-				vo.setStudentCheckStatus(rs.getString("student_check_status"));
-				vo.setStudentCheckStatus(rs.getString("student_check_type"));
-
-				list.add(vo);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return list;
-	}
-		// 날짜 + 강의명 + 분반명 으로 출석 조회
-	public ArrayList<ClassNoteVO> studentCheckSelectByLectureNameByLectureClassByDate(String date, String lectureName, String lectureClass) {
-
-		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
-
-		ClassNoteVO vo = null;
-
-		// 4. sql문 작성
-		sb.setLength(0);
-
-		sb.append("SELECT * ");
-		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
-		sb.append("WHERE s.student_no = c.student_no ");
-		sb.append("AND s.student_no = sc.student_no ");
-		sb.append("AND c.lecture_no = l.lecture_no ");
-		sb.append("AND sc.student_check_date= ? AND l.lecture_name= ? AND l.lecture_Class = ? ");
-		try {
-			// 5. 문장객체 생성
-			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.setString(1, date);
-			pstmt.setString(2, lectureName);
-			pstmt.setString(3, lectureClass);
-
-			// 6. 실행
-			rs = pstmt.executeQuery();
-
-			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
-			while (rs.next()) {
-
-				vo = new ClassNoteVO();
-
-				vo.setStudentNo(rs.getInt("student_no"));
-				vo.setStudentName(rs.getString("student_name"));
-				vo.setStudentSchoolName(rs.getString("student_school_name"));
-				vo.setStudentGrade(rs.getInt("student_grade"));
-				vo.setLectureClass(rs.getString("lecture_class"));
-				vo.setStudentPhone(rs.getString("student_phone"));
-				vo.setStudentRegistDate(rs.getString("student_regist_date"));
-				vo.setStudentGender(rs.getBoolean("student_gender"));
-				vo.setStudentParentsName(rs.getString("student_parents_name"));
-				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
-				vo.setStudentCheckNo(rs.getInt("student_check_no"));
-				vo.setStudentCheckDate(rs.getString("student_check_date"));
-				vo.setStudentCheckStatus(rs.getString("student_check_status"));
-				vo.setStudentCheckStatus(rs.getString("student_check_type"));
-
-				list.add(vo);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return list;
-	}
-	// 날짜 + 강의명 + 분반명 + 학생명으로 출석 조회
-	public ArrayList<ClassNoteVO> studentCheckSelectByLectureNameByLectureClassByStudentNameByDate(String date, String lectureName, String lectureClass, String studentName) {
-
-		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
-
-		ClassNoteVO vo = null;
-
-		// 4. sql문 작성
-		sb.setLength(0);
-
-		sb.append("SELECT * ");
-		sb.append("FROM student s, class_register c, lecture l, student_check sc ");
-		sb.append("WHERE s.student_no = c.student_no ");
-		sb.append("AND s.student_no = sc.student_no ");
-		sb.append("AND c.lecture_no = l.lecture_no ");
-		sb.append("AND sc.student_check_date= ? AND l.lecture_name= ? AND l.lectureClass = ? AND s.student_name = ? ");
-		try {
-			// 5. 문장객체 생성
-			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.setString(1, date);
-			pstmt.setString(2, lectureName);
-			pstmt.setString(3, lectureClass);
-			pstmt.setString(4, studentName);
-
-			// 6. 실행
-			rs = pstmt.executeQuery();
-
-			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
-			while (rs.next()) {
-
-				vo = new ClassNoteVO();
-
-				vo.setStudentNo(rs.getInt("student_no"));
-				vo.setStudentName(rs.getString("student_name"));
-				vo.setStudentSchoolName(rs.getString("student_school_name"));
-				vo.setStudentGrade(rs.getInt("student_grade"));
-				vo.setLectureClass(rs.getString("lecture_class"));
-				vo.setStudentPhone(rs.getString("student_phone"));
-				vo.setStudentRegistDate(rs.getString("student_regist_date"));
-				vo.setStudentGender(rs.getBoolean("student_gender"));
-				vo.setStudentParentsName(rs.getString("student_parents_name"));
-				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
-				vo.setStudentCheckNo(rs.getInt("student_check_no"));
-				vo.setStudentCheckDate(rs.getString("student_check_date"));
-				vo.setStudentCheckStatus(rs.getString("student_check_status"));
-				vo.setStudentCheckStatus(rs.getString("student_check_type"));
-
-				list.add(vo);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return list;
-	}
-	
-	
-	
 }
-
