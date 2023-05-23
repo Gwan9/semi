@@ -1,3 +1,5 @@
+<%@page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy"%>
+<%@page import="com.oreilly.servlet.MultipartRequest"%>
 <%@page import="DAO.StudentDAO"%>
 <%@page import="VO.ClassNoteVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -10,15 +12,34 @@
 </head>
 <body>
 	<%
-	String teacherId = request.getParameter("id");
-	String teacherPw = request.getParameter("pw");
-	String teacherName = request.getParameter("name");
-	String teacherAddress = request.getParameter("addrs");
-	String teacherPhone = request.getParameter("phone");
-	String teacherEmail = request.getParameter("email");
-	String teacherPhoto = request.getParameter("photo");
-	String teacherBirth = request.getParameter("birth");
-	String teacherGender = request.getParameter("gender");
+	// upload 디렉토리의 실제 경로 얻어오기
+			String saveDir = request.getRealPath("/images");
+			out.println(saveDir);
+			
+			// 첨부파일의 최대 크기 : 30MB 까지 업로드 가능
+			// 1M ==> 1024KB
+			int maxFileSize = 1024*1024*30;
+			
+			// 1KB ==> 1024Byte
+					
+			MultipartRequest mr = new MultipartRequest(request, saveDir,
+					maxFileSize, "UTF-8", new DefaultFileRenamePolicy());
+	
+	
+	String teacherId = mr.getParameter("id");
+	String teacherPw = mr.getParameter("pw");
+	String teacherName = mr.getParameter("name");
+	String teacherAddress = mr.getParameter("addrs");
+	String teacherPhone = mr.getParameter("phone");
+	String teacherEmail = mr.getParameter("email");
+	String teacherPhoto = mr.getOriginalFileName("photo");
+	String teacherBirth = mr.getParameter("birth");
+	String teacherGender = mr.getParameter("gender");
+	
+	
+	
+	
+	
 	
 	boolean tg;
 	

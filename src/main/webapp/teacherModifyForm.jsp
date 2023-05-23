@@ -40,7 +40,7 @@
 		
 	}
 	
-	#photo, #sub{
+	#teacherphoto, #sub{
 		text-align: center;
 	}
 	#findimg{
@@ -50,7 +50,7 @@
 </head>
 <body>
 	<div id="container">
-		<form action="teacherModifyOk.jsp">
+		<form action="teacherModifyOk.jsp"  method="post" enctype="multipart/form-data" >
 	<%
 		String n = request.getParameter("no");
 		if(n != null){
@@ -61,11 +61,11 @@
 	
 	%>			
 			
-			<input type="hidden" name="no" value="<%= vo.getTeacherNo() %> "/>
+			<input type="hidden" name="no" value="<%= vo.getTeacherNo() %>"/>
 			<div>
 				<h5>사진</h5>
-				<div id="photo"><img src="" alt="증명사진" /></div>
-				<div id="findimg"><input type="button" value="파일찾기" /></div>			
+				<div id="teacherphoto"><img src="./images/<%= vo.getTeacherPhoto() %>" alt="" /></div>	
+				<div id="findimg"><input type="file" name="photo" value="파일찾기" /></div>			
 			</div>
 			<div>
 				<h5>아이디</h5>

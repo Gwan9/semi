@@ -7,9 +7,85 @@
 <head>
 <meta charset="UTF-8">
 <title>MainPage</title>
-
-<link rel="stylesheet" href="./cssteacher/main.css">
-
+<style type="text/css">
+*{
+		margin: 0;
+		padding: 0;
+	}
+	#container{
+		width: 1000px;
+		height: 800px;
+		margin: auto;
+		border: 1px solid red; 
+		background: darkgray;
+	}
+	#bannerside{
+		width: 450px;
+		height: 100px;
+		float:left;
+	}
+	img{
+		width:450px;
+		height:100px;
+	}
+	#loginside{
+		width: 450px;
+		height: 100px;
+		float:right;
+		background: #F4EEDD;
+		text-align: center;
+	}
+	#center{
+		width : 100%;
+		height : 700px;
+	}
+	#leftside{
+		width: 500px;
+		height: 700px;
+		float: left;
+	}
+	#rightside{
+		width: 500px;
+		height: 700px;
+		float: right;
+	}
+	#notice{
+		margin-top:50px;
+		margin-left:50px;
+		width: 400px;
+		height: 250px;
+		background: #F4EEDD;
+	}
+	#classnote{
+		margin-top:50px;
+		margin-left:50px;
+		width: 400px;
+		height: 250px;
+		background: #F4EEDD;
+	}
+	#todayclass{
+		margin-top:50px;
+		margin-left:50px;
+		width: 400px;
+		height: 250px;
+		background: #F4EEDD;
+	}
+	#birthday{
+		margin-top:50px;
+		margin-left:50px;
+		width: 400px;
+		height: 250px;
+		background: #F4EEDD;
+	}
+	#center{
+		float : center;
+		height:650px;
+		width : 1000px;
+	}
+	ul{
+		list-style-type: none;
+	}
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript">
 // 	window.onload = function(){
@@ -29,7 +105,19 @@
 		$("#bannerside").on("click", function(){
 			location.href = "main.jsp";
 		})
+		
+		$.ajax({
+			url:"classNoteTitle.jsp"
+			success:function(data){
+				var obj = JSON.parse(data);
+				for(i = 0; i <= obj.length; i++){
+					var txt = "<tr><td>" + obj[i].NoteTitle + "</td></tr>"
+					$("#classnote table").append(txt);
+				}
+			}
+		})
 	})
+	
 // 	}
 </script>
 </head>
@@ -75,11 +163,9 @@
 					</div>
 					
 					<div id="classnote">
-						<ul>
-							<li>학습일지1</li>
-							<li>학습일지2</li>
-							<li>학습일지3</li>
-						</ul>
+						<table>
+						
+						</table>
 					</div>
 				</div>
 			
@@ -142,11 +228,9 @@
 					</div>
 					
 					<div id="classnote">
-						<ul>
-							<li>학습일지1</li>
-							<li>학습일지2</li>
-							<li>학습일지3</li>
-						</ul>
+						<table>
+						
+						</table>
 					</div>
 				</div>
 			

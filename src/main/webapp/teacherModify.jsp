@@ -20,7 +20,6 @@
 		background: #F4EEDD;
 		
 	}
-	
 	#photo, #sub{
 		text-align: center;
 	}
@@ -45,13 +44,12 @@
 	%>			
 			
 				
-	<form action="teacherModifyOk.jsp">
+	<form action="teacherModifyOk.jsp" method="post" enctype="multipart/form-data">
 		<div id="container">
 			<div id="center">
 				<div>
 					<h5>사진</h5>
-					<div id="photo"><img src="" alt="증명사진" /></div>
-					<div id="findimg"><input type="button" value="파일찾기" /></div>			
+					<div id="photo"><img src="./images/<%= vo.getTeacherPhoto() %>" alt="" /></div>			
 				</div>
 				<div>
 					<h5>아이디</h5>

@@ -173,7 +173,7 @@
 		text-align: center;
 	}
 	#findimg{
-		text-align: center;
+		text-align: right;
 	}
 	
 </style>
@@ -185,7 +185,7 @@
 				<div>
 					<h5>사진</h5>
 					<div id="photo"><img src="" alt="증명사진" /></div>
-					<div id="findimg"><input type="button" value="파일찾기" /></div>			
+					<div id="findimg"><input type="file" name="photo" value="파일찾기" /></div>			
 				</div>
 				<div>
 					<h5>아이디</h5>

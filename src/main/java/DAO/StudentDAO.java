@@ -2345,15 +2345,16 @@ public class StudentDAO {
 	public void updateOne(ClassNoteVO vo) {
 		sb.setLength(0);
 		sb.append("UPDATE teacher ");
-		sb.append("SET teacher_pw = ?, teacher_phone = ?, teacher_email = ? ");
+		sb.append("SET teacher_photo = ?, teacher_pw = ?, teacher_phone = ?, teacher_email = ? ");
 		sb.append("WHERE teacher_no = ? ");
 		
 		try {
 			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.setString(1, vo.getTeacherPw());
-			pstmt.setString(2, vo.getTeacherPhone());
-			pstmt.setString(3, vo.getTeacherEmail());
-			pstmt.setInt(4, vo.getTeacherNo());
+			pstmt.setString(1, vo.getTeacherPhoto());
+			pstmt.setString(2, vo.getTeacherPw());
+			pstmt.setString(3, vo.getTeacherPhone());
+			pstmt.setString(4, vo.getTeacherEmail());
+			pstmt.setInt(5, vo.getTeacherNo());
 			
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -2363,5 +2364,34 @@ public class StudentDAO {
 		
 	}
 	
+	public ArrayList<ClassNoteVO> classNoteGetThree(){
+		
+		ClassNoteVO vo = null;
+		
+		sb.setLength(0);
+		sb.append("SELECT note_title ");
+		sb.append("FROM ( SELECT note_title FROM class_note ");
+		sb.append("ORDER BY note_no desc ) ");
+		sb.append("WHERE ROWNUM <= 3 ");
+		
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				vo.setNoteTitle(rs.getString("note_title"));
+				
+				vo = new ClassNoteVO();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return null;
+		
+	}
 }
 
