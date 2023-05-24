@@ -56,7 +56,7 @@ public class ClassNoteVO {
 	int studentCheck;
 	String studentCheckDate;
 	String studentCheckStatus;
-	String studentCheckType;
+	int studentCheckType;
 	int noticeNo;
 	String noticeDate;
 	String noticeTitle;

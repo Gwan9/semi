@@ -1,6 +1,6 @@
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="DAO.StudentDAO"%>
+<%@page import="DAO.StudentDAOsgh"%>
 <%@page import="VO.ClassNoteVO"%>
 <%@page import="org.json.simple.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -10,7 +10,7 @@ String teacherName = request.getParameter("teacherName");
 ClassNoteVO vo = null;
 if (teacherName != null) {
     JSONArray teacherArray = new JSONArray();
-    StudentDAO dao = new StudentDAO();
+    StudentDAOsgh dao = new StudentDAOsgh();
     
     ArrayList<ClassNoteVO> list = dao.teacherCheckSelectAllByName(teacherName);
     

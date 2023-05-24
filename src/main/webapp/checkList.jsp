@@ -2,7 +2,7 @@
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="VO.ClassNoteVO"%>
-<%@page import="DAO.StudentDAO"%>
+<%@page import="DAO.StudentDAOsgh"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -76,7 +76,7 @@ Date nowDate  = new Date();
 SimpleDateFormat sdf = new SimpleDateFormat( "yy-MM-dd" );
 String today = sdf.format( nowDate); 
 
-StudentDAO dao = new StudentDAO();
+StudentDAOsgh dao = new StudentDAOsgh();
 ArrayList<ClassNoteVO> list1 = dao.teacherSelectAll();
 ArrayList<ClassNoteVO> list2 = dao.studentSearchSelectAll();
 
