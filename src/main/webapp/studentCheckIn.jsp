@@ -2,7 +2,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="org.json.simple.JSONArray" %>
 <%@ page import="org.json.simple.JSONObject" %>
-<%@ page import="DAO.StudentDAO" %>
+<%@ page import="DAO.StudentDAOsgh" %>
 <%@ page import="VO.ClassNoteVO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
@@ -13,7 +13,7 @@ if (studentCheckType != null && nameValue != null) {
     int sct = Integer.parseInt(studentCheckType);
     int no = Integer.parseInt(nameValue);
     JSONArray studentArray = new JSONArray();
-    StudentDAO dao = new StudentDAO();
+    StudentDAOsgh dao = new StudentDAOsgh();
    		
     ArrayList<ClassNoteVO> list = dao.studentCheckSelectAllByNo(no);
         

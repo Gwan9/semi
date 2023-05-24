@@ -32,7 +32,7 @@
 
 		ClassNoteVO vo = dao.registerSelectByNo(classRegisterNoInt);
 
-		vo.setClass_registerNo(classRegisterNoInt);
+		vo.setClassRegisterNo(classRegisterNoInt);
 		vo.setTeacherNo(teacherNoInt);
 		vo.setLectureNo(lectureNoInt);
 		vo.setStudentNo(studentNoInt);

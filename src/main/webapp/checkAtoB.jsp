@@ -1,5 +1,5 @@
 <%@page import="VO.ClassNoteVO"%>
-<%@page import="DAO.StudentDAO"%>
+<%@page import="DAO.StudentDAOsgh"%>
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="org.json.simple.JSONArray"%>
@@ -19,7 +19,7 @@ if( date1 != null && date2 != null && selectVal != null){
 	
 	if( Integer.parseInt(selectVal) == 1 ){
 		JSONArray j = new JSONArray();
-		StudentDAO dao1 = new StudentDAO();
+		StudentDAOsgh dao1 = new StudentDAOsgh();
 		ArrayList<ClassNoteVO> list1 = dao1.studentCheckSelectAllByDate1ToDate2( date1, date2 );
 		for( ClassNoteVO vo : list1){
 			JSONObject student = new JSONObject();
@@ -39,7 +39,7 @@ if( date1 != null && date2 != null && selectVal != null){
 		System.out.println("학생");
 	}else if ( Integer.parseInt(selectVal) == 2 ){
 		JSONArray teacherArray = new JSONArray();
-		StudentDAO dao2 = new StudentDAO();
+		StudentDAOsgh dao2 = new StudentDAOsgh();
 		ArrayList<ClassNoteVO> list2 = dao2.teacherCheckSelectAllByDate1ToDate2( date1, date2 );
 		for( ClassNoteVO vo : list2 ){
 			JSONObject teacher = new JSONObject();

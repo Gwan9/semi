@@ -110,7 +110,7 @@ td {
 						<th>납부여부</th>
 					</tr>
 					<tr>
-						<td><%=vo.getClass_registerNo()%></td>
+						<td><%=vo.getClassRegisterNo()%></td>
 						<td><a href='teacher_detail.jsp?teacher_no=<%=vo.getTeacherNo()%>'><%=vo.getTeacherNo()%></a></td>
 						<td><a href='lecture_detail.jsp?lecture_no=<%=vo.getLectureNo()%>'><%=vo.getLectureNo()%></a></td>
 						<td><a href='student_detail.jsp?student_no=<%=vo.getStudentNo()%>'><%=vo.getStudentNo()%></a></td>
@@ -120,7 +120,7 @@ td {
 
 				<div id="modify_or_cancle">
 					<a
-						href="register_modify.jsp?class_register_no=<%=vo.getClass_registerNo()%>"><input
+						href="register_modify.jsp?class_register_no=<%=vo.getClassRegisterNo()%>"><input
 						type="button" id="modify_btn" value="수정" /></a> <input type="button"
 						id="cancle_btn" value="뒤로가기" />
 				</div>

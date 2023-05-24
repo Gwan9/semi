@@ -1187,7 +1187,7 @@ table, th, td {
 							%>
 							<tr>
 
-								<td><%=vo.getClass_registerNo()%></td>
+								<td><%=vo.getClassRegisterNo()%></td>
 								<td><%=vo.getLectureClass()%></td>
 								<td><%=vo.getStudentName()%></td>
 								<td><%=vo.isPay()%></td>

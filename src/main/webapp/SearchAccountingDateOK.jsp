@@ -23,7 +23,7 @@
 	for(ClassNoteVO vo : list) {
 		JSONObject money = new JSONObject();
 		
-		money.put("registerno", vo.getClass_registerNo());
+		money.put("registerno", vo.getClassRegisterNo());
 		money.put("lectureClass", vo.getLectureClass());
 		money.put("studentName", vo.getStudentName());
 		money.put("isPay", vo.isPay());

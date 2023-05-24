@@ -101,7 +101,7 @@ td {
 				
 		%>
 		
-	<form action="register_modify_OK.jsp?class_register_no=<%=vo.getClass_registerNo()%>">
+	<form action="register_modify_OK.jsp?class_register_no=<%=vo.getClassRegisterNo()%>">
 		<div id="table">
 			<table>
 				<tr>
@@ -113,7 +113,7 @@ td {
 				</tr>
 				<tr>
 					<td>
-					<input type="text" name="classRegisterNo" id="" value="<%=vo.getClass_registerNo()%>" />
+					<input type="text" name="classRegisterNo" id="" value="<%=vo.getClassRegisterNo()%>" />
 					</td>
 					<td>
 					<input type="text" name="teacherNo" id="" value="<%=vo.getTeacherNo()%>" />
@@ -133,7 +133,7 @@ td {
 			
 			<div id="modify_or_cancle">
 				<input type="submit" id="modify_btn" value="저장" />
-				<a href="register_detail.jsp?class_register_no=<%= vo.getClass_registerNo() %>"><input type="button" id="cancle_btn" value="뒤로가기" /></a>
+				<a href="register_detail.jsp?class_register_no=<%= vo.getClassRegisterNo() %>"><input type="button" id="cancle_btn" value="뒤로가기" /></a>
 			</div>
 		</div>
 		
