@@ -3,27 +3,21 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>학습 일지 작성</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="semi.css">
+
 <style>
-* {
-	padding: 0;
-	margin: auto;
+table.tableCss {
+width:95%;
 }
-
-.container {
-	padding: 20px;
-	width: 1280px;
-	height: 720px;
-	background: #34a8cb;
-}
-
 .sidecontents {
 	padding: 20px;
 	float: left;
 	width: 30%;
 	height: 90%;
-	background: green;
 }
 
 .maincontents {
@@ -31,28 +25,21 @@
 	float: right;
 	width: 60%;
 	height: 90%;
-	background: red;
 }
-
-.classNoteWriterStudentList {
-	margin-top: 20px;
-	width: 80%;
-	height: 80%;
-	background: white;
+#student1{
+	width : 90%;
+	height : 20%;
 }
-
-select {
-	height: 20px;
-}
-
-input {
-	height: 20px;
+#student2{
+	width : 80%;
+	height : 80%;
 }
 
 #tarea {
+	border-radius: 13px;
 	margin-left: 20px;
-	height: 400px;
-	width: 700px;
+	height: 60%;
+	width: 90%;
 }
 </style>
 <script>
@@ -87,7 +74,7 @@ input {
 				var obj = JSON.parse(data);
 				for(var i = 0; i < obj.length; i++){
 					var txt = "<tr onclick='trclick(this)'> <td>" + obj[i].no + "</td><td>" + obj[i].name + "</td><td>" + obj[i].grade + "</td> </tr>";
-					$("#StudentList tbody").append(txt);
+					$("#tbody").append(txt);
 				}
 			}
 		})
@@ -150,58 +137,70 @@ input {
 </script>
 </head>
 <body>
-	<div class="container">
+<div id="canvas">
+	<div class="sideMenu1"></div>
+	<div class="sideMenu2"></div>
+	<div class="sideMenu3"></div>
+	<div class="sideMenu4"></div>
+	<div class="sideMenu5"></div>
+	<div id="container">
 		<div class="sidecontents">
-			<label for="">강의명 : </label> 
-			<select name="lectureName" id="lectureName">
-				<option value="">전체</option>
-			</select>
-			<br /> <br /> 
-			<label for="">분반 : </label> 
-			<select name="lectureClass" id="lectureClass">
-				<option value="">전체</option>
-				<option value="A">A반</option>
-				<option value="B">B반</option>
-				<option value="C">C반</option>
-			</select>
-
-			<div class="classNoteWriterStudentList">
-				<table id="StudentList">
+			<div id="student1">
+				<label for="">강의명 : </label> 
+				<select name="lectureName" id="lectureName">
+					<option value="">전체</option>
+				</select>
+				<br /><br />   
+				<label for="">분반 : </label> 
+				<select name="lectureClass" id="lectureClass">
+					<option value="">전체</option>
+					<option value="A">A반</option>
+					<option value="B">B반</option>
+					<option value="C">C반</option>
+				</select>
+			</div>
+	
+			<div id="student2">
+				<table class="tableCss">
 					<thead>
 						<tr>
-							<td>학생번호</td>
-							<td>학생이름</td>
-							<td>학년</td>
+							<th>학생번호</td>
+							<th>학생이름</td>
+							<th>학년</td>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="tbody">
 					</tbody>
 				</table>
 			</div>
 		</div>
 		<div class="maincontents">
-			<label for="">학생 : </label> 
-			<input type="text" name="selectStudentList" id="selectStudentList" readonly /> 
-			<br /> <br />
-			<label for="">수업일자 : </label> 
-			<input type="date" name="date" id="date" /> 
-			<br /> <br /> <label for="">강의명 : </label> 
-			<input type="text" name="lectureNameText" id="lectureNameText" readonly /> 
-			<label for="">분반 : </label> 
-			<input type="text" name="lectureClassText" id="lectureClassText" readonly />
-			<br /> <br /> 
-			<label for="">담당강사 : </label> 
-			<select name="teachername" id="teacherName">
-			</select> <label for="">제목 : </label> 
-			<input type="text" name="notetitle" id="notetitle" />
-			<br /> <br /> <br />
-			<textarea name="" id="tarea" cols="30" rows="10"></textarea>
-			<br />
+			<div id="student1">
+				<label for="">학생 : </label> 
+				<input type="text" name="selectStudentList" id="selectStudentList" readonly /> 
+				<label for="">수업일자 : </label> 
+				<input type="date" name="date" id="date" /> 
+				<br /> <label for="">강의명 : </label> 
+				<input type="text" name="lectureNameText" id="lectureNameText" readonly /> 
+				<label for="">분반 : </label> 
+				<input type="text" name="lectureClassText" id="lectureClassText" readonly />
+				<br />
+				<label for="">담당강사 : </label> 
+				<select name="teachername" id="teacherName">
+				</select> <label for="">제목 : </label> 
+				<input type="text" name="notetitle" id="notetitle" />
+				<br />
+				<br />
+			</div>
+				<br />
+				<br />
+				<textarea name="" id="tarea" cols="30" rows="10"></textarea>
 			<div id="alter_btn" align="right">
-				<input type="button" value="등록하기" id="update" /> 
-				<a href = "classNote.jsp"><input class="btn" type="button" value="취소하기" id="cancel" /></a>
+				<button type="button" id="update" >등록하기</button> 
+				<a href = "classNote.jsp"><button class="btn" type="button" id="cancel" >취소하기</button></a>
 			</div>
 		</div>
 	</div>
+</div>
 </body>
 </html>

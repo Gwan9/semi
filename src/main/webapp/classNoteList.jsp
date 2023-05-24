@@ -9,22 +9,28 @@
 <%
 	JSONArray JA = new JSONArray();
 	StudentDAO dao = new StudentDAO();
-	
 	ArrayList<ClassNoteVO> list = null;
+	
 
 	String lectureName = request.getParameter("lectureName").trim();
 	String lectureClass = request.getParameter("lectureClass").trim();
 	
 	if(lectureName.equals("전체") && lectureClass.equals("전체")){
+		list = new ArrayList<ClassNoteVO>();
 		list = dao.studentNoteSelectAll();
 		
+		System.out.println(list);
+		
 	}else if(!lectureName.equals("전체") && lectureClass.equals("전체")){
+		list = new ArrayList<ClassNoteVO>();
 		list = dao.studentNoteSelectAll(lectureName);
 		
 	}else if(!lectureName.equals("전체") && !lectureClass.equals("전체")){
+		list = new ArrayList<ClassNoteVO>();
 		list = dao.studentNoteSelectAll(lectureName, lectureClass);
 		
 	}else if(lectureName.equals("전체") && !lectureClass.equals("전체")){
+		list = new ArrayList<ClassNoteVO>();
 		list = dao.studentNoteSelectAllbyLectureClass(lectureClass);
 		
 	}

@@ -159,7 +159,7 @@ public class StudentDAO {
 
 	public ArrayList<ClassNoteVO> studentNoteSelectAll() {
 		ArrayList<ClassNoteVO> list = new ArrayList<>();
-		ClassNoteVO vo = new ClassNoteVO();
+		ClassNoteVO vo = null;
 
 		sb.setLength(0);
 		sb.append(
@@ -171,11 +171,14 @@ public class StudentDAO {
 						+ "join teacher t on cr.teacher_no = t.teacher_no ");
 
 		try {
+			
 			pstmt = conn.prepareStatement(sb.toString());
 
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
+				vo = new ClassNoteVO();
+				
 				vo.setNoteNo(rs.getInt("note_no"));
 				vo.setNoteDate(rs.getString("note_date"));
 				vo.setNoteTitle(rs.getString("note_title"));
