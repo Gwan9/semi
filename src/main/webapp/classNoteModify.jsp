@@ -44,11 +44,11 @@
 	}
 	%>
 <div id="canvas">
-	<div class="sideMenu1">학생목록</div>
-	<div class="sideMenu2">출결관리</div>
-	<div class="sideMenu3">수업관리</div>
-	<div class="sideMenu4">학습일지</div>
-	<div class="sideMenu5">관리자</div>
+	<div class="sideMenu1"><a href="studentList.jsp">학생목록</a></div>
+		<div class="sideMenu2"><a href="checkList.jsp"></a>출결관리</div>
+		<div class="sideMenu3"><a href="studentcal.jsp">수업관리</a></div>
+		<div class="sideMenu4"><a href="classNote.jsp">학습일지</a></div>
+		<div class="sideMenu5"><a href="admin.jsp">관리자</a></div>
 	<div id="container" > <!-- 학습일지 큰 div -->
 		<div id="student1">
 			<form action="classNoteModifyOk.jsp">
