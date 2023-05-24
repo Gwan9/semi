@@ -717,6 +717,34 @@ public class StudentDAO {
 		}
 	
 	}
+	
+	
+	// teacher 이름으로 조회했을 경우
+		public void classregisterDeleteByNo(int classregisterNo) {
+		
+			// 4. SQL 문
+			sb.setLength(0); // 초기화
+			sb.append("DELETE ");
+			sb.append("FROM CLASS_REGISTER ");
+			sb.append("WHERE CLASS_REGISTER_NO = ? ");
+		
+			try {
+				// 5. 문장 객체화
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setInt(1, classregisterNo);
+		
+				// 6. 실행
+				int result = pstmt.executeUpdate();
+		
+				if (result == 1) {
+					System.out.println("데이터 삭제 성공!");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		}
 
 	// teacher 전체 출력하기
 	public ArrayList<ClassNoteVO> teacherSelectAll() {
@@ -1265,7 +1293,7 @@ public class StudentDAO {
 
 		sb.setLength(0);
 		sb.append("INSERT INTO teacher ");
-		sb.append("VALUES (TEACHER_TNO_SEQ.NEXTVAL, ?, ?, ?, ?, 0, ?, ?, 0, ?, 0, SYSDATE, ?, ?) ");
+		sb.append("VALUES (TEACHER_NO_SEQ.NEXTVAL, ?, ?, ?, ?, 0, ?, ?, 0, ?, 0, SYSDATE, ?, ?) ");
 
 		try {
 			pstmt = conn.prepareStatement(sb.toString());

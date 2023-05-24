@@ -38,7 +38,7 @@
 					},
 					success : function(data) {
 						var obj = JSON.parse(data);
-						$("table").empty(); // 기존 테이블 내용 비우기
+						$(".tableCss").empty(); // 기존 테이블 내용 비우기
 						for (var i = 0; i < obj.length; i++) {
 							var txt = "<tr><td>"
 							+ obj[i].noteno
@@ -56,7 +56,7 @@
 							+ "</td><td>"
 							+ obj[i].notedate
 							+ "</td></tr>";
-							$("table").append(txt);
+							$(".tableCss").append(txt);
 						}
 					}
 				});
@@ -76,7 +76,7 @@
 		})
 
 		$("#stdSelect").on("click",function() {
-			$("table").empty();
+			$(".tableCss").empty();
 			$.ajax({
 				url : "classNoteStudentList.jsp",
 				data : {
@@ -101,7 +101,7 @@
 						+ "</td><td>"
 						+ obj[i].notedate
 						+ "</td></tr>";
-						$("table").append(txt);
+						$(".tableCss").append(txt);
 					}
 				}
 			})

@@ -1023,8 +1023,8 @@ table, th, td {
 														+ "<td>"
 														+ obj[i].studentParentsPhone
 														+ "</td>"
-														+ "<td><a href='deleteStudentOk.jsp?student_no="
-														+ obj[i].no
+														+ "<td><a href='deleteAccountOk.jsp?classregisterDeleteByNo="
+														+ obj[i].registerno
 														+ "'><input type='button' class='delete_btn' value='삭제' /></a></td>"
 														+ "</tr>";
 
