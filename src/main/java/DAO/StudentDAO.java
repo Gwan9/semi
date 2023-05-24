@@ -1739,6 +1739,1013 @@ public class StudentDAO {
 	// teacherCheck-------------------------------------------------------------------------------------------------------------------------------
 
 	
+	
+	// jsb // studentList-------------------------------------------------------------------------------------------------------------------------------
+
+	
+	
+		// studentSearch-------------------------------------------------------------------------------------------------------------------------------
+	// 메서드에서 (JDBC의 4-7단계)
+
+	// <전체조회> - 입력값 없이 조회
+
+	// student - class_register - lecture 조인
+
+	public ArrayList<ClassNoteVO> studentSearchSelectAll() {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성 (조인)
+		sb.setLength(0);
+		// sb.append("SELECT * FROM student "); //조인안될때 예비로 쓴 쿼리문
+
+		// 아니 디비에서는 되는데 대체 뭐가 문제야 ==> 음... 이름값을 받아오는 selectName() 에서 AND student_name=?
+		// 이 쿼리문을 빼먹어서
+		sb.append("SELECT * ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				// 객체 생성하면서 자동으로 기본생성자 생성
+				vo = new ClassNoteVO();
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+				vo.setStudentEmail(rs.getString("student_email"));
+				vo.setStudentBirth(rs.getString("student_birth"));
+				vo.setStudentAddrs(rs.getString("student_addrs"));
+				vo.setStudentPhoto(rs.getString("student_photo"));
+				vo.setStudentStatus(rs.getBoolean("student_status"));
+
+				list.add(vo);
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	} // selectAll() 끝
+
+
+
+// studentSearch-------------------------------------------------------------------------------------------------------------------------------
+
+	// 이름값을 넘겨주고 detail.jsp에
+	public ArrayList<ClassNoteVO> studentSearchSelectAllByNameToDetail(String studentName) {
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+		ClassNoteVO vo = null;
+
+		sb.setLength(0);
+		// s b.append("SELECT * FROM student "); //조인안될때 예비로 쓴 쿼리문
+
+		// 아니 디비에서는 되는데 대체 뭐가 문제야 ==> 음... 이름값을 받아오는 selectName() 에서 AND student_name=?
+		// 이 쿼리문을 빼먹어서
+		sb.append("SELECT * ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND student_name=?  ");
+
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, studentName);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				// 조장님이 주신 ClassNoteVO 사용하려면 set 해줘야함
+
+				// 객체 생성하면서 자동으로 기본생성자 생성
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+				vo.setStudentEmail(rs.getString("student_email"));
+				vo.setStudentBirth(rs.getString("student_birth"));
+				vo.setStudentAddrs(rs.getString("student_addrs"));
+				vo.setStudentPhoto(rs.getString("student_photo"));
+				vo.setStudentStatus(rs.getBoolean("student_status"));
+
+				list.add(vo);
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	} // selectAll() 끝
+		// <이름을 입력하면 리스트 조회>
+
+	public ArrayList<ClassNoteVO> studentSearchSelectAllByName(String studentName) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성 (조인)
+		sb.setLength(0);
+		// sb.append("SELECT * FROM student WHERE student_name=? ");
+
+		// 아니 디비에서는 되는데 대체 뭐가 문제야 ==> AND student_name=? 이 쿼리문을 빼먹어서
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND student_name=?  "); // where절은 한 쿼리문에 두번 쓸 수 없다 (AND로 쓰기)
+
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, studentName); // bind 변수 값 주기
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+				list.add(vo);
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	// <학년 입력> 학생 학년으로 모두 조회
+	public ArrayList<ClassNoteVO> studentSearchSelectAllByGrade(int studentGrade) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성 (조인)
+		sb.setLength(0);
+
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND student_grade=?  ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, studentGrade); // bind 변수 값 주기
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	// <분반 입력> 학생 반으로 모두조회
+	public ArrayList<ClassNoteVO> studentSearchSelectByLectureClass(String lectureClass) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND lecture_class=?  ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, lectureClass); // bind 변수 값 주기
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+				list.add(vo);
+
+				// System.out.println(list);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	// <강의명 입력>
+	public ArrayList<ClassNoteVO> studentSearchSelectByLectureName(String lectureName) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND lecture_name=?  ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, lectureName); // bind 변수 값 주기
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+				list.add(vo);
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	// 학년+분반
+	public ArrayList<ClassNoteVO> studentSearchSelectByGradeLectureClass(int studentGrade, String lectureClass) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND student_grade=? AND lecture_class=?  ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, studentGrade);
+			pstmt.setString(2, lectureClass);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	// 학년+강의명
+	public ArrayList<ClassNoteVO> studentSearchSelectByGradeLectureName(int studentGrade, String lectureName) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND student_grade=? AND lecture_name=?  ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, studentGrade);
+			pstmt.setString(2, lectureName);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	// 분반+강의명
+	public ArrayList<ClassNoteVO> studentSearchSelectByLectureClassLectureName(String lectureClass,
+			String lectureName) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND lecture_class=? AND lecture_name=?  ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, lectureClass);
+			pstmt.setString(2, lectureName);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	// 학년+분반+강의명
+	public ArrayList<ClassNoteVO> studentSearchSelectByGradeLectureClassLectureName(int studentGrade,
+			String lectureClass, String lectureName) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND student_grade=? AND lecture_class=? AND lecture_name=?  ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, studentGrade);
+			pstmt.setString(2, lectureClass);
+			pstmt.setString(3, lectureName);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+
+
+// jsb dao 추가
+	//날짜만 검색
+	public ArrayList<ClassNoteVO> studentSelectAllByRegistDate(String date1, String date2) {
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
+		ClassNoteVO vo = null;
+
+		sb.setLength(0);
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND s.student_regist_date ");
+		sb.append("BETWEEN ? AND ? ");
+
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, date1); // bind 변수 값 주기
+			pstmt.setString(2, date2); // bind 변수 값 주기
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+				list.add(vo);
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	
+	//학년+분반+강의명+날짜
+	public ArrayList<ClassNoteVO> studentSearchSelectByGradeLectureClassLectureNameRegistDate(int studentGrade,
+			String lectureClass, String lectureName, String date1, String date2) {
+
+		ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+		ClassNoteVO vo = null;
+
+		// 4. sql문 작성
+		sb.setLength(0);
+
+		sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+		sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+		sb.append("s.student_parents_name, s.student_parents_phone ");
+		sb.append("FROM student s, class_register c, lecture l ");
+		sb.append("WHERE s.student_no = c.student_no ");
+		sb.append("AND c.lecture_no = l.lecture_no ");
+		sb.append("AND student_grade=? AND lecture_class=? AND lecture_name=?  ");
+		sb.append("AND s.student_regist_date ");
+		sb.append("BETWEEN ? AND ? ");
+		try {
+			// 5. 문장객체 생성
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, studentGrade);
+			pstmt.setString(2, lectureClass);
+			pstmt.setString(3, lectureName);
+			pstmt.setString(4, date1);
+			pstmt.setString(5, date2);
+
+			// 6. 실행
+			rs = pstmt.executeQuery();
+
+			// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+			while (rs.next()) {
+
+				vo = new ClassNoteVO();
+
+				vo.setStudentNo(rs.getInt("student_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setStudentSchoolName(rs.getString("student_school_name"));
+				vo.setStudentGrade(rs.getInt("student_grade"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setStudentPhone(rs.getString("student_phone"));
+				vo.setStudentRegistDate(rs.getString("student_regist_date"));
+				vo.setStudentGender(rs.getBoolean("student_gender"));
+				vo.setStudentParentsName(rs.getString("student_parents_name"));
+				vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+	
+	//학년+분반+날짜
+		public ArrayList<ClassNoteVO> studentSearchSelectByGradeLectureClassRegistDate(int studentGrade,
+				String lectureClass, String date1, String date2) {
+
+			ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+			ClassNoteVO vo = null;
+
+			// 4. sql문 작성
+			sb.setLength(0);
+
+			sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+			sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+			sb.append("s.student_parents_name, s.student_parents_phone ");
+			sb.append("FROM student s, class_register c, lecture l ");
+			sb.append("WHERE s.student_no = c.student_no ");
+			sb.append("AND c.lecture_no = l.lecture_no ");
+			sb.append("AND student_grade=? AND lecture_class=? ");
+			sb.append("AND s.student_regist_date ");
+			sb.append("BETWEEN ? AND ? ");
+			try {
+				// 5. 문장객체 생성
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setInt(1, studentGrade);
+				pstmt.setString(2, lectureClass);
+				pstmt.setString(3, date1);
+				pstmt.setString(4, date2);
+
+				// 6. 실행
+				rs = pstmt.executeQuery();
+
+				// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+				while (rs.next()) {
+
+					vo = new ClassNoteVO();
+
+					vo.setStudentNo(rs.getInt("student_no"));
+					vo.setStudentName(rs.getString("student_name"));
+					vo.setStudentSchoolName(rs.getString("student_school_name"));
+					vo.setStudentGrade(rs.getInt("student_grade"));
+					vo.setLectureClass(rs.getString("lecture_class"));
+					vo.setStudentPhone(rs.getString("student_phone"));
+					vo.setStudentRegistDate(rs.getString("student_regist_date"));
+					vo.setStudentGender(rs.getBoolean("student_gender"));
+					vo.setStudentParentsName(rs.getString("student_parents_name"));
+					vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+					list.add(vo);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return list;
+		}
+		
+		//학년+강의명+날짜
+				public ArrayList<ClassNoteVO> studentSearchSelectByGradeLectureNameRegistDate(int studentGrade,
+						String lectureName, String date1, String date2) {
+
+					ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+					ClassNoteVO vo = null;
+
+					// 4. sql문 작성
+					sb.setLength(0);
+
+					sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+					sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+					sb.append("s.student_parents_name, s.student_parents_phone ");
+					sb.append("FROM student s, class_register c, lecture l ");
+					sb.append("WHERE s.student_no = c.student_no ");
+					sb.append("AND c.lecture_no = l.lecture_no ");
+					sb.append("AND student_grade=? AND lecture_name=? ");
+					sb.append("AND s.student_regist_date ");
+					sb.append("BETWEEN ? AND ? ");
+					try {
+						// 5. 문장객체 생성
+						pstmt = conn.prepareStatement(sb.toString());
+						pstmt.setInt(1, studentGrade);
+						pstmt.setString(2, lectureName);
+						pstmt.setString(3, date1);
+						pstmt.setString(4, date2);
+
+						// 6. 실행
+						rs = pstmt.executeQuery();
+
+						// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+						while (rs.next()) {
+
+							vo = new ClassNoteVO();
+
+							vo.setStudentNo(rs.getInt("student_no"));
+							vo.setStudentName(rs.getString("student_name"));
+							vo.setStudentSchoolName(rs.getString("student_school_name"));
+							vo.setStudentGrade(rs.getInt("student_grade"));
+							vo.setLectureClass(rs.getString("lecture_class"));
+							vo.setStudentPhone(rs.getString("student_phone"));
+							vo.setStudentRegistDate(rs.getString("student_regist_date"));
+							vo.setStudentGender(rs.getBoolean("student_gender"));
+							vo.setStudentParentsName(rs.getString("student_parents_name"));
+							vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+							list.add(vo);
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					return list;
+				}
+				
+				//분반+강의명+날짜
+				public ArrayList<ClassNoteVO> studentSearchSelectByLectureClassLectureNameRegistDate(String lectureClass,
+						String lectureName, String date1, String date2) {
+
+					ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+					ClassNoteVO vo = null;
+
+					// 4. sql문 작성
+					sb.setLength(0);
+
+					sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+					sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+					sb.append("s.student_parents_name, s.student_parents_phone ");
+					sb.append("FROM student s, class_register c, lecture l ");
+					sb.append("WHERE s.student_no = c.student_no ");
+					sb.append("AND c.lecture_no = l.lecture_no ");
+					sb.append("AND lecture_class=? AND lecture_name=? ");
+					sb.append("AND s.student_regist_date ");
+					sb.append("BETWEEN ? AND ? ");
+					try {
+						// 5. 문장객체 생성
+						pstmt = conn.prepareStatement(sb.toString());
+						pstmt.setString(1, lectureClass);
+						pstmt.setString(2, lectureName);
+						pstmt.setString(3, date1);
+						pstmt.setString(4, date2);
+
+						// 6. 실행
+						rs = pstmt.executeQuery();
+
+						// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+						while (rs.next()) {
+
+							vo = new ClassNoteVO();
+
+							vo.setStudentNo(rs.getInt("student_no"));
+							vo.setStudentName(rs.getString("student_name"));
+							vo.setStudentSchoolName(rs.getString("student_school_name"));
+							vo.setStudentGrade(rs.getInt("student_grade"));
+							vo.setLectureClass(rs.getString("lecture_class"));
+							vo.setStudentPhone(rs.getString("student_phone"));
+							vo.setStudentRegistDate(rs.getString("student_regist_date"));
+							vo.setStudentGender(rs.getBoolean("student_gender"));
+							vo.setStudentParentsName(rs.getString("student_parents_name"));
+							vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+							list.add(vo);
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					return list;
+				}
+				
+				//학년+날짜
+				public ArrayList<ClassNoteVO> studentSearchSelectByGradeRegistDate(int studentGrade,
+						 String date1, String date2) {
+
+					ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+					ClassNoteVO vo = null;
+
+					// 4. sql문 작성
+					sb.setLength(0);
+
+					sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+					sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+					sb.append("s.student_parents_name, s.student_parents_phone ");
+					sb.append("FROM student s, class_register c, lecture l ");
+					sb.append("WHERE s.student_no = c.student_no ");
+					sb.append("AND c.lecture_no = l.lecture_no ");
+					sb.append("AND student_grade=?  ");
+					sb.append("AND s.student_regist_date ");
+					sb.append("BETWEEN ? AND ? ");
+					try {
+						// 5. 문장객체 생성
+						pstmt = conn.prepareStatement(sb.toString());
+						pstmt.setInt(1, studentGrade);
+						pstmt.setString(2, date1);
+						pstmt.setString(3, date2);
+
+						// 6. 실행
+						rs = pstmt.executeQuery();
+
+						// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+						while (rs.next()) {
+
+							vo = new ClassNoteVO();
+
+							vo.setStudentNo(rs.getInt("student_no"));
+							vo.setStudentName(rs.getString("student_name"));
+							vo.setStudentSchoolName(rs.getString("student_school_name"));
+							vo.setStudentGrade(rs.getInt("student_grade"));
+							vo.setLectureClass(rs.getString("lecture_class"));
+							vo.setStudentPhone(rs.getString("student_phone"));
+							vo.setStudentRegistDate(rs.getString("student_regist_date"));
+							vo.setStudentGender(rs.getBoolean("student_gender"));
+							vo.setStudentParentsName(rs.getString("student_parents_name"));
+							vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+							list.add(vo);
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					return list;
+				}
+				
+				//분반+날짜
+				public ArrayList<ClassNoteVO> studentSearchSelectByLectureClassRegistDate(String lectureClass,
+						 String date1, String date2) {
+
+					ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+					ClassNoteVO vo = null;
+
+					// 4. sql문 작성
+					sb.setLength(0);
+
+					sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+					sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+					sb.append("s.student_parents_name, s.student_parents_phone ");
+					sb.append("FROM student s, class_register c, lecture l ");
+					sb.append("WHERE s.student_no = c.student_no ");
+					sb.append("AND c.lecture_no = l.lecture_no ");
+					sb.append("AND lecture_class=?  ");
+					sb.append("AND s.student_regist_date ");
+					sb.append("BETWEEN ? AND ? ");
+					try {
+						// 5. 문장객체 생성
+						pstmt = conn.prepareStatement(sb.toString());
+						pstmt.setString(1, lectureClass);
+						pstmt.setString(2, date1);
+						pstmt.setString(3, date2);
+
+						// 6. 실행
+						rs = pstmt.executeQuery();
+
+						// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+						while (rs.next()) {
+
+							vo = new ClassNoteVO();
+
+							vo.setStudentNo(rs.getInt("student_no"));
+							vo.setStudentName(rs.getString("student_name"));
+							vo.setStudentSchoolName(rs.getString("student_school_name"));
+							vo.setStudentGrade(rs.getInt("student_grade"));
+							vo.setLectureClass(rs.getString("lecture_class"));
+							vo.setStudentPhone(rs.getString("student_phone"));
+							vo.setStudentRegistDate(rs.getString("student_regist_date"));
+							vo.setStudentGender(rs.getBoolean("student_gender"));
+							vo.setStudentParentsName(rs.getString("student_parents_name"));
+							vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+							list.add(vo);
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					return list;
+				}
+				
+				//강의명+날짜
+				public ArrayList<ClassNoteVO> studentSearchSelectByLectureNameRegistDate(String lectureName,
+						 String date1, String date2) {
+
+					ArrayList<ClassNoteVO> list = new ArrayList<ClassNoteVO>();
+
+					ClassNoteVO vo = null;
+
+					// 4. sql문 작성
+					sb.setLength(0);
+
+					sb.append("SELECT s.student_no, s.student_name, s.student_school_name, s.student_grade, ");
+					sb.append("l.lecture_class , s.student_phone, s.student_regist_date, s.student_gender, ");
+					sb.append("s.student_parents_name, s.student_parents_phone ");
+					sb.append("FROM student s, class_register c, lecture l ");
+					sb.append("WHERE s.student_no = c.student_no ");
+					sb.append("AND c.lecture_no = l.lecture_no ");
+					sb.append("AND lecture_name=?  ");
+					sb.append("AND s.student_regist_date ");
+					sb.append("BETWEEN ? AND ? ");
+					try {
+						// 5. 문장객체 생성
+						pstmt = conn.prepareStatement(sb.toString());
+						pstmt.setString(1, lectureName);
+						pstmt.setString(2, date1);
+						pstmt.setString(3, date2);
+
+						// 6. 실행
+						rs = pstmt.executeQuery();
+
+						// 7. 레코드별 로직 처리 (출력하고 싶은것만 하는게 아니라 모든 매개변수 다 가져와 일단)
+						while (rs.next()) {
+
+							vo = new ClassNoteVO();
+
+							vo.setStudentNo(rs.getInt("student_no"));
+							vo.setStudentName(rs.getString("student_name"));
+							vo.setStudentSchoolName(rs.getString("student_school_name"));
+							vo.setStudentGrade(rs.getInt("student_grade"));
+							vo.setLectureClass(rs.getString("lecture_class"));
+							vo.setStudentPhone(rs.getString("student_phone"));
+							vo.setStudentRegistDate(rs.getString("student_regist_date"));
+							vo.setStudentGender(rs.getBoolean("student_gender"));
+							vo.setStudentParentsName(rs.getString("student_parents_name"));
+							vo.setStudentParentsPhone(rs.getString("student_parents_phone"));
+
+							list.add(vo);
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					return list;
+				}
+
+
 
 	// -----------------------------------------------------------------------
 	
