@@ -2932,7 +2932,309 @@ public class StudentDAO {
 			}
 		}
 	//----------------------------------------------------------------------------------------------------
+		public void studentNoteInsert(String title, String tarea, String tname) {
+
+//		로그인 되어있는 교사의 교사번호를 담은 무언가
+
+		sb.setLength(0);
+		sb.append(
+				"insert into class_note values(note_no_seq.nextval, sysdate, ?, ?, (select teacher_no from teacher where teacher_name = ? )) ");
+
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+
+			pstmt.setString(1, title);
+			pstmt.setString(2, tarea);
+			pstmt.setString(3, tname);
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void studentNoteDeleteOne(int noteno) {
+		sb.setLength(0);
+		sb.append("delete from class_note where note_no = ? ");
+
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, noteno);
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void studentNoteUpdateOne(ClassNoteVO vo) {
+		sb.setLength(0);
+		sb.append("update class_note set note_title = ?, note_contents = ?, note_date = sysdate where note_no = ? ");
+
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, vo.getNoteTitle());
+			pstmt.setString(2, vo.getNoteContents());
+			pstmt.setInt(3, vo.getNoteNo());
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public ClassNoteVO studentNoteSelectOne(int noteno) {
+		ClassNoteVO vo = null;
+
+		sb.setLength(0);
+		sb.append(
+				"SELECT note_date, note_title, note_contents, t.teacher_name, r.class_register_no, s.student_name, l.lecture_name, l.lecture_class ");
+		sb.append("FROM class_note n ");
+		sb.append("JOIN class_register r ON r.class_register_no = n.class_register_no ");
+		sb.append("join student s on s.student_no = r.student_no ");
+		sb.append("JOIN teacher t ON t.teacher_no = r.teacher_no ");
+		sb.append("JOIN lecture l ON l.lecture_no = r.lecture_no ");
+		sb.append("WHERE n.note_no = ?");
+
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, noteno);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				vo = new ClassNoteVO();
+				vo.setNoteNo(noteno);
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contents"));
+				vo.setTeacherName(rs.getString("teacher_name"));
+				vo.setClassRegisterNo(rs.getInt("class_register_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setLectureName(rs.getString("lecture_name"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return vo;
+	}
+
+	public ArrayList<ClassNoteVO> studentNoteSelectAll() {
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
+		ClassNoteVO vo = null;
+
+		sb.setLength(0);
+		sb.append(
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class, t.teacher_name "
+						+ "from class_note cn "
+						+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
+						+ "join lecture l on cr.lecture_no = l.lecture_no "
+						+ "join student s on cr.student_no = s.student_no "
+						+ "join teacher t on cr.teacher_no = t.teacher_no ");
+
+		try {
+			
+			pstmt = conn.prepareStatement(sb.toString());
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				vo = new ClassNoteVO();
+				
+				vo.setNoteNo(rs.getInt("note_no"));
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contents"));
+				vo.setTeacherNo(rs.getInt("class_register_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setLectureName(rs.getString("lecture_name"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setTeacherName(rs.getString("teacher_name"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	public ArrayList<ClassNoteVO> studentNoteSelectStudentName(String name) {
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
+		ClassNoteVO vo = new ClassNoteVO();
+
+		sb.setLength(0);
+		sb.append(
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class, T.TEACHER_NAME "
+				+ "from class_note cn "
+				+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
+				+ "join lecture l ON cr.lecture_no = l.lecture_no "
+				+ "join student s ON cr.student_no = s.student_no "
+				+ "join teacher T ON cr.teacher_no = T.teacher_no "
+				+ "where s.student_name = ? ");
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, name);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				vo.setNoteNo(rs.getInt("note_no"));
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contents"));
+				vo.setTeacherNo(rs.getInt("class_register_no"));
+				vo.setStudentName(name);
+				vo.setLectureName(rs.getString("lecture_name"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setTeacherName(rs.getString("teacher_name"));
+
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
 	
+
+	public ArrayList<ClassNoteVO> studentNoteSelectAll(String lectureName) {
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
+		ClassNoteVO vo = null;
+
+		sb.setLength(0);
+		sb.append(
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class, t.teacher_name "
+						+ "from class_note cn "
+						+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
+						+ "join lecture l on cr.lecture_no = l.lecture_no "
+						+ "join student s on cr.student_no = s.student_no "
+						+ "join teacher t on cr.teacher_no = t.teacher_no " + "where lecture_name = ? ");
+
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, lectureName);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				vo = new ClassNoteVO();
+
+				vo.setNoteNo(rs.getInt("note_no"));
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contents"));
+				vo.setClassRegisterNo(rs.getInt("class_register_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setLectureName(rs.getString("lecture_name"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setTeacherName(rs.getString("teacher_name"));
+
+				list.add(vo);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	public ArrayList<ClassNoteVO> studentNoteSelectAll(String lectureName, String lectureClass) {
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
+		ClassNoteVO vo = null;
+
+		sb.setLength(0);
+		sb.append(
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class, t.teacher_name "
+						+ "from class_note cn "
+						+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
+						+ "join lecture l on cr.lecture_no = l.lecture_no "
+						+ "join student s on cr.student_no = s.student_no "
+						+ "join teacher t on cr.teacher_no = t.teacher_no "
+						+ "where l.lecture_name = ? and l.lecture_class = ? ");
+
+		try {
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, lectureName);
+			pstmt.setString(2, lectureClass);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				vo = new ClassNoteVO();
+
+				vo.setNoteNo(rs.getInt("note_no"));
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contents"));
+				vo.setClassRegisterNo(rs.getInt("class_register_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setLectureName(rs.getString("lecture_name"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setTeacherName(rs.getString("teacher_name"));
+
+				list.add(vo);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	public ArrayList<ClassNoteVO> studentNoteSelectAllbyLectureClass(String Class) {
+		ArrayList<ClassNoteVO> list = new ArrayList<>();
+		ClassNoteVO vo = null;
+
+		sb.setLength(0);
+		sb.append(
+				"select cn.note_no, cn.note_date, cn.note_title, cn.note_contents, cn.class_register_no, s.student_name, l.lecture_name, l.lecture_class, t.teacher_name "
+						+ "from class_note cn "
+						+ "join class_register cr ON cn.class_register_no = cr.class_register_no "
+						+ "join lecture l on cr.lecture_no = l.lecture_no "
+						+ "join student s on cr.student_no = s.student_no "
+						+ "join teacher t on cr.teacher_no = t.teacher_no " + "where l.lecture_class = ? ");
+
+		try {
+
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, Class);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				vo = new ClassNoteVO();
+
+				vo.setNoteNo(rs.getInt("note_no"));
+				vo.setNoteDate(rs.getString("note_date"));
+				vo.setNoteTitle(rs.getString("note_title"));
+				vo.setNoteContents(rs.getString("note_contents"));
+				vo.setClassRegisterNo(rs.getInt("class_register_no"));
+				vo.setStudentName(rs.getString("student_name"));
+				vo.setLectureName(rs.getString("lecture_name"));
+				vo.setLectureClass(rs.getString("lecture_class"));
+				vo.setTeacherName(rs.getString("teacher_name"));
+
+				list.add(vo);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+	
+//	choi won kyu
+// ----------------------------------------------------------------------------------------------------
 	// close 메서드
 	
 	public void close() {
