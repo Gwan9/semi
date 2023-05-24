@@ -1,0 +1,21 @@
+@charset "UTF-8";
+	#header{
+		width:1080px;
+		height:100px;
+	}
+	#bannerside{
+		width: 450px;
+		height: 100px;
+		float:left;
+	}
+	img{
+		width:450px;
+		height:100px;
+	}
+	#loginside{
+		width: 450px;
+		height: 100px;
+		float:right;
+		background: #F4EEDD;
+		text-align: center;
+	}
