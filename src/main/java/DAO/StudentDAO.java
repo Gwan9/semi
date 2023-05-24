@@ -2748,6 +2748,190 @@ public class StudentDAO {
 
 
 	// -----------------------------------------------------------------------
+
+//ptm-----------------------------------------------------------------------------------
+	public ClassNoteVO teacherSelectAllById(String teacherId) {
+			sb.setLength(0);
+			sb.append("SELECT * FROM teacher WHERE teacher_id = ? ");
+			
+			ClassNoteVO vo = null;
+			
+			try {
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setString(1, teacherId);
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					int teacherNo = rs.getInt("teacher_no");
+					String teacherPw = rs.getString("teacher_pw");
+					String teacherName = rs.getString("teacher_name");
+					String teacherAddress = rs.getString("teacher_address");
+					int teacherSal = rs.getInt("teacher_sal");
+					String teacherPhone = rs.getString("teacher_phone");
+					String teacherEmail = rs.getString("teacher_email");
+					String teacherSubject = rs.getString("teacher_subject");
+					String teacherPhoto = rs.getString("teacher_photo");
+					String teacherWorktype = rs.getString("teacher_worktype");
+					String teacherHiredate = rs.getString("teacher_hiredate");
+					String teacherBirth = rs.getString("teacher_birth");
+					String teacherGender = rs.getString("teacher_gender");
+					
+					vo = new ClassNoteVO();
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return vo;
+		}
+		
+		public ClassNoteVO teacherSelectAllByIdPw(String teacherId, String teacherPw) {
+			sb.setLength(0);
+			sb.append("SELECT * FROM teacher WHERE teacher_id = ? and teacher_pw = ? ");
+			
+			ClassNoteVO vo = null;
+			try {
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setString(1, teacherId);
+				pstmt.setString(2, teacherPw);
+				
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					int teacherNo = rs.getInt("teacher_no");
+					String teacherName = rs.getString("teacher_name");
+					String teacherAddress = rs.getString("teacher_address");
+					int teacherSal = rs.getInt("teacher_sal");
+					String teacherPhone = rs.getString("teacher_phone");
+					String teacherEmail = rs.getString("teacher_email");
+					String teacherSubject = rs.getString("teacher_subject");
+					String teacherPhoto = rs.getString("teacher_photo");
+					String teacherWorktype = rs.getString("teacher_worktype");
+					String teacherHiredate = rs.getString("teacher_hiredate");
+					String teacherBirth = rs.getString("teacher_birth");
+					
+					boolean g;
+					if(rs.getString("teacher_gender") == "1")
+						g = true;
+					else
+						g = false;
+					
+					vo = new ClassNoteVO(teacherNo, teacherId, teacherPw, teacherName, teacherAddress
+							, teacherSal, teacherPhone, teacherEmail, teacherSubject, teacherPhoto
+							, teacherWorktype, teacherHiredate, teacherBirth, g);
+					
+					System.out.println("dao:"+vo);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return vo;
+		}
+		
+		public ClassNoteVO teacherSelectAllByNo(int teacherNo) {
+
+			// vo 초기화
+			ClassNoteVO vo = new ClassNoteVO();
+
+			// 4. SQL 문
+			sb.setLength(0); // 초기화
+			sb.append("SELECT TEACHER_NO, TEACHER_ID, TEACHER_PW, TEACHER_NAME, TEACHER_PHONE, TEACHER_EMAIL, TEACHER_PHOTO, TEACHER_HIREDATE, TEACHER_ADDRESS, TEACHER_SAL, TEACHER_SUBJECT, TEACHER_WORKTYPE, TEACHER_BIRTH, TEACHER_GENDER ");
+			sb.append("FROM TEACHER ");
+			sb.append("WHERE TEACHER_NO = ? ");
+
+			try {
+				// 5. SQL 문장 객체
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setInt(1, teacherNo);
+
+				// 6. 실행
+				rs = pstmt.executeQuery();
+
+				// 7. 레코드 별 로직 처리
+				while (rs.next()) {
+					vo = new ClassNoteVO();
+
+					vo.setTeacherNo(teacherNo);
+					vo.setTeacherId(rs.getString("TEACHER_ID"));
+					vo.setTeacherPw(rs.getString("TEACHER_PW"));
+					vo.setTeacherName(rs.getString("TEACHER_NAME"));
+					vo.setTeacherPhone(rs.getString("TEACHER_PHONE"));
+					vo.setTeacherEmail(rs.getString("TEACHER_EMAIL"));
+					vo.setTeacherPhoto(rs.getString("TEACHER_PHOTO"));
+					vo.setTeacherHiredate(rs.getString("TEACHER_HIREDATE"));
+					vo.setTeacherAddress(rs.getString("TEACHER_ADDRESS"));
+					vo.setTeacherSal(rs.getInt("TEACHER_SAL"));
+					vo.setTeacherSubject(rs.getString("TEACHER_SUBJECT"));
+					vo.setTeacherWorktype(rs.getString("TEACHER_WORKTYPE"));
+					vo.setTeacherBirth(rs.getString("TEACHER_BIRTH"));
+					vo.setTeacherGender(rs.getBoolean("TEACHER_GENDER"));
+
+				}
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return vo;
+
+		}
+		
+		public void updateOne(ClassNoteVO vo) {
+			sb.setLength(0);
+			sb.append("UPDATE teacher ");
+			sb.append("SET teacher_photo = ?, teacher_pw = ?, teacher_phone = ?, teacher_email = ? ");
+			sb.append("WHERE teacher_no = ? ");
+			
+			try {
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setString(1, vo.getTeacherPhoto());
+				pstmt.setString(2, vo.getTeacherPw());
+				pstmt.setString(3, vo.getTeacherPhone());
+				pstmt.setString(4, vo.getTeacherEmail());
+				pstmt.setInt(5, vo.getTeacherNo());
+				
+				pstmt.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		public void teacherInsertByAll(ClassNoteVO vo) {
+			
+			sb.setLength(0);
+			sb.append("INSERT INTO teacher ");
+			sb.append("VALUES (TEACHER_NO_SEQ.NEXTVAL, ?, ?, ?, ?, 0, ?, ?, 0, ?, 0, SYSDATE, ?, ?) ");
+			
+			try {
+				pstmt = conn.prepareStatement(sb.toString());
+				
+				String g;
+				if(vo.isTeacherGender())
+					g = "1";
+				else
+					g = "0";
+				
+				pstmt.setString(1, vo.getTeacherId());
+				pstmt.setString(2, vo.getTeacherPw());
+				pstmt.setString(3, vo.getTeacherName());
+				pstmt.setString(4, vo.getTeacherAddress());
+				pstmt.setString(5, vo.getTeacherPhone());
+				pstmt.setString(6, vo.getTeacherEmail());
+				pstmt.setString(7, vo.getTeacherPhoto());
+				pstmt.setString(8, vo.getTeacherBirth());
+				pstmt.setString(9, g);
+				
+				pstmt.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	//----------------------------------------------------------------------------------------------------
 	
 	// close 메서드
 	
