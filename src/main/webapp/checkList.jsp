@@ -596,7 +596,7 @@ ArrayList<ClassNoteVO> list2 = dao.studentSearchSelectAll();
 <div id="canvas"><!-- 가장 큰 박스 -->
 	<a href="./studentList.jsp"><div class="sideMenu1">학생목록</div></a>
 	<a href="./checkList.jsp"><div class="sideMenu2">출결관리</div></a>
-	<a href="./studentCal.jsp"><div class="sideMenu3">수업관리</div></a>
+	<a href="./studentcal.jsp"><div class="sideMenu3">수업관리</div></a>
 	<a href="./classNote.jsp"><div class="sideMenu4">학습일지</div></a>
 	<a href="./admin.jsp"><div class="sideMenu5">관리자</div></a>
 	<div id="container"> <!-- 중간박스 -->
